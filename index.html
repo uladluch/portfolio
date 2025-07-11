@@ -2,10 +2,126 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>SnapTasty – Support</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Coming soon...</title>
+  <style>
+    html {
+      box-sizing: border-box;
+    }
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f7f7f7;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: #222;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    #snaptasty {
+      max-width: 680px;
+      margin: 48px auto;
+      padding: 24px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 16px 0 rgba(0,0,0,0.06);
+    }
+    h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 0.5em;
+      letter-spacing: -0.5px;
+    }
+    p {
+      margin-top: 0;
+      margin-bottom: 1.5em;
+      text-align: center;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 2em 0;
+    }
+    ul li {
+      display: flex;
+      align-items: center;
+      font-size: 1.08em;
+      margin-bottom: 1em;
+      padding-left: 0.1em;
+    }
+    ul li span.emoji {
+      font-size: 1.2em;
+      margin-right: 0.7em;
+      flex-shrink: 0;
+    }
+    a {
+      color: #1976d2;
+      text-decoration: underline;
+      transition: color 0.15s;
+      word-break: break-all;
+    }
+    a:hover, a:focus {
+      color: #ff6f61;
+    }
+    .anchor-target {
+      display: block;
+      height: 0;
+      visibility: hidden;
+      position: relative;
+      top: -64px;
+    }
+    .placeholder {
+      margin-bottom: 2em;
+      color: #666;
+      font-size: 1em;
+      text-align: left;
+    }
+    @media (max-width: 480px) {
+      #snaptasty {
+        padding: 12px;
+      }
+      body {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1 style="font-family:sans-serif;text-align:center;margin-top:30vh;">coming soon...</h1>
+  <section id="snaptasty">
+    <h2>SnapTasty Support</h2>
+    <p>Need help with the SnapTasty Food Photo AI app?</p>
+    <ul>
+      <li>
+        <span class="emoji">📧</span>
+        <a href="mailto:support@luch.dev">Email: support@luch.dev</a>
+      </li>
+      <li>
+        <span class="emoji">🔄</span>
+        <a href="#restore">How to restore a purchase?</a>
+      </li>
+      <li>
+        <span class="emoji">❌</span>
+        <a href="#cancel">How to cancel subscription?</a>
+      </li>
+      <li>
+        <span class="emoji">🔐</span>
+        <a href="https://luch.dev/privacy" target="_blank" rel="noopener">Privacy Policy</a>
+      </li>
+    </ul>
+    <span id="restore" class="anchor-target"></span>
+    <div class="placeholder">
+      <strong>Restore Purchase</strong><br>
+      Instructions on restoring your purchase will appear here.
+    </div>
+    <span id="cancel" class="anchor-target"></span>
+    <div class="placeholder">
+      <strong>Cancel Subscription</strong><br>
+      Instructions on canceling your subscription will appear here.
+    </div>
+  </section>
 </body>
 </html> 
