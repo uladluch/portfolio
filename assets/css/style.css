@@ -442,7 +442,7 @@ body {
 
 .content-block__title {
   margin: 0;
-  font-size: 36px;
+  font-size: 26px;
   line-height: 28px;
   letter-spacing: -0.72px;
   font-weight: 600;
@@ -491,6 +491,63 @@ body {
 .content-block__expand img {
   width: 24px;
   height: 24px;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: rgba(18, 18, 18, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 200;
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+.lightbox__content {
+  position: relative;
+  width: min(90vw, 960px);
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox__image {
+  width: 100%;
+  height: auto;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 24px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+}
+
+.lightbox__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #e2e2e2;
+  background: var(--blur-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.lightbox__close img {
+  width: 16px;
+  height: 16px;
 }
 
 .secondary-page {
