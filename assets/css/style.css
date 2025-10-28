@@ -109,7 +109,6 @@ body {
 .section-groups {
   margin-top: 64px;
   display: flex;
-  gap: 40px;
   align-items: flex-start;
   flex-wrap: wrap;
 }
@@ -179,6 +178,13 @@ body {
 
 .footer-id {
   color: var(--text-tertiary);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.footer-id:hover,
+.footer-id:focus-visible {
+  text-decoration: underline;
 }
 
 .gallery {
@@ -266,11 +272,11 @@ body {
 
   .section-groups {
     flex-wrap: nowrap;
-    gap: 32px;
   }
 
   .section-group {
-    min-width: auto;
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   .gallery-list {
@@ -279,6 +285,10 @@ body {
   }
 
   .card {
+    width: 100%;
+  }
+
+  .gallery {
     width: 100%;
   }
 }
