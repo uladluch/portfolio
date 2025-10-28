@@ -212,6 +212,8 @@ body {
   align-items: flex-end;
   justify-content: flex-start;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 }
 
 .card-meta {
@@ -294,6 +296,66 @@ body {
     width: 100%;
   }
 }
+
+.case-study {
+  min-height: 100vh;
+  padding: 64px 16px;
+  display: flex;
+  justify-content: center;
+  background: var(--bg);
+  color: var(--text-primary);
+}
+
+.case-study__container {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 64px;
+}
+
+.case-study__title {
+  margin: 0;
+  font-size: 40px;
+  line-height: 48px;
+  letter-spacing: -0.06em;
+  font-weight: 600;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.content-block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.content-block__title {
+  margin: 0;
+  font-size: 36px;
+  line-height: 28px;
+  letter-spacing: -0.72px;
+  font-weight: 600;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.content-block p {
+  margin: 0;
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 18px;
+  line-height: 32px;
+  letter-spacing: 0;
+}
+
+.content-block__media {
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 1 / 1;
+  display: block;
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  object-fit: cover;
+}
+
 .secondary-page {
   min-height: 100vh;
   padding: 5rem 2rem;
