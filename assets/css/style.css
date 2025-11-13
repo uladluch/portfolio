@@ -6,9 +6,10 @@
   --text-tertiary: #c6c6c6;
   --muted: #f3f4f6;
   --muted-dark: #dfe1e8;
-  --accent: #0f0f12;
+  --accent: #2196F3;
   --shadow: 0 0 0 rgba(0, 0, 0, 0);
   --blur-surface: rgba(250, 250, 250, 0.48);
+  --modal-progress: 0;
 }
 
 * {
@@ -568,4 +569,321 @@ body {
   max-width: 540px;
   color: var(--text-secondary);
   font-size: 1rem;
+}
+
+.experience-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.experience-modal.is-visible {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.experience-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 12, 0.68);
+  opacity: var(--modal-progress);
+  transition:
+    opacity 0.5s ease,
+    backdrop-filter 0.5s ease,
+    -webkit-backdrop-filter 0.5s ease;
+  backdrop-filter: blur(calc(4px + 20px * var(--modal-progress)));
+  -webkit-backdrop-filter: blur(calc(4px + 20px * var(--modal-progress)));
+  cursor: pointer;
+}
+
+.experience-modal__sheet {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(
+    -50%,
+    calc(
+      (1 - var(--modal-progress)) * 100%
+    )
+  );
+  width: 100vw;
+  border-radius: 0;
+  background: var(--bg);
+  color: var(--text-primary);
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.48);
+  height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
+  pointer-events: auto;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  scrollbar-width: none;
+}
+
+.experience-modal__sheet::-webkit-scrollbar {
+  display: none;
+}
+
+.experience-modal.is-dragging .experience-modal__sheet {
+  transition: none;
+}
+
+.experience-modal__header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 0;
+  padding: 16px 32px;
+  background: rgba(255, 255, 255, 0);
+  border-bottom: 1px solid transparent;
+  z-index: 1;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    backdrop-filter 0.3s ease,
+    -webkit-backdrop-filter 0.3s ease;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+}
+
+[data-modal-drag-zone] {
+  cursor: grab;
+  touch-action: none;
+}
+
+.experience-modal.is-dragging [data-modal-drag-zone] {
+  cursor: grabbing;
+}
+
+.experience-modal__content {
+  width: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 24px 32px calc(40px + env(safe-area-inset-bottom));
+}
+
+.modal-large-title {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 24px;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+.modal-large-title h2 {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.1;
+}
+
+.experience-modal__sheet.is-condensed .modal-large-title {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.98);
+  pointer-events: none;
+}
+
+.experience-modal__title {
+  width: 100%;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+  pointer-events: none;
+}
+
+.experience-modal__header.is-raised {
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom-color: var(--muted-dark);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.experience-modal__sheet.is-condensed .experience-modal__title {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.experience-modal__title h2 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.1;
+}
+
+.experience-modal__close {
+  position: absolute;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 4px 8px;
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.experience-modal__body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.experience-modal__role {
+  padding: 16px 0;
+  border-top: 1px solid var(--muted-dark);
+}
+
+.experience-modal__role:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.experience-modal__role-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.experience-modal__role-company {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.experience-modal__role-period {
+  margin: 12px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.experience-modal__role-copy {
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.experience-modal__pills {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.experience-modal__pills li {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--muted);
+  color: var(--text-primary);
+}
+
+.case-modal__intro {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.case-modal__eyebrow {
+  margin: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--text-secondary);
+}
+
+.case-modal__intro h3 {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.2;
+}
+
+.case-modal__lede {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.case-modal__sections {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.case-modal__section-title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.case-modal__section p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.case-modal__media {
+  margin-top: 16px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.case-modal__media img {
+  width: 100%;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .experience-modal__sheet {
+    width: 100%;
+    border-radius: 0;
+  }
+
+  .experience-modal__title h2 {
+    font-size: 16px;
+  }
+
+  .experience-modal__header {
+    padding: 16px 24px;
+  }
+
+  .experience-modal__close {
+    right: 16px;
+  }
+
+  .experience-modal__content {
+    padding: 20px 24px calc(32px + env(safe-area-inset-bottom));
+  }
+
+  .case-modal__intro h3 {
+    font-size: 22px;
+  }
+
+  .modal-large-title h2 {
+    font-size: 26px;
+  }
 }
