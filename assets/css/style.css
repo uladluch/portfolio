@@ -670,7 +670,7 @@ body {
   width: 100%;
   max-width: 560px;
   margin: 0 auto;
-  padding: 24px 32px calc(40px + env(safe-area-inset-bottom));
+  padding: 0 16px calc(32px + env(safe-area-inset-bottom));
 }
 
 .modal-large-title {
@@ -685,7 +685,7 @@ body {
 
 .modal-large-title h2 {
   margin: 0;
-  font-size: 32px;
+  font-size: 28px;
   line-height: 1.1;
 }
 
