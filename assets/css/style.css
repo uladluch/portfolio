@@ -641,7 +641,7 @@ body {
   width: 100%;
   margin: 0;
   padding: 16px 32px;
-  background: rgba(255, 255, 255, 0);
+  background: rgba(255, 255, 255, 0.2);
   border-bottom: 1px solid transparent;
   z-index: 1;
   transition:
@@ -650,8 +650,8 @@ body {
     box-shadow 0.3s ease,
     backdrop-filter 0.3s ease,
     -webkit-backdrop-filter 0.3s ease;
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 [data-modal-drag-zone] {
@@ -704,11 +704,11 @@ body {
 }
 
 .experience-modal__header.is-raised {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.55);
   border-bottom-color: var(--muted-dark);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
 }
 
 .experience-modal__sheet.is-condensed .experience-modal__title {

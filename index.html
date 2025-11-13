@@ -61,7 +61,7 @@
         <div class="section-group">
           <h2 class="section-title">About</h2>
           <ul class="section-links">
-            <li><a href="experience.html" target="_blank" rel="noreferrer noopener" data-experience-trigger>Experience</a></li>
+            <li><a href="experience.html" target="_blank" rel="noreferrer noopener" data-modal-trigger="experience">Experience</a></li>
             <li><a href="services.html" target="_blank" rel="noreferrer noopener">Services</a></li>
             <li><a href="blog.html" target="_blank" rel="noreferrer noopener">Blog</a></li>
           </ul>
@@ -91,7 +91,7 @@
 
     <main class="gallery" aria-label="Selected work">
       <div class="gallery-list">
-        <a class="card" href="case-study.html">
+        <a class="card" href="case-study.html" data-modal-trigger="case-study">
           <div class="card-meta">
             <span class="meta-icon" aria-hidden="true"></span>
             <span>Calm Banking Companion</span>
@@ -112,21 +112,20 @@
   </div>
 
   <div class="experience-modal" id="experienceModal" aria-hidden="true">
-    <div class="experience-modal__overlay" data-experience-dismiss></div>
+    <div class="experience-modal__overlay" data-modal-dismiss></div>
     <section class="experience-modal__sheet" role="dialog" aria-modal="true" aria-labelledby="experienceModalTitle" tabindex="-1">
+      <header class="experience-modal__header" data-modal-drag-zone>
+        <div class="experience-modal__title">
+          <h2 id="experienceModalTitle">Experience</h2>
+        </div>
+        <button class="experience-modal__close" type="button" data-modal-dismiss>
+          Done
+        </button>
+      </header>
       <div class="experience-modal__content">
-        <header class="experience-modal__header" data-experience-drag-zone>
-          <span class="experience-modal__grabber" aria-hidden="true"></span>
-          <div class="experience-modal__header-row">
-            <div class="experience-modal__title">
-              <p class="experience-modal__eyebrow">Selected roles · Product design</p>
-              <h2 id="experienceModalTitle">Experience</h2>
-            </div>
-            <button class="experience-modal__close" type="button" aria-label="Close Experience" data-experience-dismiss>
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-        </header>
+        <div class="modal-large-title" aria-hidden="true">
+          <h2>Experience</h2>
+        </div>
         <div class="experience-modal__body">
           <article class="experience-modal__role">
             <div>
@@ -167,6 +166,79 @@
               <li>Systems</li>
             </ul>
           </article>
+          <article class="experience-modal__role">
+            <div>
+              <p class="experience-modal__role-title">Senior UX Designer</p>
+              <p class="experience-modal__role-company">Adidas Digital</p>
+            </div>
+            <p class="experience-modal__role-period">2014 — 2016</p>
+            <p class="experience-modal__role-copy">Brought retail storytelling to mobile, running design sprints with product teams to align global launches and shopper journeys.</p>
+            <ul class="experience-modal__pills">
+              <li>Commerce</li>
+              <li>Mobile</li>
+              <li>Workshops</li>
+            </ul>
+          </article>
+          <article class="experience-modal__role">
+            <div>
+              <p class="experience-modal__role-title">Product Designer</p>
+              <p class="experience-modal__role-company">IKEA Digital Lab</p>
+            </div>
+            <p class="experience-modal__role-period">2012 — 2014</p>
+            <p class="experience-modal__role-copy">Prototyped spatial planning tools that connected catalog data with AR, collaborating closely with research and engineering squads.</p>
+            <ul class="experience-modal__pills">
+              <li>AR</li>
+              <li>Prototyping</li>
+              <li>Home</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="experience-modal case-study-modal" id="caseStudyModal" aria-hidden="true">
+    <div class="experience-modal__overlay" data-modal-dismiss></div>
+    <section class="experience-modal__sheet" role="dialog" aria-modal="true" aria-labelledby="caseStudyModalTitle" tabindex="-1">
+      <header class="experience-modal__header" data-modal-drag-zone>
+        <div class="experience-modal__title">
+          <h2 id="caseStudyModalTitle">Case Study</h2>
+        </div>
+        <button class="experience-modal__close" type="button" data-modal-dismiss>
+          Done
+        </button>
+      </header>
+      <div class="experience-modal__content">
+        <div class="modal-large-title" aria-hidden="true">
+          <h2>Case Study</h2>
+        </div>
+        <div class="case-modal__intro">
+          <p class="case-modal__eyebrow">Featured work</p>
+          <h3>Building a Calm Banking Companion</h3>
+          <p class="case-modal__lede">I helped overworked freelancers reconcile multi-bank cash flow in minutes by rethinking notifications, IA, and automation paths.</p>
+        </div>
+        <div class="case-modal__sections">
+          <section class="case-modal__section">
+            <h4 class="case-modal__section-title">Framing the Problem</h4>
+            <p>User interviews revealed that busy freelancers struggled to reconcile invoices across multiple banks. They needed a calm assistant that clarified cash flow in seconds.</p>
+            <div class="case-modal__media">
+              <img src="assets/images/sample.png" alt="Storyboard describing research insights" loading="lazy">
+            </div>
+          </section>
+          <section class="case-modal__section">
+            <h4 class="case-modal__section-title">Design Principles</h4>
+            <p>I worked with the founding team to define success, streamline notifications, and create a flexible IA that reduced noise while keeping high-signal events visible.</p>
+            <div class="case-modal__media">
+              <img src="assets/images/sample.png" alt="Interface mockup sample" loading="lazy">
+            </div>
+          </section>
+          <section class="case-modal__section">
+            <h4 class="case-modal__section-title">Outcome</h4>
+            <p>The pilot release helped early adopters reconcile their statements 2× faster, freeing time for client work and paving the way for automated guidance.</p>
+            <div class="case-modal__media">
+              <img src="assets/images/sample.png" alt="Visualization of business impact" loading="lazy">
+            </div>
+          </section>
         </div>
       </div>
     </section>
@@ -174,186 +246,269 @@
 
   <script>
     (function () {
-      const modal = document.getElementById('experienceModal');
-      if (!modal) {
-        return;
-      }
-
-      const sheet = modal.querySelector('.experience-modal__sheet');
-      const dragZone = modal.querySelector('[data-experience-drag-zone]');
-      const triggers = document.querySelectorAll('[data-experience-trigger]');
-      const dismissControls = modal.querySelectorAll('[data-experience-dismiss]');
       const root = document.documentElement;
-      let lastFocusedElement = null;
-      let isDragging = false;
-      let dragStartY = 0;
-      let lastDragDelta = 0;
-      let sheetHeight = 0;
-      let dragPointerId = null;
-
       const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+      let activeModal = null;
 
       const setProgress = (value) => {
-        const next = clamp(value, 0, 1);
-        root.style.setProperty('--experience-progress', next);
-        return next;
+        root.style.setProperty('--modal-progress', clamp(value, 0, 1));
       };
+      setProgress(0);
 
-      const clearProgress = () => {
-        root.style.removeProperty('--experience-progress');
-      };
-
-      const finishClose = () => {
-        modal.classList.remove('is-visible');
-        modal.setAttribute('aria-hidden', 'true');
-        document.body.style.overflow = '';
-        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
-          lastFocusedElement.focus();
-        }
-        lastFocusedElement = null;
-        clearProgress();
-      };
-
-      const handleTransitionEnd = (event) => {
-        if (event.target !== sheet || event.propertyName !== 'transform') {
-          return;
+      const createModalController = ({ modalId, triggerSelector }) => {
+        const modal = document.getElementById(modalId);
+        if (!modal) {
+          return null;
         }
 
-        if (!modal.classList.contains('is-open')) {
-          finishClose();
-        }
-      };
-
-      const openModal = (event) => {
-        if (event) {
-          event.preventDefault();
-        }
-        if (modal.classList.contains('is-open')) {
-          return;
-        }
-        lastFocusedElement = document.activeElement;
-        modal.classList.add('is-visible');
-        modal.removeAttribute('aria-hidden');
-        document.body.style.overflow = 'hidden';
-        setProgress(0);
-        requestAnimationFrame(() => {
-          modal.classList.add('is-open');
-          setProgress(1);
-          sheet.focus();
-        });
-      };
-
-      const closeModal = () => {
-        if (!modal.classList.contains('is-open')) {
-          return;
-        }
-        modal.classList.remove('is-open');
-        modal.classList.remove('is-dragging');
-        setProgress(0);
-      };
-
-      const stopDrag = (shouldClose) => {
-        if (!isDragging) {
-          return;
+        const sheet = modal.querySelector('.experience-modal__sheet');
+        if (!sheet) {
+          return null;
         }
 
-        if (dragZone && dragPointerId !== null && dragZone.releasePointerCapture) {
-          dragZone.releasePointerCapture(dragPointerId);
-        }
+        const header = modal.querySelector('.experience-modal__header');
+        const dragZone = modal.querySelector('[data-modal-drag-zone]');
+        const dismissControls = modal.querySelectorAll('[data-modal-dismiss]');
+        let lastFocusedElement = null;
+        let isDragging = false;
+        let dragStartY = 0;
+        let lastDragDelta = 0;
+        let sheetHeight = 0;
+        let dragPointerId = null;
+        let api;
 
-        const progress = 1 - clamp(lastDragDelta / (sheetHeight || 1), 0, 1);
-        isDragging = false;
-        dragPointerId = null;
-        modal.classList.remove('is-dragging');
-
-        if (shouldClose === true || progress < 0.7) {
-          closeModal();
-        } else {
-          setProgress(1);
-          modal.classList.add('is-open');
-        }
-      };
-
-      const handleDragStart = (event) => {
-        if (!dragZone || !modal.classList.contains('is-open')) {
-          return;
-        }
-
-        if (event.pointerType === 'mouse' && window.matchMedia('(pointer: fine)').matches) {
-          return;
-        }
-
-        if (event.target.closest('[data-experience-dismiss]')) {
-          return;
-        }
-
-        isDragging = true;
-        dragPointerId = event.pointerId;
-        dragStartY = event.clientY;
-        lastDragDelta = 0;
-        sheetHeight = sheet.getBoundingClientRect().height;
-        modal.classList.add('is-dragging');
-
-        if (dragZone.setPointerCapture && typeof dragZone.setPointerCapture === 'function') {
-          try {
-            dragZone.setPointerCapture(dragPointerId);
-          } catch (error) {
-            dragPointerId = null;
+        const updateHeaderState = () => {
+          const shouldRaise = sheet.scrollTop > 8;
+          if (header) {
+            header.classList.toggle('is-raised', shouldRaise);
           }
-        }
-      };
+          sheet.classList.toggle('is-condensed', shouldRaise);
+        };
 
-      const handleDragMove = (event) => {
-        if (!isDragging || (dragPointerId !== null && event.pointerId !== dragPointerId)) {
-          return;
-        }
+        const finishClose = (restoreFocus = true) => {
+          modal.classList.remove('is-visible');
+          modal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          if (restoreFocus && lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+            lastFocusedElement.focus();
+          }
+          lastFocusedElement = null;
+          sheet.scrollTop = 0;
+          updateHeaderState();
+          if (activeModal === api) {
+            activeModal = null;
+          }
+        };
 
-        const deltaY = Math.max(event.clientY - dragStartY, 0);
-        lastDragDelta = deltaY;
-        const progress = 1 - clamp(deltaY / (sheetHeight || 1), 0, 1);
-        setProgress(progress);
-      };
+        const closeModal = () => {
+          if (!modal.classList.contains('is-open')) {
+            return;
+          }
+          modal.classList.remove('is-open');
+          modal.classList.remove('is-dragging');
+          setProgress(0);
+          updateHeaderState();
+        };
 
-      const handleDragEnd = (event) => {
-        if (!isDragging) {
-          return;
-        }
+        const forceClose = ({ restoreFocus } = { restoreFocus: false }) => {
+          if (!modal.classList.contains('is-open') && !modal.classList.contains('is-visible')) {
+            return;
+          }
+          modal.classList.remove('is-open');
+          modal.classList.remove('is-dragging');
+          modal.classList.remove('is-visible');
+          modal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          setProgress(0);
+          sheet.scrollTop = 0;
+          updateHeaderState();
+          if (restoreFocus && lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+            lastFocusedElement.focus();
+          }
+          lastFocusedElement = null;
+          if (activeModal === api) {
+            activeModal = null;
+          }
+        };
 
-        if (dragPointerId !== null && event && event.pointerId !== dragPointerId) {
-          return;
-        }
+        const openModal = (event) => {
+          if (event) {
+            if (event.type === 'click') {
+              if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || (typeof event.button === 'number' && event.button !== 0)) {
+                return;
+              }
+              event.preventDefault();
+            } else if (event.type === 'keydown') {
+              event.preventDefault();
+            }
+          }
 
-        stopDrag();
-      };
+          if (modal.classList.contains('is-open')) {
+            return;
+          }
 
-      triggers.forEach((trigger) => {
-        trigger.addEventListener('click', openModal);
-        trigger.addEventListener('keydown', (event) => {
-          const isActivationKey = event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar';
-          if (isActivationKey) {
-            openModal(event);
+          if (activeModal && activeModal !== api) {
+            activeModal.forceClose({ restoreFocus: false });
+          }
+
+          lastFocusedElement = document.activeElement;
+          activeModal = api;
+          modal.classList.add('is-visible');
+          modal.removeAttribute('aria-hidden');
+          document.body.style.overflow = 'hidden';
+          setProgress(0);
+          sheet.scrollTop = 0;
+          updateHeaderState();
+          requestAnimationFrame(() => {
+            modal.classList.add('is-open');
+            setProgress(1);
+            sheet.focus();
+          });
+        };
+
+        const stopDrag = (shouldClose) => {
+          if (!isDragging) {
+            return;
+          }
+
+          if (dragZone && dragPointerId !== null && dragZone.releasePointerCapture) {
+            dragZone.releasePointerCapture(dragPointerId);
+          }
+
+          const progress = 1 - clamp(lastDragDelta / (sheetHeight || 1), 0, 1);
+          isDragging = false;
+          dragPointerId = null;
+          modal.classList.remove('is-dragging');
+
+          if (shouldClose === true || progress < 0.7) {
+            closeModal();
+          } else {
+            setProgress(1);
+            modal.classList.add('is-open');
+          }
+        };
+
+        const handleDragStart = (event) => {
+          if (!dragZone || !modal.classList.contains('is-open')) {
+            return;
+          }
+
+          if (event.pointerType === 'mouse' && window.matchMedia('(pointer: fine)').matches) {
+            return;
+          }
+
+          if (event.target.closest('[data-modal-dismiss]')) {
+            return;
+          }
+
+          isDragging = true;
+          dragPointerId = event.pointerId;
+          dragStartY = event.clientY;
+          lastDragDelta = 0;
+          sheetHeight = sheet.getBoundingClientRect().height;
+          modal.classList.add('is-dragging');
+
+          if (dragZone.setPointerCapture && typeof dragZone.setPointerCapture === 'function') {
+            try {
+              dragZone.setPointerCapture(dragPointerId);
+            } catch (error) {
+              dragPointerId = null;
+            }
+          }
+        };
+
+        const handleDragMove = (event) => {
+          if (!isDragging || (dragPointerId !== null && event.pointerId !== dragPointerId)) {
+            return;
+          }
+
+          const deltaY = Math.max(event.clientY - dragStartY, 0);
+          lastDragDelta = deltaY;
+          const progress = 1 - clamp(deltaY / (sheetHeight || 1), 0, 1);
+          setProgress(progress);
+        };
+
+        const handleDragEnd = (event) => {
+          if (!isDragging) {
+            return;
+          }
+
+          if (dragPointerId !== null && event && event.pointerId !== dragPointerId) {
+            return;
+          }
+
+          stopDrag();
+        };
+
+        const handleTransitionEnd = (event) => {
+          if (event.target !== sheet || event.propertyName !== 'transform') {
+            return;
+          }
+
+          if (!modal.classList.contains('is-open')) {
+            finishClose();
+          }
+        };
+
+        const triggers = Array.from(document.querySelectorAll(triggerSelector));
+
+        triggers.forEach((trigger) => {
+          trigger.addEventListener('click', openModal);
+          trigger.addEventListener('keydown', (event) => {
+            const isActivationKey = event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar';
+            if (isActivationKey) {
+              openModal(event);
+            }
+          });
+        });
+
+        dismissControls.forEach((control) => {
+          control.addEventListener('click', closeModal);
+        });
+
+        sheet.addEventListener('transitionend', handleTransitionEnd);
+        sheet.addEventListener('scroll', updateHeaderState);
+
+        modal.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            closeModal();
           }
         });
-      });
 
-      dismissControls.forEach((control) => {
-        control.addEventListener('click', closeModal);
-      });
+        modal.addEventListener('pointerdown', (event) => {
+          if (event.target === modal) {
+            closeModal();
+          }
+        });
 
-      sheet.addEventListener('transitionend', handleTransitionEnd);
-
-      modal.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-          closeModal();
+        if (dragZone) {
+          dragZone.addEventListener('pointerdown', handleDragStart);
+          dragZone.addEventListener('pointermove', handleDragMove);
+          dragZone.addEventListener('pointerup', handleDragEnd);
+          dragZone.addEventListener('pointercancel', () => stopDrag(false));
         }
+
+        updateHeaderState();
+
+        api = {
+          modal,
+          openModal,
+          closeModal,
+          forceClose,
+        };
+
+        return api;
+      };
+
+      createModalController({
+        modalId: 'experienceModal',
+        triggerSelector: '[data-modal-trigger=\"experience\"]',
       });
 
-      if (dragZone) {
-        dragZone.addEventListener('pointerdown', handleDragStart);
-        dragZone.addEventListener('pointermove', handleDragMove);
-        dragZone.addEventListener('pointerup', handleDragEnd);
-        dragZone.addEventListener('pointercancel', () => stopDrag(false));
-      }
+      createModalController({
+        modalId: 'caseStudyModal',
+        triggerSelector: '[data-modal-trigger=\"case-study\"]',
+      });
     })();
   </script>
 </body>
