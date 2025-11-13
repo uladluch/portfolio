@@ -622,6 +622,9 @@ body {
   pointer-events: auto;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
   scrollbar-width: none;
+  overscroll-behavior: contain;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .experience-modal__sheet::-webkit-scrollbar {
@@ -634,7 +637,7 @@ body {
 
 .experience-modal__header {
   position: sticky;
-  top: 0;
+  top: env(safe-area-inset-top, 0px);
   display: flex;
   align-items: center;
   justify-content: center;
