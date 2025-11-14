@@ -264,6 +264,7 @@
               <li>Lightweight video editing tools for quick trims and highlights.</li>
               <li>Robust content organization and search to handle multi-device libraries.</li>
             </ul>
+            <p><a class="case-modal__link" href="https://luch.dev/" target="_blank" rel="noreferrer noopener">Explore Stream Vision II features</a></p>
           </section>
 
           <section class="case-modal__section">
@@ -446,12 +447,10 @@
           }
         };
 
-        const handleDragStart = (event) => {
-          if (!dragZone || !modal.classList.contains('is-open')) {
-            return;
-          }
+        const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
 
-          if (event.pointerType === 'mouse' && window.matchMedia('(pointer: fine)').matches) {
+        const handleDragStart = (event) => {
+          if (!dragZone || !modal.classList.contains('is-open') || !isCoarsePointer) {
             return;
           }
 
@@ -539,7 +538,7 @@
           }
         });
 
-        if (dragZone) {
+        if (dragZone && isCoarsePointer) {
           dragZone.addEventListener('pointerdown', handleDragStart);
           dragZone.addEventListener('pointermove', handleDragMove);
           dragZone.addEventListener('pointerup', handleDragEnd);

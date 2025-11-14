@@ -1006,6 +1006,18 @@ body {
   background: var(--bg-secondary);
 }
 
+.case-modal__link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.case-modal__link:hover,
+.case-modal__link:focus-visible {
+  text-decoration: underline;
+}
+
 .case-modal__section p:last-child,
 .case-modal__section ul:last-child,
 .case-modal__media:last-child {
