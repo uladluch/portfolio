@@ -940,7 +940,7 @@ body {
   }
 
   .experience-modal__content {
-    padding: 20px 24px calc(32px + env(safe-area-inset-bottom));
+    padding: 0 16px calc(32px + env(safe-area-inset-bottom));
   }
 
   .case-modal__intro h3 {
