@@ -682,6 +682,13 @@ body {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+@supports (height: 100dvh) {
+  .experience-modal__sheet {
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+}
+
 .experience-modal__sheet::-webkit-scrollbar {
   display: none;
 }

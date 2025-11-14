@@ -340,6 +340,7 @@
         };
 
         const openModal = (event) => {
+          const triggerElement = event && event.currentTarget instanceof Element ? event.currentTarget : null;
           if (event) {
             if (event.type === 'click') {
               if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || (typeof event.button === 'number' && event.button !== 0)) {
@@ -353,6 +354,15 @@
 
           if (modal.classList.contains('is-open')) {
             return;
+          }
+
+          if (triggerElement && event && event.type === 'click') {
+            const rect = triggerElement.getBoundingClientRect();
+            const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+            const offset = rect.bottom - viewportHeight + 24;
+            if (offset > 0) {
+              window.scrollBy(0, offset);
+            }
           }
 
           if (activeModal && activeModal !== api) {
