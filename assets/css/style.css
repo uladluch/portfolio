@@ -824,9 +824,10 @@ body {
 
 .experience-modal__title {
   width: 100%;
-  text-align: center;
+  text-align: left;
   opacity: 0;
   transform: translateY(8px);
+  padding: 0 96px 0 16px;
   transition:
     opacity 0.25s ease,
     transform 0.25s ease;
@@ -851,6 +852,9 @@ body {
   margin: 0;
   font-size: 16px;
   line-height: 1.1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .experience-modal__close {
