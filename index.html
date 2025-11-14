@@ -60,7 +60,7 @@
       <section class="section-groups">
         <div class="section-groups__columns">
           <div class="section-group">
-            <h3 class="section-title section-group__title">Design</h3>
+            <h3 class="section-title section-group__title"><span class="section-group__title-icon" data-feather="figma" aria-hidden="true"></span>Design</h3>
             <ul class="section-items">
               <li><span>iOS App Design</span></li>
               <li><span>Web App Design</span></li>
@@ -68,7 +68,7 @@
             </ul>
           </div>
           <div class="section-group">
-            <h3 class="section-title section-group__title">Development</h3>
+            <h3 class="section-title section-group__title"><span class="section-group__title-icon" data-feather="cpu" aria-hidden="true"></span>Development</h3>
             <ul class="section-items">
               <li><span>Design Systems</span></li>
               <li><span>Web App Development</span></li>
@@ -512,6 +512,14 @@
         triggerSelector: '[data-modal-trigger=\"case-study\"]',
       });
     })();
+  </script>
+  <script src="https://unpkg.com/feather-icons@4.29.1/dist/feather.min.js" defer></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.feather) {
+        window.feather.replace();
+      }
+    });
   </script>
 </body>
 </html>

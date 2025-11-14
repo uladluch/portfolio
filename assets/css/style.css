@@ -98,20 +98,25 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
   text-decoration: none;
 }
 
 .btn-primary {
-  width: 108px;
-  height: 36px;
+  min-height: 36px;
+  padding: 0 16px;
   background: var(--accent);
   color: #ffffff;
 }
 
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background: #2196f3;
+}
+
 .btn-secondary {
-  width: 128px;
-  height: 36px;
+  min-height: 36px;
+  padding: 0 16px;
   background: var(--bg-secondary);
   color: var(--text-primary);
 }
@@ -138,6 +143,16 @@ body {
 
 .section-group__title {
   margin: 0 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.section-group__title-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  color: inherit;
 }
 
 .section-title {
@@ -289,11 +304,6 @@ body {
 
   .section-groups {
     margin-top: 40px;
-    gap: 24px;
-  }
-
-  .section-groups__columns {
-    flex-direction: column;
     gap: 24px;
   }
 
