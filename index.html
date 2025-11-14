@@ -398,7 +398,7 @@
           dragPointerId = null;
           modal.classList.remove('is-dragging');
 
-          if (shouldClose === true || progress < 0.7) {
+          if (shouldClose === true || progress < 0.7 || lastDragDelta > 120) {
             closeModal();
           } else {
             setProgress(1);
