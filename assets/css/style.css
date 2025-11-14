@@ -1,12 +1,12 @@
 :root {
   --bg: #ffffff;
-  --bg-secondary: #fafafa;
+  --bg-secondary: #f3f4f6;
   --text-primary: #121212;
   --text-secondary: #8d8d8d;
   --text-tertiary: #c6c6c6;
   --muted: #f3f4f6;
   --muted-dark: #dfe1e8;
-  --accent: #2196F3;
+  --accent: #121212;
   --shadow: 0 0 0 rgba(0, 0, 0, 0);
   --blur-surface: rgba(250, 250, 250, 0.48);
   --modal-progress: 0;
@@ -119,6 +119,12 @@ body {
 .section-groups {
   margin-top: 64px;
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-groups__columns {
+  display: flex;
   gap: 40px;
   align-items: flex-start;
   flex-wrap: wrap;
@@ -130,6 +136,10 @@ body {
   min-width: 150px;
 }
 
+.section-group__title {
+  margin: 0 0 12px;
+}
+
 .section-title {
   font-size: 12px;
   letter-spacing: 0.3px;
@@ -138,25 +148,21 @@ body {
   color: var(--text-secondary);
 }
 
-.section-links {
+.section-items {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 8px;
+  gap: 4px;
 }
 
-.section-links a {
+.section-items span {
   color: var(--text-primary);
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0;
   text-decoration: none;
-}
-
-.section-links a:hover,
-.section-links a:focus-visible {
-  text-decoration: underline;
+  cursor: default;
 }
 
 .sidebar-footer {
@@ -189,7 +195,6 @@ body {
 .footer-id {
   color: var(--text-tertiary);
   text-decoration: none;
-  cursor: pointer;
 }
 
 .footer-id:hover,
@@ -216,7 +221,7 @@ body {
   border-radius: 16px;
   width: 100%;
   min-height: clamp(320px, 45vw, 740px);
-  background: linear-gradient(135deg, var(--bg-secondary), var(--muted-dark));
+  background: var(--bg-secondary);
   overflow: hidden;
   display: flex;
   align-items: flex-end;
@@ -283,9 +288,13 @@ body {
   }
 
   .section-groups {
-    flex-wrap: nowrap;
-    gap: 24px;
     margin-top: 40px;
+    gap: 24px;
+  }
+
+  .section-groups__columns {
+    flex-direction: column;
+    gap: 24px;
   }
 
   .section-group {
