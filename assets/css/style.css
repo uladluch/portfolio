@@ -334,6 +334,18 @@ body {
   object-fit: cover;
 }
 
+.card-label {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0;
+  text-decoration: none;
+  cursor: default;
+}
+
 .card-body {
   position: relative;
   z-index: 1;
