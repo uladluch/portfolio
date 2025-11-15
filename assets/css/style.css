@@ -279,6 +279,33 @@ body {
   gap: 8px;
 }
 
+.gallery-cta {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+}
+
+.gallery-cta .btn-secondary {
+}
+
+.gallery-cta .btn-icon {
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (max-width: 721px) {
+  .gallery-cta {
+    padding: 8px 0;
+  }
+
+  .gallery-cta .btn-secondary {
+    width: 100%;
+  }
+}
+
 .card {
   position: relative;
   border-radius: 16px;

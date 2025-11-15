@@ -127,15 +127,12 @@
           <img class="card-cover" src="assets/images/strem-vision-cover.png" alt="Stream Vision case study cover" loading="lazy">
         </a>
         <article class="card"></article>
-        <article class="card"></article>
-        <article class="card"></article>
-        <article class="card"></article>
-        <article class="card"></article>
-        <article class="card"></article>
-        <article class="card"></article>
-        <article class="card"></article>
-        <article class="card"></article>
-        <article class="card"></article>
+      </div>
+      <div class="gallery-cta">
+        <button class="btn btn-secondary js-scroll-btn" type="button">
+          Back to Top
+          <span class="btn-icon" data-feather="arrow-up" aria-hidden="true"></span>
+        </button>
       </div>
     </main>
   </div>
@@ -719,6 +716,16 @@
       createModalController({
         modalId: 'experienceModal',
         triggerSelector: '[data-modal-trigger=\"experience\"]',
+      });
+
+      const scrollButtons = document.querySelectorAll('.js-scroll-btn');
+      scrollButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const firstCard = document.querySelector('.gallery-list .card');
+          if (firstCard) {
+            firstCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
       });
 
       createModalController({
