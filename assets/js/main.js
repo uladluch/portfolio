@@ -1,4 +1,5 @@
 (function () {
+      const caseContentCache = new Map();
       const root = document.documentElement;
       const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
       let activeModal = null;
@@ -8,7 +9,65 @@
       };
       setProgress(0);
 
-      const createModalController = ({ modalId, triggerSelector }) => {
+      const fetchCaseContent = (src) => {
+        if (!src) {
+          return Promise.resolve('');
+        }
+
+        const cached = caseContentCache.get(src);
+        if (typeof cached === 'string') {
+          return Promise.resolve(cached);
+        }
+
+        if (cached && typeof cached.then === 'function') {
+          return cached;
+        }
+
+        const loadFromNetwork = () =>
+          fetch(src, { credentials: 'same-origin' }).then((response) => {
+            if (!response.ok) {
+              throw new Error(`Failed to load ${src}`);
+            }
+            return response.text();
+          });
+
+        const loadFromFallback = () => {
+          if (window.__CASE_FALLBACKS && typeof window.__CASE_FALLBACKS[src] === 'string') {
+            return Promise.resolve(window.__CASE_FALLBACKS[src]);
+          }
+          return Promise.reject(new Error(`No local fallback for ${src}`));
+        };
+
+        const request = (window.fetch ? loadFromNetwork() : Promise.reject(new Error('Fetch not supported')))
+          .catch((error) => {
+            if (window.location.protocol === 'file:' || !window.fetch) {
+              return loadFromFallback();
+            }
+            const fallbackPromise = loadFromFallback().catch(() => {
+              throw error;
+            });
+            return fallbackPromise;
+          })
+          .then((html) => {
+            caseContentCache.set(src, html);
+            return html;
+          })
+          .catch((error) => {
+            caseContentCache.delete(src);
+            throw error;
+          });
+
+        caseContentCache.set(src, request);
+        return request;
+      };
+
+      const replaceFeatherIcons = (scope) => {
+        if (window.feather && typeof window.feather.replace === 'function') {
+          window.feather.replace(scope instanceof Element ? scope : undefined);
+        }
+      };
+
+      const createModalController = ({ modalId, triggerSelector, contentSelector }) => {
         const modal = document.getElementById(modalId);
         if (!modal) {
           return null;
@@ -22,6 +81,7 @@
         const header = modal.querySelector('.experience-modal__header');
         const dragZone = modal.querySelector('[data-modal-drag-zone]');
         const dismissControls = modal.querySelectorAll('[data-modal-dismiss]');
+        const contentTarget = contentSelector ? modal.querySelector(contentSelector) : null;
         let lastFocusedElement = null;
         let isDragging = false;
         let dragStartY = 0;
@@ -36,6 +96,29 @@
             header.classList.toggle('is-raised', shouldRaise);
           }
           sheet.classList.toggle('is-condensed', shouldRaise);
+        };
+
+        const loadModalContent = () => {
+          if (!contentTarget || contentTarget.hasAttribute('data-case-loaded')) {
+            return;
+          }
+
+          const src = contentTarget.getAttribute('data-case-src');
+          if (!src) {
+            return;
+          }
+
+          contentTarget.innerHTML = '<p class="experience-modal__role-copy">Loading case study...</p>';
+
+          fetchCaseContent(src)
+            .then((html) => {
+              contentTarget.innerHTML = html;
+              contentTarget.setAttribute('data-case-loaded', 'true');
+              replaceFeatherIcons(contentTarget);
+            })
+            .catch(() => {
+              contentTarget.innerHTML = '<p class="experience-modal__role-copy">Unable to load case study. Please try again.</p>';
+            });
         };
 
         const finishClose = (restoreFocus = true) => {
@@ -95,6 +178,10 @@
             } else if (event.type === 'keydown') {
               event.preventDefault();
             }
+          }
+
+          if (contentTarget) {
+            loadModalContent();
           }
 
           if (modal.classList.contains('is-open')) {
@@ -279,11 +366,13 @@
       createModalController({
         modalId: 'caseStudyModal',
         triggerSelector: '[data-modal-trigger=\"case-study\"]',
+        contentSelector: '[data-case-content]',
       });
 
       createModalController({
         modalId: 'auroxCaseModal',
         triggerSelector: '[data-modal-trigger=\"aurox-case\"]',
+        contentSelector: '[data-case-content]',
       });
     })();
 
