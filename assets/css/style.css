@@ -744,3 +744,11 @@ body {
     font-size: 26px;
   }
 }
+
+@media (max-width: 1024px) {
+  .case-modal__full-bleed img {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+  }
+}
