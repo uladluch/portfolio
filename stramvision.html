@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case Study — Ulad Luch</title>
+  <meta name="robots" content="index, follow">
+  <meta name="description" content="Detailed case study showcasing Ulad Luch’s end-to-end product design process.">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <div class="case-study">
+    <div class="case-study__container" id="case-study-top">
+      <h1 class="case-study__title">Building a Calm Banking Companion</h1>
+
+      <section class="content-block">
+        <h2 class="content-block__title">Framing the Problem</h2>
+        <p>User interviews revealed that busy freelancers struggled to reconcile invoices across multiple banks. They needed a calm assistant that clarified cash flow in seconds.</p>
+        <div class="content-block__media">
+          <img src="assets/images/sample.png" alt="Storyboard describing research insights">
+          <button class="content-block__expand blur-surface" type="button" aria-label="Expand research insights image">
+            <img src="assets/images/expand.svg" alt="">
+          </button>
+        </div>
+      </section>
+
+      <section class="content-block">
+        <h2 class="content-block__title">Design Principles</h2>
+        <p>I worked with the founding team to define success, streamline notifications, and create a flexible IA that reduced noise while keeping high-signal events visible.</p>
+        <div class="content-block__media">
+          <img src="assets/images/sample.png" alt="Interface mockup sample">
+          <button class="content-block__expand blur-surface" type="button" aria-label="Expand interface mockup image">
+            <img src="assets/images/expand.svg" alt="">
+          </button>
+        </div>
+      </section>
+
+      <section class="content-block">
+        <h2 class="content-block__title">Outcome</h2>
+        <p>The pilot release helped early adopters reconcile their statements 2× faster, freeing time for client work and paving the way for automated guidance.</p>
+        <div class="content-block__media">
+          <img src="assets/images/sample.png" alt="Visualization of business impact">
+          <button class="content-block__expand blur-surface" type="button" aria-label="Expand business impact image">
+            <img src="assets/images/expand.svg" alt="">
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <nav class="case-study-nav blur-surface" aria-label="Breadcrumb">
+    <ol class="case-study-nav__breadcrumbs">
+      <li>
+        <a href="index.html">
+          <span class="case-study-nav__label">Home</span>
+        </a>
+      </li>
+      <li>
+        <span class="case-study-nav__label" aria-current="page">Case Study</span>
+      </li>
+    </ol>
+    <a class="case-study-nav__top" href="#case-study-top" aria-label="Back to top">
+      <img src="assets/images/arrow-up.svg" alt="">
+    </a>
+  </nav>
+
+  <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true">
+    <div class="lightbox__content">
+      <button class="lightbox__close" id="lightboxClose" type="button" aria-label="Close image">
+        <img src="assets/images/cross.svg" alt="">
+      </button>
+      <img class="lightbox__image" id="lightboxImage" src="" alt="">
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImage = document.getElementById('lightboxImage');
+      const closeButton = document.getElementById('lightboxClose');
+      const pageBody = document.body;
+
+      const openLightbox = (src, alt) => {
+        lightboxImage.src = src;
+        lightboxImage.alt = alt;
+        lightbox.removeAttribute('hidden');
+        pageBody.style.overflow = 'hidden';
+      };
+
+      const closeLightbox = () => {
+        if (lightbox.hasAttribute('hidden')) {
+          return;
+        }
+        lightbox.setAttribute('hidden', '');
+        lightboxImage.removeAttribute('src');
+        lightboxImage.alt = '';
+        pageBody.style.overflow = '';
+      };
+
+      document.querySelectorAll('.content-block__expand').forEach((button) => {
+        button.addEventListener('click', (event) => {
+          const media = event.currentTarget.closest('.content-block__media');
+          const mediaImage = media.querySelector('img');
+          if (!mediaImage) {
+            return;
+          }
+          openLightbox(mediaImage.src, mediaImage.alt || '');
+        });
+      });
+
+      closeButton.addEventListener('click', closeLightbox);
+
+      lightbox.addEventListener('click', (event) => {
+        if (event.target === lightbox) {
+          closeLightbox();
+        }
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeLightbox();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
