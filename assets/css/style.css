@@ -618,7 +618,7 @@ body {
 }
 
 .experience-modal__role-copy {
-  margin: 12px 0 0;
+  margin: 0;
   font-size: 15px;
   line-height: 1.6;
   color: var(--text-primary);
@@ -649,36 +649,36 @@ body {
 }
 
 .case-modal__section-title {
-  margin: 0 0 8px;
+  margin: 0;
   font-size: 20px;
   line-height: 1.3;
 }
 
+.case-modal__section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .case-modal__section p {
-  margin: 0 0 16px;
+  margin: 0;
   font-size: 16px;
   line-height: 1.7;
   color: var(--text-primary);
 }
 
 .case-modal__section ul {
-  margin: 0 0 16px;
-  padding-left: 18px;
+  padding-left: 16px;
   font-size: 16px;
   line-height: 1.7;
   color: var(--text-primary);
+  margin: 0px;
 }
 
 .case-modal__section li {
-  margin-bottom: 8px;
-}
-
-.case-modal__section li:last-child {
-  margin-bottom: 0;
 }
 
 .case-modal__media {
-  margin: 16px 0;
   background: var(--bg-secondary);
 }
 
@@ -700,14 +700,8 @@ body {
   text-decoration: underline;
 }
 
-.case-modal__section p:last-child,
-.case-modal__section ul:last-child,
-.case-modal__media:last-child {
-  margin-bottom: 0;
-}
-
 .case-modal__full-bleed {
-  margin: 24px 0;
+  margin: 0;
 }
 
 .case-modal__full-bleed img {
