@@ -1,8 +1,29 @@
 (function () {
       const caseContentCache = new Map();
+      const modalSlugMap = new Map();
       const root = document.documentElement;
       const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
       let activeModal = null;
+      const normalizeSlug = (value = '') => String(value).replace(/^#/, '').trim().toLowerCase();
+      const getCurrentSlug = () => normalizeSlug(window.location.hash);
+      const setHashSlug = (slug) => {
+        const normalizedSlug = normalizeSlug(slug);
+        const targetHash = normalizedSlug ? `#${normalizedSlug}` : '';
+        if (window.location.hash === targetHash) {
+          return;
+        }
+        const newUrl = `${window.location.pathname}${window.location.search}${targetHash}`;
+        window.history.replaceState(null, '', newUrl);
+      };
+      const clearHashSlug = (slug) => {
+        const normalizedSlug = normalizeSlug(slug);
+        if (!normalizedSlug) {
+          return;
+        }
+        if (getCurrentSlug() === normalizedSlug) {
+          setHashSlug('');
+        }
+      };
 
       const setProgress = (value) => {
         root.style.setProperty('--modal-progress', clamp(value, 0, 1));
@@ -67,7 +88,17 @@
         }
       };
 
-      const createModalController = ({ modalId, triggerSelector, contentSelector }) => {
+      const openModalBySlug = (slug) => {
+        const normalizedSlug = normalizeSlug(slug);
+        const api = modalSlugMap.get(normalizedSlug);
+        if (api && typeof api.openModal === 'function') {
+          api.openModal();
+          return true;
+        }
+        return false;
+      };
+
+      const createModalController = ({ modalId, triggerSelector, contentSelector, slug }) => {
         const modal = document.getElementById(modalId);
         if (!modal) {
           return null;
@@ -82,6 +113,7 @@
         const dragZone = modal.querySelector('[data-modal-drag-zone]');
         const dismissControls = modal.querySelectorAll('[data-modal-dismiss]');
         const contentTarget = contentSelector ? modal.querySelector(contentSelector) : null;
+        const modalSlug = normalizeSlug(slug);
         let lastFocusedElement = null;
         let isDragging = false;
         let dragStartY = 0;
@@ -125,6 +157,7 @@
           modal.classList.remove('is-visible');
           modal.setAttribute('aria-hidden', 'true');
           document.body.style.overflow = '';
+          clearHashSlug(modalSlug);
           if (restoreFocus && lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
             lastFocusedElement.focus();
           }
@@ -155,6 +188,7 @@
           modal.classList.remove('is-visible');
           modal.setAttribute('aria-hidden', 'true');
           document.body.style.overflow = '';
+          clearHashSlug(modalSlug);
           setProgress(0);
           sheet.scrollTop = 0;
           updateHeaderState();
@@ -185,6 +219,9 @@
           }
 
           if (modal.classList.contains('is-open')) {
+            if (modalSlug) {
+              setHashSlug(modalSlug);
+            }
             return;
           }
 
@@ -203,6 +240,9 @@
 
           lastFocusedElement = document.activeElement;
           activeModal = api;
+          if (modalSlug) {
+            setHashSlug(modalSlug);
+          }
           modal.classList.add('is-visible');
           modal.removeAttribute('aria-hidden');
           document.body.style.overflow = 'hidden';
@@ -345,12 +385,16 @@
           forceClose,
         };
 
+        if (modalSlug) {
+          modalSlugMap.set(modalSlug, api);
+        }
+
         return api;
       };
 
       createModalController({
         modalId: 'experienceModal',
-        triggerSelector: '[data-modal-trigger=\"experience\"]',
+        triggerSelector: '[data-modal-trigger="experience"]',
       });
 
       const scrollButtons = document.querySelectorAll('.js-scroll-btn');
@@ -365,14 +409,32 @@
 
       createModalController({
         modalId: 'caseStudyModal',
-        triggerSelector: '[data-modal-trigger=\"case-study\"]',
+        triggerSelector: '[data-modal-trigger="case-study"]',
         contentSelector: '[data-case-content]',
+        slug: 'stream-vision-2',
       });
 
       createModalController({
         modalId: 'auroxCaseModal',
-        triggerSelector: '[data-modal-trigger=\"aurox-case\"]',
+        triggerSelector: '[data-modal-trigger="aurox-case"]',
         contentSelector: '[data-case-content]',
+        slug: 'aurox-wallet',
+      });
+
+      const initialSlug = getCurrentSlug();
+      if (initialSlug) {
+        openModalBySlug(initialSlug);
+      }
+
+      window.addEventListener('hashchange', () => {
+        const slug = getCurrentSlug();
+        if (!slug) {
+          if (activeModal) {
+            activeModal.forceClose({ restoreFocus: true });
+          }
+          return;
+        }
+        openModalBySlug(slug);
       });
     })();
 
