@@ -9,6 +9,25 @@
   padding: 0;
 }
 
+/* --- Base unit (4px grid) --- */
+:root {
+  --u-1:   4px;
+  --u-2:   8px;
+  --u-3:  12px;
+  --u-4:  16px;
+  --u-5:  20px;
+  --u-6:  24px;
+  --u-7:  28px;
+  --u-8:  32px;
+  --u-9:  36px;
+  --u-10: 40px;
+  --u-11: 44px;
+  --u-12: 48px;
+  --u-16: 64px;
+  --u-20: 80px;
+  --u-24: 96px;
+}
+
 /* --- Color Palette --- */
 :root {
   --gray-900: #111827;
@@ -49,22 +68,20 @@
   /* --- Typography --- */
   --font: 'Inter', system-ui, -apple-system, sans-serif;
 
-  /* Size scale */
-  --text-xs:   12px;
-  --text-sm:   14px;
-  --text-base: 16px;
-  --text-lg:   18px;
-  --text-xl:   20px;
-  --text-2xl:  24px;
-  --text-3xl:  28px;
-  --text-4xl:  32px;
-  --text-5xl:  40px;
+  /* Size scale (on 4px grid where possible) */
+  --text-xs:   var(--u-3);   /* 12px */
+  --text-sm:   14px;         /* off-grid */
+  --text-base: var(--u-4);   /* 16px */
+  --text-lg:   18px;         /* off-grid */
+  --text-xl:   var(--u-5);   /* 20px */
+  --text-2xl:  var(--u-6);   /* 24px */
+  --text-3xl:  var(--u-7);   /* 28px */
+  --text-4xl:  var(--u-8);   /* 32px */
+  --text-5xl:  var(--u-10);  /* 40px */
 
-  /* Weight scale */
-  --weight-regular:  400;
-  --weight-medium:   500;
-  --weight-semibold: 600;
-  --weight-bold:     700;
+  /* Weight scale — only two types */
+  --weight-regular:   500;  /* Medium — default for all text */
+  --weight-emphasize: 700;  /* Bold — for emphasis */
 
   /* Line-height scale */
   --lh-none:    1;
@@ -81,17 +98,17 @@
 
   /* Semantic aliases */
   --type-h1-size:   var(--text-3xl);
-  --type-h1-weight: var(--weight-bold);
+  --type-h1-weight: var(--weight-regular);
   --type-h1-lh:     var(--lh-tight);
   --type-h1-ls:     var(--ls-tight);
 
   --type-h2-size:   var(--text-2xl);
-  --type-h2-weight: var(--weight-bold);
+  --type-h2-weight: var(--weight-emphasize);
   --type-h2-lh:     var(--lh-tight);
   --type-h2-ls:     var(--ls-tight);
 
   --type-h3-size:   var(--text-xl);
-  --type-h3-weight: var(--weight-semibold);
+  --type-h3-weight: var(--weight-emphasize);
   --type-h3-lh:     var(--lh-snug);
   --type-h3-ls:     var(--ls-normal);
 
@@ -101,31 +118,32 @@
   --type-body-ls:     var(--ls-normal);
 
   --type-label-size:   var(--text-sm);
-  --type-label-weight: var(--weight-semibold);
+  --type-label-weight: var(--weight-regular);
   --type-label-lh:     var(--lh-none);
   --type-label-ls:     var(--ls-normal);
 
   --type-caption-size:   var(--text-xs);
-  --type-caption-weight: var(--weight-medium);
+  --type-caption-weight: var(--weight-regular);
   --type-caption-lh:     var(--lh-normal);
 
-  /* --- Spacing --- */
-  --sp-1:  4px;
-  --sp-2:  8px;
-  --sp-3:  12px;
-  --sp-4:  16px;
-  --sp-5:  20px;
-  --sp-6:  24px;
-  --sp-8:  32px;
-  --sp-10: 40px;
-  --sp-12: 48px;
+  /* --- Spacing (aliases → units) --- */
+  --sp-1:  var(--u-1);   /*  4px */
+  --sp-2:  var(--u-2);   /*  8px */
+  --sp-3:  var(--u-3);   /* 12px */
+  --sp-4:  var(--u-4);   /* 16px */
+  --sp-5:  var(--u-5);   /* 20px */
+  --sp-6:  var(--u-6);   /* 24px */
+  --sp-8:  var(--u-8);   /* 32px */
+  --sp-10: var(--u-10);  /* 40px */
+  --sp-12: var(--u-12);  /* 48px */
 
   /* --- Radius --- */
   --r-pill: 9999px;
-  --r-md:   8px;
+  --r-md:   var(--u-2);  /* 8px */
 
   /* --- Layout --- */
-  --content-width: 386px;
+  --content-width: 320px;  /* narrow mobile-first container */
+  --page-padding:  var(--sp-4);
 }
 
 
@@ -149,7 +167,7 @@ body {
   background: var(--c-bg-subtle);
   display: grid;
   place-items: center;
-  padding: var(--sp-8) var(--sp-4);
+  padding: var(--sp-8) var(--page-padding);
 }
 
 a {
@@ -181,10 +199,16 @@ a {
   gap: var(--sp-2);
 }
 
+.hero__icon-link {
+  display: block;
+  width: fit-content;
+  margin-bottom: var(--sp-2);
+  cursor: pointer;
+}
+
 .hero__icon {
   display: block;
   color: var(--c-text);
-  margin-bottom: var(--sp-2);
   flex-shrink: 0;
 }
 
@@ -220,8 +244,8 @@ a {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--sp-3) var(--sp-5);
-  border-radius: var(--r-pill);
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--r-md);
   font-family: var(--font);
   font-size: var(--type-label-size);
   font-weight: var(--type-label-weight);
