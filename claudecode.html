@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Connect Claude Code</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #0d0d0d;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .container { text-align: center; max-width: 460px; width: 100%; }
+    .app-icon { margin-bottom: 20px; display: flex; align-items: center; justify-content: center; }
+    .app-icon img { width: 80px; height: 80px; border-radius: 18px; }
+    h1 { font-size: 22px; margin-bottom: 6px; font-weight: 700; }
+    .subtitle { font-size: 14px; color: #666; margin-bottom: 22px; }
+    .segment { display: flex; background: rgba(255,255,255,0.07); border-radius: 10px; padding: 3px; margin-bottom: 18px; gap: 3px; }
+    .seg-btn { flex: 1; padding: 9px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.18s; background: transparent; color: #777; }
+    .seg-btn.active { background: rgba(255,255,255,0.13); color: white; }
+    .tab { display: none; }
+    .tab.active { display: block; }
+    .steps {
+      text-align: left;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 16px 18px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      font-size: 14px;
+    }
+    .step { margin-bottom: 14px; display: flex; flex-direction: column; }
+    .step:last-child { margin-bottom: 0; }
+    .step-header { display: flex; align-items: center; gap: 8px; }
+    .step-num { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.1); font-size: 11px; font-weight: 600; }
+    .step-num.hidden { background: transparent; color: transparent; }
+    .step-label { font-weight: 600; color: #e0e0e0; }
+    .step-label em { font-weight: 400; color: #555; font-style: normal; }
+    .code-block { display: flex; align-items: center; background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 9px 12px; margin: 7px 0 0 28px; gap: 8px; }
+    .code-block code { flex: 1; font-family: "SF Mono", Menlo, Monaco, "Courier New", monospace; font-size: 12.5px; color: #ddd; user-select: all; }
+    .copy-btn { background: transparent; border: none; color: #555; cursor: pointer; font-size: 15px; padding: 0 2px; transition: color 0.15s; flex-shrink: 0; line-height: 1; }
+    .copy-btn:hover { color: #aaa; }
+    .copy-btn.copied { color: #4caf50; }
+    .btn { background: #E8704E; color: white; padding: 14px; border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 16px; display: block; width: 100%; cursor: pointer; border: none; transition: opacity 0.15s; }
+    .btn:hover { opacity: 0.88; }
+    .btn:active { opacity: 0.75; }
+    .btn.disabled { opacity: 0.55; pointer-events: none; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(16px); background: rgba(40,40,40,0.95); border: 1px solid rgba(255,255,255,0.12); color: #eee; padding: 9px 18px; border-radius: 20px; font-size: 13px; opacity: 0; transition: all 0.22s; pointer-events: none; white-space: nowrap; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .error { margin-top: 12px; color: #ff9c9c; font-size: 13px; display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="app-icon"><img src="./appicon.svg" alt="Claude Code Mobile" /></div>
+    <h1>Connect Claude Code</h1>
+    <p class="subtitle">Bridge your mobile app with Claude Code CLI on your computer.</p>
+    <div class="segment">
+      <button class="seg-btn" id="tab-unix" onclick="switchTab('unix')">macOS / Linux</button>
+      <button class="seg-btn" id="tab-windows" onclick="switchTab('windows')">Windows</button>
+    </div>
+    <div class="tab" id="content-unix">
+      <div class="steps">
+        <div class="step"><div class="step-header"><span class="step-num">1</span><span class="step-label">Open Terminal</span></div></div>
+        <div class="step"><div class="step-header"><span class="step-num hidden">&nbsp;</span><span class="step-label">Install Claude Code <em>(if needed)</em></span></div><div class="code-block"><code>curl -fsSL https://claude.ai/install.sh | sh</code><button class="copy-btn" onclick="copyCode(this,'curl -fsSL https://claude.ai/install.sh | sh')" title="Copy">&#x2398;</button></div></div>
+        <div class="step"><div class="step-header"><span class="step-num hidden">&nbsp;</span><span class="step-label">Log in <em>(if needed)</em></span></div><div class="code-block"><code>claude</code><button class="copy-btn" onclick="copyCode(this,'claude')" title="Copy">&#x2398;</button></div></div>
+        <div class="step"><div class="step-header"><span class="step-num">2</span><span class="step-label">Start the bridge</span></div><div class="code-block"><code>npx claude-mobile-bridge@latest</code><button class="copy-btn" onclick="copyCode(this,'npx claude-mobile-bridge@latest')" title="Copy">&#x2398;</button></div></div>
+        <div class="step"><div class="step-header"><span class="step-num">3</span><span class="step-label">Tap Connect below</span></div></div>
+      </div>
+    </div>
+    <div class="tab" id="content-windows">
+      <div class="steps">
+        <div class="step"><div class="step-header"><span class="step-num">1</span><span class="step-label">Open PowerShell</span></div></div>
+        <div class="step"><div class="step-header"><span class="step-num hidden">&nbsp;</span><span class="step-label">Install Node.js <em>(if needed)</em></span></div><div class="code-block"><code>winget install OpenJS.NodeJS</code><button class="copy-btn" onclick="copyCode(this,'winget install OpenJS.NodeJS')" title="Copy">&#x2398;</button></div></div>
+        <div class="step"><div class="step-header"><span class="step-num hidden">&nbsp;</span><span class="step-label">Install Claude Code <em>(if needed)</em></span></div><div class="code-block"><code>winget install Anthropic.Claude</code><button class="copy-btn" onclick="copyCode(this,'winget install Anthropic.Claude')" title="Copy">&#x2398;</button></div></div>
+        <div class="step"><div class="step-header"><span class="step-num hidden">&nbsp;</span><span class="step-label">Log in <em>(if needed)</em></span></div><div class="code-block"><code>claude</code><button class="copy-btn" onclick="copyCode(this,'claude')" title="Copy">&#x2398;</button></div></div>
+        <div class="step"><div class="step-header"><span class="step-num">2</span><span class="step-label">Start the bridge</span></div><div class="code-block"><code>npx.cmd claude-mobile-bridge@latest</code><button class="copy-btn" onclick="copyCode(this,'npx.cmd claude-mobile-bridge@latest')" title="Copy">&#x2398;</button></div></div>
+        <div class="step"><div class="step-header"><span class="step-num">3</span><span class="step-label">Tap Connect below</span></div></div>
+      </div>
+    </div>
+    <a id="connectBtn" class="btn" href="#">Connect</a>
+    <div id="error" class="error">Missing token in URL. Open this page from the app.</div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    function detectOS() {
+      var u = navigator.userAgent || "";
+      var p = navigator.platform || "";
+      if (/Win/i.test(p) || /Windows/i.test(u)) return "windows";
+      return "unix";
+    }
+    function switchTab(os) {
+      ["unix", "windows"].forEach(function(id) {
+        document.getElementById("tab-" + id).classList.toggle("active", id === os);
+        document.getElementById("content-" + id).classList.toggle("active", id === os);
+      });
+    }
+
+    function copyCode(btn, text) {
+      navigator.clipboard.writeText(text).then(function() {
+        btn.textContent = "\u2713";
+        btn.classList.add("copied");
+        var t = document.getElementById("toast");
+        t.textContent = "Copied!";
+        t.classList.add("show");
+        setTimeout(function() {
+          btn.textContent = "\u2398";
+          btn.classList.remove("copied");
+          t.classList.remove("show");
+        }, 1600);
+      });
+    }
+
+    const token = new URLSearchParams(window.location.search).get("token");
+    const btn = document.getElementById("connectBtn");
+    const err = document.getElementById("error");
+    if (!token) {
+      btn.classList.add("disabled");
+      btn.textContent = "Open from app";
+      err.style.display = "block";
+    } else {
+      btn.href = "http://127.0.0.1:38473/callback?token=" + encodeURIComponent(token);
+    }
+    switchTab(detectOS());
+  </script>
+</body>
+</html>
