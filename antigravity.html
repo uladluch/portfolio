@@ -206,23 +206,24 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
+    const pairId = params.get("pair");
     const token = params.get("token");
-    const uniqueId = params.get("id");
     const connectLink = document.getElementById("connect-link");
     const note = document.getElementById("note");
     const meta = document.getElementById("meta");
 
-    if (!token) {
+    if (!pairId || !token) {
       connectLink.style.opacity = "0.5";
       connectLink.style.pointerEvents = "none";
-      note.textContent = "Missing token in URL. Open this page from the app.";
+      note.textContent = "Invalid link. Open this page from the iOS app.";
     } else {
-      connectLink.href = `http://127.0.0.1:38475/callback?token=${encodeURIComponent(token)}`;
+      const callback = `http://127.0.0.1:38475/callback?pair=${encodeURIComponent(pairId)}&token=${encodeURIComponent(token)}`;
+      connectLink.href = callback;
       note.textContent = "";
     }
 
-    if (uniqueId) {
-      meta.textContent = "Session ID: " + uniqueId;
+    if (pairId) {
+      meta.textContent = "Pairing ID: " + pairId.slice(0, 8);
     }
 
     function switchTab(tab) {
