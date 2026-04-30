@@ -217,10 +217,7 @@
       connectLink.style.pointerEvents = "none";
       note.textContent = "Missing token in URL. Open this page from the app.";
     } else {
-      const url = new URL("https://gqowupdasbvencpsmlhb.supabase.co/functions/v1/connect");
-      url.searchParams.set("token", token);
-      url.searchParams.set("ide", "gemini_cli");
-      connectLink.href = url.toString();
+      connectLink.href = `http://127.0.0.1:38475/callback?token=${encodeURIComponent(token)}`;
       note.textContent = "";
     }
 
