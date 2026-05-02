@@ -114,20 +114,24 @@
       flex-shrink: 0;
     }
     .copy-btn:hover { color: #111827; }
-    .connect-btn {
-      margin-top: 16px;
-      display: block;
-      width: 100%;
-      border: none;
-      text-decoration: none;
-      text-align: center;
-      background: #000000;
-      color: #FFFFFF;
+    .auto-status {
+      margin-top: 18px;
+      font-size: 15px;
       font-weight: 600;
-      font-size: 16px;
-      padding: 14px 16px;
-      border-radius: 100px;
+      color: #111827;
+      text-align: center;
+      line-height: 1.45;
     }
+    .fallback-link {
+      display: block;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #2563EB;
+      text-align: center;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .fallback-link:hover { color: #1D4ED8; }
     .note {
       margin-top: 12px;
       font-size: 12px;
@@ -176,7 +180,8 @@
         <div style="font-size:12px;color:#6B7280;margin-top:8px;">If you see “port in use”, stop the other bridge with Ctrl+C first. To switch folders: disconnect the project in the iOS app (Sessions), then repeat from step 2.</div>
       </div>
       <div class="step">
-        <div class="step-title">4. Tap Connect below</div>
+        <div class="step-title">4. Open this page on the same Mac (Safari/Chrome)</div>
+        <div style="font-size:12px;color:#6B7280;margin-top:6px;">With the bridge already running in Terminal, this tab connects to it automatically. If you see a connection error, start the bridge first, then use “Try again” below.</div>
       </div>
     </div>
 
@@ -207,11 +212,13 @@
         <div style="font-size:12px;color:#6B7280;margin-top:8px;">Stop any other bridge first. To switch folders: disconnect in the iOS app (Sessions), then repeat from step 2.</div>
       </div>
       <div class="step">
-        <div class="step-title">4. Tap Connect below</div>
+        <div class="step-title">4. Open this page on the same Windows PC</div>
+        <div style="font-size:12px;color:#6B7280;margin-top:6px;">With the bridge already running in the terminal, this tab connects automatically. If you see an error, start the bridge first, then use “Try again” below.</div>
       </div>
     </div>
 
-    <a id="connect-link" class="connect-btn" href="#">Connect</a>
+    <p id="auto-status" class="auto-status" hidden>Connecting to the bridge on this computer…</p>
+    <a id="fallback-link" class="fallback-link" href="#" hidden>Try again (open bridge callback)</a>
     <div class="note" id="note"></div>
     <div class="meta" id="meta"></div>
   </div>
@@ -220,18 +227,23 @@
     const params = new URLSearchParams(window.location.search);
     const pairId = params.get("pair");
     const token = params.get("token");
-    const connectLink = document.getElementById("connect-link");
+    const autoStatus = document.getElementById("auto-status");
+    const fallbackLink = document.getElementById("fallback-link");
     const note = document.getElementById("note");
     const meta = document.getElementById("meta");
 
     if (!pairId || !token) {
-      connectLink.style.opacity = "0.5";
-      connectLink.style.pointerEvents = "none";
       note.textContent = "Invalid link. Open this page from the iOS app.";
     } else {
       const callback = `http://127.0.0.1:38475/callback?pair=${encodeURIComponent(pairId)}&token=${encodeURIComponent(token)}`;
-      connectLink.href = callback;
+      fallbackLink.href = callback;
+      autoStatus.hidden = false;
+      fallbackLink.hidden = false;
       note.textContent = "";
+      // Same navigation as the old “Connect” button — no extra click when the bridge is already listening.
+      requestAnimationFrame(() => {
+        setTimeout(() => window.location.replace(callback), 350);
+      });
     }
 
     if (pairId) {
