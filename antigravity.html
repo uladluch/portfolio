@@ -36,10 +36,49 @@
       letter-spacing: -0.02em;
     }
     .subtitle {
-      margin: 0 0 22px;
+      margin: 0 0 14px;
       color: #6B7280;
       font-size: 14px;
       line-height: 1.55;
+    }
+    /* Countdown timer */
+    .countdown {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6B7280;
+      background: #F3F4F6;
+      border: 1px solid #E5E7EB;
+      border-radius: 100px;
+      padding: 5px 12px;
+      margin-bottom: 18px;
+      transition: color 0.3s, background 0.3s, border-color 0.3s;
+    }
+    .countdown.warning {
+      color: #B45309;
+      background: #FFFBEB;
+      border-color: #FCD34D;
+    }
+    .countdown.expired {
+      color: #B91C1C;
+      background: #FEF2F2;
+      border-color: #FECACA;
+    }
+    .countdown-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #9CA3AF;
+      animation: pulse-dot 2s ease-in-out infinite;
+      flex-shrink: 0;
+    }
+    .countdown.warning .countdown-dot { background: #F59E0B; }
+    .countdown.expired .countdown-dot { background: #EF4444; animation: none; }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
     }
     .segment {
       display: flex;
@@ -127,13 +166,45 @@
       font-size: 16px;
       padding: 14px 16px;
       border-radius: 100px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .connect-btn:hover { opacity: 0.85; }
+    /* Success state */
+    .success-state {
+      display: none;
+      margin-top: 16px;
+      text-align: center;
+      padding: 24px 16px;
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      border-radius: 18px;
+    }
+    .success-state.visible { display: block; }
+    .success-icon {
+      font-size: 44px;
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+    .success-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #15803D;
+      margin: 0 0 8px;
+    }
+    .success-subtitle {
+      font-size: 13px;
+      color: #166534;
+      margin: 0;
+      line-height: 1.6;
     }
     .note {
       margin-top: 12px;
       font-size: 12px;
-      color: #B91C1C;
+      color: #6B7280;
       min-height: 16px;
     }
+    .note.error { color: #B91C1C; }
     .meta {
       margin-top: 8px;
       color: #6B7280;
@@ -162,6 +233,12 @@
     <h1>Connect Gemini CLI</h1>
     <p class="subtitle">Bridge your mobile app with Gemini CLI on your computer.</p>
 
+    <!-- Countdown timer — shown only when pairId is present -->
+    <div class="countdown" id="countdown" style="display:none;">
+      <span class="countdown-dot" id="countdown-dot"></span>
+      <span id="countdown-text">Link valid for 15:00</span>
+    </div>
+
     <div class="segment">
       <button class="seg-btn active" id="tab-unix-btn" onclick="switchTab('unix')">macOS / Linux</button>
       <button class="seg-btn" id="tab-win-btn" onclick="switchTab('windows')">Windows</button>
@@ -186,11 +263,8 @@
         <div class="code"><span class="cmd"><span class="verb">cd</span> <span class="arg">/path/to/your-project</span></span><button class="copy-btn" onclick="copyText('cd /path/to/your-project', this)">Copy</button></div>
       </div>
       <div class="step">
-        <div class="step-title">3. Start the bridge (only one terminal)</div>
+        <div class="step-title">3. Start the bridge — it connects automatically</div>
         <div class="code"><span class="cmd"><span class="verb">npx</span> <span class="pkg">antigravity-gemini-bridge@latest</span></span><button class="copy-btn" onclick="copyText('npx antigravity-gemini-bridge@latest', this)">Copy</button></div>
-      </div>
-      <div class="step">
-        <div class="step-title">4. Tap Connect below</div>
       </div>
     </div>
 
@@ -217,15 +291,23 @@
         <div class="code"><span class="cmd"><span class="verb">cd</span> <span class="arg">C:\path\to\your-project</span></span><button class="copy-btn" onclick="copyText('cd C:\\path\\to\\your-project', this)">Copy</button></div>
       </div>
       <div class="step">
-        <div class="step-title">3. Start the bridge (one terminal only)</div>
+        <div class="step-title">3. Start the bridge — it connects automatically</div>
         <div class="code"><span class="cmd"><span class="verb">npx</span> <span class="pkg">antigravity-gemini-bridge@latest</span></span><button class="copy-btn" onclick="copyText('npx antigravity-gemini-bridge@latest', this)">Copy</button></div>
-      </div>
-      <div class="step">
-        <div class="step-title">4. Tap Connect below</div>
       </div>
     </div>
 
-    <a id="connect-link" class="connect-btn" href="#">Connect</a>
+    <!-- Manual fallback connect button -->
+    <div id="manual-connect-wrap">
+      <a id="connect-link" class="connect-btn" href="#">Connect</a>
+    </div>
+
+    <!-- Success state — replaces connect button after auto-connect -->
+    <div class="success-state" id="success-state">
+      <div class="success-icon">&#x2705;</div>
+      <p class="success-title">Bridge connected!</p>
+      <p class="success-subtitle">You&rsquo;re all set. Return to your iOS app and start coding.<br>You can close this tab.</p>
+    </div>
+
     <div class="warning-box">
       <strong>Important:</strong> Do not paste API keys in the app chat.
       If you see a <code>GEMINI_API_KEY</code> error, fix Gemini authentication in Terminal first, then try Connect again.
@@ -238,18 +320,110 @@
     const params = new URLSearchParams(window.location.search);
     const pairId = params.get("pair");
     const token = params.get("token");
+    // iOS may pass ?expires=<unix_timestamp> in a future release.
+    // Fall back to 15 min from page load (matches current server-side TTL).
+    const expiresParam = parseInt(params.get("expires") || "0", 10);
+    const expiresAt = expiresParam > 0 ? expiresParam * 1000 : Date.now() + 15 * 60 * 1000;
+
     const connectLink = document.getElementById("connect-link");
+    const successState = document.getElementById("success-state");
+    const waitingStatus = document.getElementById("waiting-status");
+    const manualConnectWrap = document.getElementById("manual-connect-wrap");
     const note = document.getElementById("note");
     const meta = document.getElementById("meta");
+    const countdownEl = document.getElementById("countdown");
+    const countdownText = document.getElementById("countdown-text");
 
+    let autoConnectTimer = null;
+    let autoConnectAttempts = 0;
+    let autoConnected = false;
+    let countdownInterval = null;
+
+    // ── Countdown timer ──────────────────────────────────────────────────────
+    function startCountdown() {
+      countdownEl.style.display = "inline-flex";
+      const tick = () => {
+        const msLeft = expiresAt - Date.now();
+        if (msLeft <= 0) {
+          countdownEl.className = "countdown expired";
+          countdownText.textContent = "Link expired — get a new one from the iOS app";
+          clearInterval(countdownInterval);
+          if (autoConnectTimer) { clearInterval(autoConnectTimer); autoConnectTimer = null; }
+          connectLink.style.opacity = "0.4";
+          connectLink.style.pointerEvents = "none";
+          note.className = "note error";
+          note.textContent = "This link has expired. Tap Connect again in the iOS app to get a fresh link.";
+          return;
+        }
+        const totalSec = Math.ceil(msLeft / 1000);
+        const m = Math.floor(totalSec / 60);
+        const s = totalSec % 60;
+        countdownText.textContent = "Link valid for " + m + ":" + s.toString().padStart(2, "0");
+        countdownEl.className = "countdown" + (msLeft < 2 * 60 * 1000 ? " warning" : "");
+      };
+      tick();
+      countdownInterval = setInterval(tick, 1000);
+    }
+
+    // ── Success handler ──────────────────────────────────────────────────────
+    function onConnected() {
+      autoConnected = true;
+      clearInterval(autoConnectTimer);
+      clearInterval(countdownInterval);
+      connectLink.style.display = "none";
+      manualConnectWrap.style.display = "none";
+      waitingStatus.textContent = "";
+      successState.classList.add("visible");
+      countdownEl.style.display = "none";
+      note.textContent = "";
+    }
+
+    // ── Main pairing logic ───────────────────────────────────────────────────
     if (!pairId || !token) {
       connectLink.style.opacity = "0.5";
       connectLink.style.pointerEvents = "none";
       note.textContent = "Invalid link. Open this page from the iOS app.";
     } else {
-      const callback = `http://127.0.0.1:38475/callback?pair=${encodeURIComponent(pairId)}&token=${encodeURIComponent(token)}`;
+      const callback = "http://127.0.0.1:38475/callback?pair=" + encodeURIComponent(pairId) + "&token=" + encodeURIComponent(token);
       connectLink.href = callback;
-      note.textContent = "";
+      waitingStatus.textContent = "Waiting for bridge to start\u2026 it will connect automatically.";
+      // Show manual fallback link after 15s so it doesn’t distract immediately
+      setTimeout(() => { manualConnectWrap.style.display = "block"; }, 15000);
+
+      startCountdown();
+
+      // Handle manual "Connect" tap
+      connectLink.addEventListener("click", async (e) => {
+        e.preventDefault();
+        try {
+          const resp = await fetch(callback, { method: "GET", cache: "no-store" });
+          if (resp.ok) { onConnected(); return; }
+        } catch {}
+        // Fallback: navigate directly so bridge can handle the HTTP request
+        window.location.href = callback;
+      });
+
+      const tryAutoConnect = async () => {
+        if (autoConnected) return;
+        autoConnectAttempts += 1;
+        // Poll for up to 10 minutes (400 attempts x 1500 ms)
+        if (autoConnectAttempts > 400) {
+          clearInterval(autoConnectTimer);
+          waitingStatus.textContent = "Auto-connect timed out. Keep bridge running and tap Connect manually.";
+          return;
+        }
+        try {
+          const resp = await fetch(callback, { method: "GET", cache: "no-store" });
+          if (!resp.ok) return;
+          onConnected();
+        } catch {
+          // Bridge not listening yet — keep polling quietly.
+        }
+      };
+
+      // Delay first attempt so users have time to start the terminal command.
+      setTimeout(tryAutoConnect, 1200);
+      autoConnectTimer = setInterval(tryAutoConnect, 1500);
     }
 
     if (pairId) {
