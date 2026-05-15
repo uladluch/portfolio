@@ -277,9 +277,9 @@
       </div>
     </div>
 
-    <!-- Manual fallback connect button -->
-    <div id="manual-connect-wrap">
-      <a id="connect-link" class="connect-btn" href="#">Connect</a>
+    <!-- Manual fallback connect button — shown after 15s if auto-connect hasn't fired -->
+    <div id="manual-connect-wrap" style="display:none;">
+      <a id="connect-link" class="connect-btn" href="#">Connect manually</a>
     </div>
 
     <!-- Success state — replaces connect button after auto-connect -->
@@ -301,14 +301,11 @@
     const params = new URLSearchParams(window.location.search);
     const pairId = params.get("pair");
     const token = params.get("token");
-    // iOS may pass ?expires=<unix_timestamp> in a future release.
-    // Fall back to 15 min from page load (matches current server-side TTL).
     const expiresParam = parseInt(params.get("expires") || "0", 10);
     const expiresAt = expiresParam > 0 ? expiresParam * 1000 : Date.now() + 15 * 60 * 1000;
 
     const connectLink = document.getElementById("connect-link");
     const successState = document.getElementById("success-state");
-    const waitingStatus = document.getElementById("waiting-status");
     const manualConnectWrap = document.getElementById("manual-connect-wrap");
     const note = document.getElementById("note");
     const meta = document.getElementById("meta");
@@ -351,9 +348,7 @@
       autoConnected = true;
       clearInterval(autoConnectTimer);
       clearInterval(countdownInterval);
-      connectLink.style.display = "none";
       manualConnectWrap.style.display = "none";
-      waitingStatus.textContent = "";
       successState.classList.add("visible");
       countdownEl.style.display = "none";
       note.textContent = "";
@@ -361,14 +356,15 @@
 
     // ── Main pairing logic ───────────────────────────────────────────────────
     if (!pairId || !token) {
+      manualConnectWrap.style.display = "block";
       connectLink.style.opacity = "0.5";
       connectLink.style.pointerEvents = "none";
       note.textContent = "Invalid link. Open this page from the iOS app.";
     } else {
       const callback = "http://127.0.0.1:38475/callback?pair=" + encodeURIComponent(pairId) + "&token=" + encodeURIComponent(token);
       connectLink.href = callback;
-      waitingStatus.textContent = "Waiting for bridge to start\u2026 it will connect automatically.";
-      // Show manual fallback link after 15s so it doesn’t distract immediately
+
+      // Show fallback Connect button after 15s in case auto-connect doesn't fire
       setTimeout(() => { manualConnectWrap.style.display = "block"; }, 15000);
 
       startCountdown();
@@ -380,17 +376,17 @@
           const resp = await fetch(callback, { method: "GET", cache: "no-store" });
           if (resp.ok) { onConnected(); return; }
         } catch {}
-        // Fallback: navigate directly so bridge can handle the HTTP request
         window.location.href = callback;
       });
 
+      // Auto-connect: poll the local bridge every 1.5s
       const tryAutoConnect = async () => {
         if (autoConnected) return;
         autoConnectAttempts += 1;
-        // Poll for up to 10 minutes (400 attempts x 1500 ms)
         if (autoConnectAttempts > 400) {
           clearInterval(autoConnectTimer);
-          waitingStatus.textContent = "Auto-connect timed out. Keep bridge running and tap Connect manually.";
+          manualConnectWrap.style.display = "block";
+          note.textContent = "Auto-connect timed out. Keep bridge running and tap Connect manually.";
           return;
         }
         try {
@@ -402,8 +398,8 @@
         }
       };
 
-      // Delay first attempt so users have time to start the terminal command.
-      setTimeout(tryAutoConnect, 1200);
+      // Start polling right away — the bridge should already be running.
+      setTimeout(tryAutoConnect, 800);
       autoConnectTimer = setInterval(tryAutoConnect, 1500);
     }
 
