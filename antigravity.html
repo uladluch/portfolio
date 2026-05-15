@@ -182,6 +182,7 @@
       border: 1px solid #BBF7D0;
       border-radius: 100px;
       padding: 5px 12px;
+      margin-top: 4px;
       margin-bottom: 18px;
     }
     .connected-pill.visible { display: inline-flex; }
@@ -234,6 +235,12 @@
       <span id="countdown-text">Link valid for 15:00</span>
     </div>
 
+    <!-- Connected pill — shown after auto-connect succeeds -->
+    <div class="connected-pill" id="connected-pill">
+      <span class="connected-dot"></span>
+      <span>Connected</span>
+    </div>
+
     <div class="segment">
       <button class="seg-btn active" id="tab-unix-btn" onclick="switchTab('unix')">macOS / Linux</button>
       <button class="seg-btn" id="tab-win-btn" onclick="switchTab('windows')">Windows</button>
@@ -275,12 +282,6 @@
     <!-- Manual fallback connect button — shown after 15s if auto-connect hasn't fired -->
     <div id="manual-connect-wrap" style="display:none;">
       <a id="connect-link" class="connect-btn" href="#">Connect manually</a>
-    </div>
-
-    <!-- Connected pill — shown after auto-connect succeeds -->
-    <div class="connected-pill" id="connected-pill">
-      <span class="connected-dot"></span>
-      <span>Connected</span>
     </div>
 
     <div class="warning-box">
