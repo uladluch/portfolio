@@ -170,33 +170,28 @@
       transition: opacity 0.2s;
     }
     .connect-btn:hover { opacity: 0.85; }
-    /* Success state */
-    .success-state {
+    /* Connected pill — same style as countdown but green */
+    .connected-pill {
       display: none;
-      margin-top: 16px;
-      text-align: center;
-      padding: 24px 16px;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #15803D;
       background: #F0FDF4;
       border: 1px solid #BBF7D0;
-      border-radius: 18px;
+      border-radius: 100px;
+      padding: 5px 12px;
+      margin-bottom: 18px;
     }
-    .success-state.visible { display: block; }
-    .success-icon {
-      font-size: 44px;
-      margin-bottom: 12px;
-      line-height: 1;
-    }
-    .success-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #15803D;
-      margin: 0 0 8px;
-    }
-    .success-subtitle {
-      font-size: 13px;
-      color: #166534;
-      margin: 0;
-      line-height: 1.6;
+    .connected-pill.visible { display: inline-flex; }
+    .connected-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #16A34A;
+      flex-shrink: 0;
+      animation: pulse-dot 2s ease-in-out infinite;
     }
     .note {
       margin-top: 12px;
@@ -282,11 +277,10 @@
       <a id="connect-link" class="connect-btn" href="#">Connect manually</a>
     </div>
 
-    <!-- Success state — replaces connect button after auto-connect -->
-    <div class="success-state" id="success-state">
-      <div class="success-icon">&#x2705;</div>
-      <p class="success-title">Bridge connected!</p>
-      <p class="success-subtitle">You&rsquo;re all set. Return to your iOS app and start coding.<br>You can close this tab.</p>
+    <!-- Connected pill — shown after auto-connect succeeds -->
+    <div class="connected-pill" id="connected-pill">
+      <span class="connected-dot"></span>
+      <span>Connected</span>
     </div>
 
     <div class="warning-box">
@@ -306,6 +300,7 @@
 
     const connectLink = document.getElementById("connect-link");
     const successState = document.getElementById("success-state");
+    const connectedPill = document.getElementById("connected-pill");
     const manualConnectWrap = document.getElementById("manual-connect-wrap");
     const note = document.getElementById("note");
     const meta = document.getElementById("meta");
@@ -349,8 +344,8 @@
       clearInterval(autoConnectTimer);
       clearInterval(countdownInterval);
       manualConnectWrap.style.display = "none";
-      successState.classList.add("visible");
       countdownEl.style.display = "none";
+      connectedPill.classList.add("visible");
       note.textContent = "";
     }
 
