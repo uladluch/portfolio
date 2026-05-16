@@ -102,15 +102,53 @@
       color: #111827;
       background: #FFFFFF;
     }
+    .tab-header-outside {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111827;
+      margin: 20px 0 12px;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+    .chevron {
+      width: 20px;
+      height: 20px;
+      transition: transform 0.3s;
+      color: #9CA3AF;
+    }
+    .tab-header-outside.collapsed .chevron {
+      transform: rotate(-90deg);
+    }
     .tab {
       display: none;
       text-align: left;
+    }
+    .tab.active { display: block; }
+    .card {
       background: #FFFFFF;
       border: 1px solid #E5E7EB;
       border-radius: 18px;
       padding: 15px 16px;
+      margin-bottom: 20px;
+      display: block;
     }
-    .tab.active { display: block; }
+    .card.hidden {
+      display: none;
+    }
+    .empty-state {
+      background: #FFFFFF;
+      border: 1px solid #E5E7EB;
+      border-radius: 18px;
+      padding: 40px 20px;
+      text-align: center;
+      color: #9CA3AF;
+      font-size: 15px;
+      font-weight: 500;
+    }
     .step {
       margin-bottom: 14px;
       color: #374151;
@@ -221,13 +259,14 @@
     .warning-box strong {
       color: #374151;
     }
+
   </style>
 </head>
 <body>
   <div class="container">
     <img class="logo" src="https://gqowupdasbvencpsmlhb.supabase.co/storage/v1/object/public/assets/antigravity/logo.png" alt="Antigravity">
-    <h1>Connect Gemini CLI</h1>
-    <p class="subtitle">Bridge your mobile app with Gemini CLI on your computer.</p>
+    <h1>Connect your Workspace</h1>
+    <p class="subtitle">Bridge your mobile app with Gemini CLI or Antigravity IDE.</p>
 
     <!-- Countdown timer — shown only when pairId is present -->
     <div class="countdown" id="countdown" style="display:none;">
@@ -242,40 +281,50 @@
     </div>
 
     <div class="segment">
-      <button class="seg-btn active" id="tab-unix-btn" onclick="switchTab('unix')">macOS / Linux</button>
-      <button class="seg-btn" id="tab-win-btn" onclick="switchTab('windows')">Windows</button>
+      <button class="seg-btn active" id="tab-unix-btn" onclick="switchTab('unix')">Gemini CLI</button>
+      <button class="seg-btn" id="tab-win-btn" onclick="switchTab('windows')">Antigravity IDE</button>
     </div>
 
     <div class="tab active" id="tab-unix">
-      <div class="step">
-        <div class="step-title">1. Open Terminal</div>
+      <div class="tab-header-outside" onclick="toggleSection('card-unix', this)">
+        <span>MacOS / Linux</span>
+        <svg class="chevron" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
       </div>
-      <div class="step">
-        <div class="step-title">2. Go to your project folder</div>
-        <div style="font-size:13px;color:#4B5563;margin-top:4px;">Gemini runs in this directory. Example:</div>
-        <div class="code"><span class="cmd"><span class="verb">cd</span> <span class="arg">/path/to/your-project</span></span><button class="copy-btn" onclick="copyText('cd /path/to/your-project', this)">Copy</button></div>
+      <div class="card" id="card-unix">
+        <div class="step">
+          <div class="step-title">1. Open Terminal in your Project Folder or Mac</div>
+        </div>
+        <div class="step">
+          <div class="step-title">2. Run this command</div>
+          <div class="code"><span class="cmd"><span class="verb">npx</span> <span class="pkg">antigravity-gemini-bridge@latest</span></span><button class="copy-btn" onclick="copyText('npx antigravity-gemini-bridge@latest', this)">Copy</button></div>
+          <div style="font-size:12px;color:#6B7280;margin-top:6px;">Node.js required. Gemini CLI &amp; sign-in are handled automatically.</div>
+        </div>
       </div>
-      <div class="step">
-        <div class="step-title">3. Run this command</div>
-        <div class="code"><span class="cmd"><span class="verb">npx</span> <span class="pkg">antigravity-gemini-bridge@latest</span></span><button class="copy-btn" onclick="copyText('npx antigravity-gemini-bridge@latest', this)">Copy</button></div>
-        <div style="font-size:12px;color:#6B7280;margin-top:6px;">Node.js required. Gemini CLI &amp; sign-in are handled automatically.</div>
+
+      <div class="tab-header-outside" onclick="toggleSection('card-win', this)">
+        <span>Windows</span>
+        <svg class="chevron" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <div class="card" id="card-win">
+        <div class="step">
+          <div class="step-title">1. Open PowerShell in your Project Folder or PC</div>
+          <div style="font-size:13px;color:#4B5563;margin-top:4px;">Node.js is required. <a href="https://nodejs.org" target="_blank" style="color:#2563EB;">Download here</a> if not installed.</div>
+        </div>
+        <div class="step">
+          <div class="step-title">2. Run this command</div>
+          <div class="code"><span class="cmd"><span class="verb">npx</span> <span class="pkg">antigravity-gemini-bridge@latest</span></span><button class="copy-btn" onclick="copyText('npx antigravity-gemini-bridge@latest', this)">Copy</button></div>
+          <div style="font-size:12px;color:#6B7280;margin-top:6px;">Node.js required. Gemini CLI &amp; sign-in are handled automatically.</div>
+        </div>
       </div>
     </div>
 
     <div class="tab" id="tab-windows">
-      <div class="step">
-        <div class="step-title">1. Open PowerShell</div>
-        <div style="font-size:13px;color:#4B5563;margin-top:4px;">Node.js is required. <a href="https://nodejs.org" target="_blank" style="color:#2563EB;">Download here</a> if not installed.</div>
-      </div>
-      <div class="step">
-        <div class="step-title">2. Go to your project folder</div>
-        <div style="font-size:13px;color:#4B5563;margin-top:4px;">Example:</div>
-        <div class="code"><span class="cmd"><span class="verb">cd</span> <span class="arg">C:\path\to\your-project</span></span><button class="copy-btn" onclick="copyText('cd C:\\path\\to\\your-project', this)">Copy</button></div>
-      </div>
-      <div class="step">
-        <div class="step-title">3. Run this command</div>
-        <div class="code"><span class="cmd"><span class="verb">npx</span> <span class="pkg">antigravity-gemini-bridge@latest</span></span><button class="copy-btn" onclick="copyText('npx antigravity-gemini-bridge@latest', this)">Copy</button></div>
-        <div style="font-size:12px;color:#6B7280;margin-top:6px;">Gemini CLI &amp; sign-in are handled automatically.</div>
+      <div class="empty-state">
+        <div class="tab-header-outside" style="justify-content: center; margin: 0;">Coming soon</div>
       </div>
     </div>
 
@@ -360,8 +409,8 @@
       const callback = "http://127.0.0.1:38475/callback?pair=" + encodeURIComponent(pairId) + "&token=" + encodeURIComponent(token);
       connectLink.href = callback;
 
-      // Show fallback Connect button after 15s in case auto-connect doesn't fire
-      setTimeout(() => { manualConnectWrap.style.display = "block"; }, 15000);
+      // Show fallback Connect button after 15s — only if not already connected
+      setTimeout(() => { if (!autoConnected) manualConnectWrap.style.display = "block"; }, 15000);
 
       startCountdown();
 
@@ -410,6 +459,33 @@
       document.getElementById("tab-unix-btn").classList.toggle("active", isUnix);
       document.getElementById("tab-win-btn").classList.toggle("active", !isUnix);
     }
+
+    function toggleSection(cardId, header) {
+      const card = document.getElementById(cardId);
+      card.classList.toggle("hidden");
+      header.classList.toggle("collapsed");
+    }
+
+    function autoDetectOS() {
+      const platform = window.navigator.platform.toLowerCase();
+      const isWindows = platform.indexOf('win') !== -1;
+      const isMac = platform.indexOf('mac') !== -1;
+      const isLinux = platform.indexOf('linux') !== -1;
+
+      const macHeader = document.querySelector('[onclick*="card-unix"]');
+      const winHeader = document.querySelector('[onclick*="card-win"]');
+
+      if (isWindows) {
+        // Collapse Mac section
+        toggleSection('card-unix', macHeader);
+      } else if (isMac || isLinux) {
+        // Collapse Windows section
+        toggleSection('card-win', winHeader);
+      }
+    }
+
+    // Run detection after a short delay or immediately
+    window.addEventListener('DOMContentLoaded', autoDetectOS);
 
     function copyText(value, btn) {
       navigator.clipboard.writeText(value).then(() => {
