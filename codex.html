@@ -269,13 +269,9 @@
         <div class="code"><span class="cmd"><span class="verb">cd</span> <span class="arg">/path/to/your-project</span></span><button class="copy-btn" onclick="copyText('cd /path/to/your-project', this)">Copy</button></div>
       </div>
       <div class="step">
-        <div class="step-title">3. Install Codex CLI (if needed)</div>
-        <div class="code"><span class="cmd"><span class="verb">npm</span> <span class="flag">i -g</span> <span class="pkg">@openai/codex</span></span><button class="copy-btn" onclick="copyText('npm i -g @openai/codex', this)">Copy</button></div>
-      </div>
-      <div class="step">
-        <div class="step-title">4. Run the bridge</div>
+        <div class="step-title">3. Run the bridge</div>
         <div class="code"><span class="cmd"><span class="verb">npx</span> <span class="pkg">spudmobile-bridge@latest</span></span><button class="copy-btn" onclick="copyText('npx spudmobile-bridge@latest', this)">Copy</button></div>
-        <div style="font-size:12px;color:#6B7280;margin-top:6px;">Node.js required. The bridge connects Codex CLI to your phone.</div>
+        <div style="font-size:12px;color:#6B7280;margin-top:6px;">Node.js required. Codex CLI will be installed automatically if needed.</div>
       </div>
     </div>
 
@@ -290,11 +286,7 @@
         <div class="code"><span class="cmd"><span class="verb">cd</span> <span class="arg">C:\path\to\your-project</span></span><button class="copy-btn" onclick="copyText('cd C:\\path\\to\\your-project', this)">Copy</button></div>
       </div>
       <div class="step">
-        <div class="step-title">3. Install Codex CLI (if needed)</div>
-        <div class="code"><span class="cmd"><span class="verb">npm</span> <span class="flag">i -g</span> <span class="pkg">@openai/codex</span></span><button class="copy-btn" onclick="copyText('npm i -g @openai/codex', this)">Copy</button></div>
-      </div>
-      <div class="step">
-        <div class="step-title">4. Run the bridge</div>
+        <div class="step-title">3. Run the bridge</div>
         <div class="code"><span class="cmd"><span class="verb">npx</span> <span class="pkg">spudmobile-bridge@latest</span></span><button class="copy-btn" onclick="copyText('npx spudmobile-bridge@latest', this)">Copy</button></div>
       </div>
     </div>
@@ -305,8 +297,8 @@
     </div>
 
     <div class="warning-box">
-      <strong>Important:</strong> Make sure you have an <code>OPENAI_API_KEY</code> set in your environment before running the bridge.
-      If Codex CLI shows authentication errors, fix them in Terminal first, then try Connect again.
+      <strong>That's it!</strong> The bridge will install Codex CLI and sign you in automatically on first run.
+      You only need <a href="https://nodejs.org" target="_blank" style="color:#2563EB;">Node.js</a> installed.
     </div>
     <div class="note" id="note"></div>
     <div class="meta" id="meta"></div>
