@@ -489,6 +489,7 @@
     const params = new URLSearchParams(window.location.search);
     const pairId = params.get("pair");
     const token = params.get("token");
+    const cliParam = params.get("cli");
     const expiresParam = parseInt(params.get("expires") || "0", 10);
     const expiresAt = expiresParam > 0 ? expiresParam * 1000 : Date.now() + 15 * 60 * 1000;
 
@@ -605,6 +606,10 @@
 
     if (pairId) {
       meta.textContent = "Pairing ID: " + pairId.slice(0, 8);
+    }
+    
+    if (cliParam === "antigravity") {
+      switchTab("antigravity");
     }
 
     function switchTab(tab) {
