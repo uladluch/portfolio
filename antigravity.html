@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Connect Gemini CLI</title>
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
@@ -17,11 +21,13 @@
       color: #111827;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
+
     .container {
       width: 100%;
       max-width: 460px;
       text-align: center;
     }
+
     .logo {
       width: 60px;
       height: 60px;
@@ -29,18 +35,21 @@
       display: block;
       object-fit: contain;
     }
+
     h1 {
       margin: 0 0 8px;
       font-size: 30px;
       font-weight: 700;
       letter-spacing: -0.02em;
     }
+
     .subtitle {
       margin: 0 0 14px;
       color: #6B7280;
       font-size: 14px;
       line-height: 1.55;
     }
+
     /* Countdown timer */
     .countdown {
       display: inline-flex;
@@ -56,16 +65,19 @@
       margin-bottom: 18px;
       transition: color 0.3s, background 0.3s, border-color 0.3s;
     }
+
     .countdown.warning {
       color: #B45309;
       background: #FFFBEB;
       border-color: #FCD34D;
     }
+
     .countdown.expired {
       color: #B91C1C;
       background: #FEF2F2;
       border-color: #FECACA;
     }
+
     .countdown-dot {
       width: 7px;
       height: 7px;
@@ -74,12 +86,28 @@
       animation: pulse-dot 2s ease-in-out infinite;
       flex-shrink: 0;
     }
-    .countdown.warning .countdown-dot { background: #F59E0B; }
-    .countdown.expired .countdown-dot { background: #EF4444; animation: none; }
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.35; }
+
+    .countdown.warning .countdown-dot {
+      background: #F59E0B;
     }
+
+    .countdown.expired .countdown-dot {
+      background: #EF4444;
+      animation: none;
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.35;
+      }
+    }
+
     .segment {
       display: flex;
       background: #EDEFF5;
@@ -88,6 +116,7 @@
       gap: 3px;
       margin-bottom: 16px;
     }
+
     .seg-btn {
       flex: 1;
       border: none;
@@ -98,10 +127,12 @@
       font-size: 14px;
       cursor: pointer;
     }
+
     .seg-btn.active {
       color: #111827;
       background: #FFFFFF;
     }
+
     .tab-header-outside {
       font-size: 18px;
       font-weight: 700;
@@ -114,20 +145,27 @@
       cursor: pointer;
       user-select: none;
     }
+
     .chevron {
       width: 20px;
       height: 20px;
       transition: transform 0.3s;
       color: #9CA3AF;
     }
+
     .tab-header-outside.collapsed .chevron {
       transform: rotate(-90deg);
     }
+
     .tab {
       display: none;
       text-align: left;
     }
-    .tab.active { display: block; }
+
+    .tab.active {
+      display: block;
+    }
+
     .card {
       background: #FFFFFF;
       border: 1px solid #E5E7EB;
@@ -136,9 +174,11 @@
       margin-bottom: 20px;
       display: block;
     }
+
     .card.hidden {
       display: none;
     }
+
     .empty-state {
       background: #FFFFFF;
       border: 1px solid #E5E7EB;
@@ -149,19 +189,26 @@
       font-size: 15px;
       font-weight: 500;
     }
+
     .step {
       margin-bottom: 14px;
       color: #374151;
       font-size: 14px;
     }
-    .step:last-child { margin-bottom: 0; }
+
+    .step:last-child {
+      margin-bottom: 0;
+    }
+
     .step-title {
       font-weight: 600;
       margin-bottom: 7px;
     }
+
     .step.optional-substep {
       margin-left: 2.1ch;
     }
+
     .code {
       margin-top: 6px;
       display: flex;
@@ -176,11 +223,28 @@
       font-size: 12px;
       color: #111827;
     }
-    .cmd { color: #334155; }
-    .cmd .verb { color: #111827; font-weight: 600; }
-    .cmd .pkg { color: #2563EB; }
-    .cmd .flag { color: #7C3AED; }
-    .cmd .arg { color: #0EA5E9; }
+
+    .cmd {
+      color: #334155;
+    }
+
+    .cmd .verb {
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .cmd .pkg {
+      color: #2563EB;
+    }
+
+    .cmd .flag {
+      color: #7C3AED;
+    }
+
+    .cmd .arg {
+      color: #0EA5E9;
+    }
+
     .copy-btn {
       border: none;
       background: transparent;
@@ -190,7 +254,11 @@
       padding: 0;
       flex-shrink: 0;
     }
-    .copy-btn:hover { color: #111827; }
+
+    .copy-btn:hover {
+      color: #111827;
+    }
+
     .connect-btn {
       margin-top: 16px;
       display: block;
@@ -207,7 +275,11 @@
       cursor: pointer;
       transition: opacity 0.2s;
     }
-    .connect-btn:hover { opacity: 0.85; }
+
+    .connect-btn:hover {
+      opacity: 0.85;
+    }
+
     /* Connected pill — same style as countdown but green */
     .connected-pill {
       display: none;
@@ -223,7 +295,11 @@
       margin-top: 4px;
       margin-bottom: 18px;
     }
-    .connected-pill.visible { display: inline-flex; }
+
+    .connected-pill.visible {
+      display: inline-flex;
+    }
+
     .connected-dot {
       width: 7px;
       height: 7px;
@@ -232,19 +308,25 @@
       flex-shrink: 0;
       animation: pulse-dot 2s ease-in-out infinite;
     }
+
     .note {
       margin-top: 12px;
       font-size: 12px;
       color: #6B7280;
       min-height: 16px;
     }
-    .note.error { color: #B91C1C; }
+
+    .note.error {
+      color: #B91C1C;
+    }
+
     .meta {
       margin-top: 8px;
       color: #6B7280;
       font-size: 11px;
       min-height: 14px;
     }
+
     .warning-box {
       margin-top: 12px;
       text-align: left;
@@ -256,15 +338,18 @@
       font-size: 12px;
       line-height: 1.5;
     }
+
     .warning-box strong {
       color: #374151;
     }
-
   </style>
 </head>
+
 <body>
   <div class="container">
-    <img class="logo" src="https://gqowupdasbvencpsmlhb.supabase.co/storage/v1/object/public/assets/antigravity/logo.png" alt="Antigravity">
+    <img class="logo"
+      src="https://gqowupdasbvencpsmlhb.supabase.co/storage/v1/object/public/assets/antigravity/logo.png"
+      alt="Antigravity">
     <h1>Connect your Workspace</h1>
     <p class="subtitle">Bridge your mobile app with Gemini CLI or Antigravity IDE.</p>
 
@@ -289,7 +374,9 @@
       <div class="tab-header-outside" onclick="toggleSection('card-unix', this)">
         <span>MacOS / Linux</span>
         <svg class="chevron" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+          <path fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd" />
         </svg>
       </div>
       <div class="card" id="card-unix">
@@ -298,33 +385,63 @@
         </div>
         <div class="step">
           <div class="step-title">2. Run this command</div>
-          <div class="code"><span class="cmd"><span class="verb">npx</span> <span class="pkg">antigravity-gemini-bridge@latest</span></span><button class="copy-btn" onclick="copyText('npx antigravity-gemini-bridge@latest', this)">Copy</button></div>
-          <div style="font-size:12px;color:#6B7280;margin-top:6px;">Node.js required. Gemini CLI &amp; sign-in are handled automatically.</div>
+          <div class="code"><span class="cmd"><span class="verb">npx</span> <span
+                class="pkg">antigravity-gemini-bridge@latest</span></span><button class="copy-btn"
+              onclick="copyText('npx antigravity-gemini-bridge@latest', this)">Copy</button></div>
+          <div style="font-size:12px;color:#6B7280;margin-top:6px;">Node.js required. Gemini CLI &amp; sign-in are
+            handled automatically.</div>
         </div>
       </div>
 
       <div class="tab-header-outside" onclick="toggleSection('card-win', this)">
         <span>Windows</span>
         <svg class="chevron" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+          <path fill-rule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clip-rule="evenodd" />
         </svg>
       </div>
       <div class="card" id="card-win">
         <div class="step">
           <div class="step-title">1. Open PowerShell in your Project Folder or System</div>
-          <div style="font-size:13px;color:#4B5563;margin-top:4px;">Node.js is required. <a href="https://nodejs.org" target="_blank" style="color:#2563EB;">Download here</a> if not installed.</div>
+          <div style="font-size:13px;color:#4B5563;margin-top:4px;">Node.js is required. <a href="https://nodejs.org"
+              target="_blank" style="color:#2563EB;">Download here</a> if not installed.</div>
         </div>
         <div class="step">
           <div class="step-title">2. Run this command</div>
-          <div class="code"><span class="cmd"><span class="verb">npx</span> <span class="pkg">antigravity-gemini-bridge@latest</span></span><button class="copy-btn" onclick="copyText('npx antigravity-gemini-bridge@latest', this)">Copy</button></div>
-          <div style="font-size:12px;color:#6B7280;margin-top:6px;">Node.js required. Gemini CLI &amp; sign-in are handled automatically.</div>
+          <div class="code"><span class="cmd"><span class="verb">npx</span> <span
+                class="pkg">antigravity-gemini-bridge@latest</span></span><button class="copy-btn"
+              onclick="copyText('npx antigravity-gemini-bridge@latest', this)">Copy</button></div>
+          <div style="font-size:12px;color:#6B7280;margin-top:6px;">Node.js required. Gemini CLI &amp; sign-in are
+            handled automatically.</div>
         </div>
       </div>
     </div>
 
     <div class="tab" id="tab-windows">
-      <div class="empty-state">
-        <div class="tab-header-outside" style="justify-content: center; margin: 0;">Coming soon</div>
+      <div class="card">
+        <div class="step">
+          <div class="step-title">1. Install the Extension</div>
+          <div style="font-size:13px;color:#4B5563;margin-top:4px;">Skip this step if you already have it installed.</div>
+          <div style="margin-top:10px;">
+            <a href="antigravity:extension/uladluch.antigravity-mobile-connector"
+              style="display:inline-block;background:#2563EB;color:#fff;font-size:14px;font-weight:600;padding:10px 22px;border-radius:8px;text-decoration:none;transition:opacity 0.2s;"
+              onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+              Install in Antigravity IDE
+            </a>
+          </div>
+          <div style="font-size:11px;color:#9CA3AF;margin-top:8px;">
+            Also on <a href="https://open-vsx.org/extension/uladluch/antigravity-mobile-connector" target="_blank"
+              style="color:#2563EB;">Open VSX Registry</a>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-title">2. Open Setup Guide and follow the buttons</div>
+          <div style="font-size:13px;color:#4B5563;margin-top:4px;line-height:1.6;">
+            Click the <strong>📱 Antigravity Mobile</strong> button in the bottom status bar.<br>
+            The extension will guide you through sign-in and connection — all on one screen.
+          </div>
+        </div>
       </div>
     </div>
 
@@ -335,7 +452,8 @@
 
     <div class="warning-box">
       <strong>Important:</strong> Do not paste API keys in the app chat.
-      If you see a <code>GEMINI_API_KEY</code> error, fix Gemini authentication in Terminal first, then try Connect again.
+      If you see a <code>GEMINI_API_KEY</code> error, fix Gemini authentication in Terminal first, then try Connect
+      again.
     </div>
     <div class="note" id="note"></div>
     <div class="meta" id="meta"></div>
@@ -420,7 +538,7 @@
         try {
           const resp = await fetch(callback, { method: "GET", cache: "no-store" });
           if (resp.ok) { onConnected(); return; }
-        } catch {}
+        } catch { }
         window.location.href = callback;
       });
 
@@ -496,4 +614,5 @@
     }
   </script>
 </body>
+
 </html>
