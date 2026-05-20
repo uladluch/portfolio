@@ -23,208 +23,242 @@
       text-align: center;
     }
     .logo {
-      width: 60px;
-      height: 60px;
-      margin: 0 auto 18px;
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 20px;
       display: block;
     }
     .logo svg {
-      width: 60px;
-      height: 60px;
-      border-radius: 14px;
-      filter: drop-shadow(0 2px 8px rgba(48, 127, 255, 0.25));
+      width: 70px;
+      height: 70px;
+      border-radius: 16px;
+      filter: drop-shadow(0 4px 12px rgba(48, 127, 255, 0.3));
     }
     h1 {
       margin: 0 0 8px;
       font-size: 30px;
       font-weight: 700;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.025em;
+      color: #0F172A;
     }
     .subtitle {
-      margin: 0 0 14px;
-      color: #6B7280;
+      margin: 0 0 16px;
+      color: #64748B;
       font-size: 14px;
-      line-height: 1.55;
+      line-height: 1.6;
     }
+    
     /* Countdown timer */
     .countdown {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       font-size: 13px;
-      font-weight: 500;
-      color: #6B7280;
-      background: #F3F4F6;
-      border: 1px solid #E5E7EB;
+      font-weight: 600;
+      color: #64748B;
+      background: #F1F5F9;
+      border: 1px solid #E2E8F0;
       border-radius: 100px;
-      padding: 5px 12px;
-      margin-bottom: 18px;
-      transition: color 0.3s, background 0.3s, border-color 0.3s;
+      padding: 6px 14px;
+      margin-bottom: 20px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .countdown.warning {
-      color: #B45309;
+      color: #D97706;
       background: #FFFBEB;
-      border-color: #FCD34D;
+      border-color: #FDE68A;
     }
     .countdown.expired {
-      color: #B91C1C;
+      color: #DC2626;
       background: #FEF2F2;
-      border-color: #FECACA;
+      border-color: #FEE2E2;
     }
     .countdown-dot {
-      width: 7px;
-      height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      background: #9CA3AF;
-      animation: pulse-dot 2s ease-in-out infinite;
+      background: #94A3B8;
+      animation: pulse-dot 2s infinite ease-in-out;
       flex-shrink: 0;
     }
     .countdown.warning .countdown-dot { background: #F59E0B; }
     .countdown.expired .countdown-dot { background: #EF4444; animation: none; }
+    
     @keyframes pulse-dot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.35; }
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.85); }
     }
+    
     .segment {
       display: flex;
-      background: #EDEFF5;
+      background: #E2E8F0;
       border-radius: 100px;
-      padding: 3px;
-      gap: 3px;
-      margin-bottom: 16px;
+      padding: 4px;
+      gap: 4px;
+      margin-bottom: 20px;
     }
     .seg-btn {
       flex: 1;
       border: none;
       background: transparent;
-      color: #6B7280;
+      color: #64748B;
       border-radius: 100px;
       padding: 10px 14px;
       font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
       font-family: inherit;
+      transition: all 0.2s ease;
     }
     .seg-btn.active {
-      color: #111827;
+      color: #0F172A;
       background: #FFFFFF;
+      box-shadow: 0 2px 4px rgba(15, 23, 42, 0.05);
     }
+    
     .tab {
       display: none;
       text-align: left;
       background: #FFFFFF;
-      border: 1px solid #E5E7EB;
-      border-radius: 18px;
-      padding: 15px 16px;
+      border: 1px solid #E2E8F0;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.03), 0 2px 4px -1px rgba(15, 23, 42, 0.02);
     }
     .tab.active { display: block; }
+    
     .step {
-      margin-bottom: 14px;
-      color: #374151;
+      margin-bottom: 16px;
+      color: #334155;
       font-size: 14px;
     }
     .step:last-child { margin-bottom: 0; }
     .step-title {
       font-weight: 600;
-      margin-bottom: 7px;
+      margin-bottom: 8px;
+      color: #0F172A;
     }
     .code {
-      margin-top: 6px;
+      margin-top: 8px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
-      background: #F3F4F6;
-      border: 1px solid #E5E7EB;
+      gap: 12px;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
       border-radius: 14px;
-      padding: 10px 11px;
+      padding: 12px 14px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
       font-size: 12px;
-      color: #111827;
+      color: #0F172A;
     }
     .cmd { color: #334155; }
-    .cmd .verb { color: #111827; font-weight: 600; }
-    .cmd .pkg { color: #2563EB; }
+    .cmd .verb { color: #0F172A; font-weight: 700; }
+    .cmd .pkg { color: #2563EB; font-weight: 500; }
     .cmd .flag { color: #7C3AED; }
     .cmd .arg { color: #0EA5E9; }
+    
     .copy-btn {
-      border: none;
-      background: transparent;
-      color: #6B7280;
+      border: 1px solid #E2E8F0;
+      background: #FFFFFF;
+      color: #64748B;
       cursor: pointer;
-      font-size: 13px;
-      padding: 0;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 8px;
       flex-shrink: 0;
       font-family: inherit;
+      transition: all 0.15s ease;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
     }
-    .copy-btn:hover { color: #111827; }
+    .copy-btn:hover {
+      color: #0F172A;
+      border-color: #CBD5E1;
+      background: #F8FAFC;
+    }
+    
     .connect-btn {
-      margin-top: 16px;
+      margin-top: 18px;
       display: block;
       width: 100%;
       border: none;
       text-decoration: none;
       text-align: center;
-      background: #000000;
+      background: #307FFF;
       color: #FFFFFF;
       font-weight: 600;
-      font-size: 16px;
-      padding: 14px 16px;
+      font-size: 15px;
+      padding: 14px 18px;
       border-radius: 100px;
       cursor: pointer;
-      transition: opacity 0.2s;
+      transition: all 0.2s ease;
       font-family: inherit;
+      box-shadow: 0 4px 14px rgba(48, 127, 255, 0.35);
     }
-    .connect-btn:hover { opacity: 0.85; }
+    .connect-btn:hover {
+      background: #1D63D8;
+      box-shadow: 0 6px 20px rgba(29, 99, 216, 0.4);
+      transform: translateY(-1px);
+    }
+    .connect-btn:active {
+      transform: translateY(0);
+    }
+    
     /* Connected pill */
     .connected-pill {
       display: none;
       align-items: center;
       gap: 6px;
       font-size: 13px;
-      font-weight: 500;
-      color: #15803D;
+      font-weight: 600;
+      color: #16A34A;
       background: #F0FDF4;
       border: 1px solid #BBF7D0;
       border-radius: 100px;
-      padding: 5px 12px;
+      padding: 6px 14px;
       margin-top: 4px;
-      margin-bottom: 18px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(22, 163, 74, 0.05);
     }
     .connected-pill.visible { display: inline-flex; }
     .connected-dot {
-      width: 7px;
-      height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: #16A34A;
       flex-shrink: 0;
-      animation: pulse-dot 2s ease-in-out infinite;
+      animation: pulse-dot 2s infinite ease-in-out;
     }
+    
     .note {
-      margin-top: 12px;
-      font-size: 12px;
-      color: #6B7280;
-      min-height: 16px;
+      margin-top: 14px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #64748B;
+      min-height: 18px;
     }
-    .note.error { color: #B91C1C; }
+    .note.error { color: #DC2626; }
     .meta {
-      margin-top: 8px;
-      color: #6B7280;
+      margin-top: 10px;
+      color: #94A3B8;
       font-size: 11px;
       min-height: 14px;
     }
+    
     .warning-box {
-      margin-top: 12px;
+      margin-top: 16px;
       text-align: left;
-      background: transparent;
-      border: 1px solid #D1D5DB;
-      border-radius: 14px;
-      padding: 10px 12px;
-      color: #4B5563;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 12px 14px;
+      color: #475569;
       font-size: 12px;
-      line-height: 1.5;
+      line-height: 1.6;
     }
     .warning-box strong {
-      color: #374151;
+      color: #0F172A;
     }
   </style>
 </head>
@@ -265,24 +299,24 @@
       </div>
       <div class="step">
         <div class="step-title">2. Go to your project folder</div>
-        <div style="font-size:13px;color:#4B5563;margin-top:4px;">Codex runs in this directory. Example:</div>
+        <div style="font-size:13px;color:#64748B;margin-top:4px;">Codex runs in this directory. Example:</div>
         <div class="code"><span class="cmd"><span class="verb">cd</span> <span class="arg">/path/to/your-project</span></span><button class="copy-btn" onclick="copyText('cd /path/to/your-project', this)">Copy</button></div>
       </div>
       <div class="step">
         <div class="step-title">3. Run the bridge</div>
         <div class="code"><span class="cmd"><span class="verb">npx</span> <span class="pkg">spudmobile-bridge@latest</span></span><button class="copy-btn" onclick="copyText('npx spudmobile-bridge@latest', this)">Copy</button></div>
-        <div style="font-size:12px;color:#6B7280;margin-top:6px;">Node.js required. Codex CLI will be installed automatically if needed.</div>
+        <div style="font-size:12px;color:#64748B;margin-top:6px;">Node.js required. Codex CLI will be run automatically via npx if needed.</div>
       </div>
     </div>
 
     <div class="tab" id="tab-windows">
       <div class="step">
         <div class="step-title">1. Open PowerShell</div>
-        <div style="font-size:13px;color:#4B5563;margin-top:4px;">Node.js is required. <a href="https://nodejs.org" target="_blank" style="color:#2563EB;">Download here</a> if not installed.</div>
+        <div style="font-size:13px;color:#64748B;margin-top:4px;">Node.js is required. <a href="https://nodejs.org" target="_blank" style="color:#2563EB; font-weight: 500; text-decoration: none;">Download here</a> if not installed.</div>
       </div>
       <div class="step">
         <div class="step-title">2. Go to your project folder</div>
-        <div style="font-size:13px;color:#4B5563;margin-top:4px;">Example:</div>
+        <div style="font-size:13px;color:#64748B;margin-top:4px;">Example:</div>
         <div class="code"><span class="cmd"><span class="verb">cd</span> <span class="arg">C:\path\to\your-project</span></span><button class="copy-btn" onclick="copyText('cd C:\\path\\to\\your-project', this)">Copy</button></div>
       </div>
       <div class="step">
@@ -297,8 +331,8 @@
     </div>
 
     <div class="warning-box">
-      <strong>That's it!</strong> The bridge will install Codex CLI and sign you in automatically on first run.
-      You only need <a href="https://nodejs.org" target="_blank" style="color:#2563EB;">Node.js</a> installed.
+      <strong>Important:</strong> Do not paste API keys in the app chat.
+      If you see a <code>CODEX_API_KEY</code> error, fix Codex authentication in Terminal first, then try Connect again.
     </div>
     <div class="note" id="note"></div>
     <div class="meta" id="meta"></div>
@@ -411,7 +445,7 @@
     }
 
     if (pairId) {
-      meta.textContent = "Pair: " + pairId.slice(0, 8) + "…";
+      meta.textContent = "Pairing ID: " + pairId.slice(0, 8) + "…";
     }
 
     function switchTab(tab) {
@@ -429,7 +463,18 @@
         setTimeout(() => { btn.textContent = old; }, 1200);
       });
     }
+
+    function autoDetectOS() {
+      const platform = (window.navigator.userAgentData?.platform || window.navigator.platform || '').toLowerCase();
+      const isWindows = platform.indexOf('win') !== -1;
+      if (isWindows) {
+        switchTab('windows');
+      } else {
+        switchTab('unix');
+      }
+    }
+    
+    window.addEventListener('DOMContentLoaded', autoDetectOS);
   </script>
 </body>
 </html>
-
