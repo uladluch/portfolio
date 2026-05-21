@@ -404,7 +404,14 @@
           if (autoConnectTimer) { clearInterval(autoConnectTimer); autoConnectTimer = null; }
           const resp = await fetch(callback, { method: "GET", cache: "no-store" });
           if (!resp.ok) {
-            // Restart polling if callback failed
+            if (resp.status >= 400 && resp.status < 500) {
+              // Permanent client-side error (e.g. invalid/expired token)
+              autoConnecting = false;
+              note.className = "note error";
+              note.textContent = "This link is invalid or has expired. Tap Connect again in the iOS app to get a fresh link.";
+              return;
+            }
+            // Restart polling if callback failed with other errors (e.g., 500 transient)
             autoConnecting = false;
             autoConnectTimer = setInterval(tryAutoConnect, 2000);
             return;
