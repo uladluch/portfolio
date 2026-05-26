@@ -433,7 +433,7 @@
 
         const img = new Image();
         img.onload = () => {
-          onConnected();
+          window.location.href = callback;
         };
         img.src = "http://127.0.0.1:38475/ping.gif?pair=" + encodeURIComponent(pairId) + "&nocache=" + Date.now();
       };
