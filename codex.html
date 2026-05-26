@@ -420,8 +420,8 @@
         window.location.href = callback;
       });
 
-      // Auto-connect: poll the local bridge every 1.5s
-      const tryAutoConnect = async () => {
+      // Auto-connect: poll the local bridge using an Image to bypass Mixed Content blocking
+      const tryAutoConnect = () => {
         if (autoConnected) return;
         autoConnectAttempts += 1;
         if (autoConnectAttempts > 400) {
@@ -430,13 +430,12 @@
           note.textContent = "Auto-connect timed out. Keep bridge running and tap Connect manually.";
           return;
         }
-        try {
-          const resp = await fetch(callback, { method: "GET", cache: "no-store" });
-          if (!resp.ok) return;
+
+        const img = new Image();
+        img.onload = () => {
           onConnected();
-        } catch {
-          // Bridge not listening yet — keep polling quietly.
-        }
+        };
+        img.src = "http://127.0.0.1:38475/ping.gif?pair=" + encodeURIComponent(pairId) + "&nocache=" + Date.now();
       };
 
       // Start polling right away
