@@ -315,12 +315,17 @@
         <div style="font-size:13px;color:#64748B;margin-top:4px;">Node.js is required. <a href="https://nodejs.org" target="_blank" style="color:#2563EB; font-weight: 500; text-decoration: none;">Download here</a> if not installed.</div>
       </div>
       <div class="step">
-        <div class="step-title">2. Go to your project folder</div>
+        <div class="step-title">2. Allow scripts (one-time)</div>
+        <div style="font-size:13px;color:#64748B;margin-top:4px;">If you see a <span style="color:#DC2626;font-weight:500;">SecurityError</span>, run this first:</div>
+        <div class="code"><span class="cmd"><span class="verb">Set-ExecutionPolicy</span> <span class="arg">RemoteSigned</span> <span class="flag">-Scope CurrentUser</span></span><button class="copy-btn" onclick="copyText('Set-ExecutionPolicy RemoteSigned -Scope CurrentUser', this)">Copy</button></div>
+      </div>
+      <div class="step">
+        <div class="step-title">3. Go to your project folder</div>
         <div style="font-size:13px;color:#64748B;margin-top:4px;">Example:</div>
         <div class="code"><span class="cmd"><span class="verb">cd</span> <span class="arg">C:\path\to\your-project</span></span><button class="copy-btn" onclick="copyText('cd C:\\path\\to\\your-project', this)">Copy</button></div>
       </div>
       <div class="step">
-        <div class="step-title">3. Run the bridge</div>
+        <div class="step-title">4. Run the bridge</div>
         <div class="code"><span class="cmd"><span class="verb">npx</span> <span class="pkg">spudmobile-bridge@latest</span></span><button class="copy-btn" onclick="copyText('npx spudmobile-bridge@latest', this)">Copy</button></div>
       </div>
     </div>
@@ -342,28 +347,11 @@
     const params = new URLSearchParams(window.location.search);
     const pairId = params.get("pair");
     const token = params.get("token");
-    const expiresParam = parseInt(params.get("expires") || "0", 10);
     const MAX_LIFETIME_MS = 15 * 60 * 1000;
-    // Compute remaining time relative to page-load moment.
-    // If the computer clock is skewed, we clamp to the full lifetime so the link
-    // doesn't expire immediately on machines with incorrect time.
-    const pageLoadMs = Date.now();
-    let remainingMs = expiresParam > 0
-      ? Math.max(0, expiresParam * 1000 - pageLoadMs)
-      : MAX_LIFETIME_MS;
-    // If remaining time exceeds the max lifetime (clock ahead), clamp it
-    if (remainingMs > MAX_LIFETIME_MS) remainingMs = MAX_LIFETIME_MS;
-    // If remaining is 0 but expires was set and is within a generous window
-    // (clock skew up to 5 minutes behind), grant a grace period
-    if (remainingMs === 0 && expiresParam > 0) {
-      const skew = pageLoadMs - expiresParam * 1000;
-      if (skew < 5 * 60 * 1000) {
-        // Clock is likely behind — grant remaining time as if clocks matched
-        remainingMs = MAX_LIFETIME_MS - skew;
-        if (remainingMs < 60 * 1000) remainingMs = 60 * 1000; // at least 1 min
-      }
-    }
-    const expiresAt = pageLoadMs + remainingMs;
+    // Always count down from page-load. The actual token expiry is validated
+    // server-side by the bridge, so this timer is purely cosmetic. Using a
+    // fixed duration avoids false "expired" on machines with wrong clocks.
+    const expiresAt = Date.now() + MAX_LIFETIME_MS;
 
     const connectLink = document.getElementById("connect-link");
     const connectedPill = document.getElementById("connected-pill");
