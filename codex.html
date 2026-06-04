@@ -312,21 +312,16 @@
     <div class="tab" id="tab-windows">
       <div class="step">
         <div class="step-title">1. Open PowerShell</div>
-        <div style="font-size:13px;color:#64748B;margin-top:4px;">Node.js is required. <a href="https://nodejs.org" target="_blank" style="color:#2563EB; font-weight: 500; text-decoration: none;">Download here</a> if not installed.</div>
+        <div style="font-size:13px;color:#64748B;margin-top:4px;">Press <span style="background:#F1F5F9;border:1px solid #E2E8F0;border-radius:6px;padding:2px 6px;font-size:12px;font-weight:500;">Win + X</span> → select <strong>Terminal</strong> or <strong>PowerShell</strong></div>
       </div>
       <div class="step">
-        <div class="step-title">2. Allow scripts (one-time)</div>
-        <div style="font-size:13px;color:#64748B;margin-top:4px;">If you see a <span style="color:#DC2626;font-weight:500;">SecurityError</span>, run this first:</div>
-        <div class="code"><span class="cmd"><span class="verb">Set-ExecutionPolicy</span> <span class="arg">RemoteSigned</span> <span class="flag">-Scope CurrentUser</span></span><button class="copy-btn" onclick="copyText('Set-ExecutionPolicy RemoteSigned -Scope CurrentUser', this)">Copy</button></div>
+        <div class="step-title">2. Paste this command</div>
+        <div style="font-size:13px;color:#64748B;margin-top:4px;">It will install everything automatically — <strong>no Node.js required</strong>.</div>
+        <div class="code"><span class="cmd"><span class="verb">irm</span> <span class="arg">https://unpkg.com/spudmobile-bridge@latest/install.ps1</span> <span class="flag">|</span> <span class="verb">iex</span></span><button class="copy-btn" onclick="copyText('irm https://unpkg.com/spudmobile-bridge@latest/install.ps1 | iex', this)">Copy</button></div>
+        <div style="font-size:12px;color:#64748B;margin-top:6px;">Downloads portable Node.js if needed, installs the bridge, and launches it.</div>
       </div>
       <div class="step">
-        <div class="step-title">3. Go to your project folder</div>
-        <div style="font-size:13px;color:#64748B;margin-top:4px;">Example:</div>
-        <div class="code"><span class="cmd"><span class="verb">cd</span> <span class="arg">C:\path\to\your-project</span></span><button class="copy-btn" onclick="copyText('cd C:\\path\\to\\your-project', this)">Copy</button></div>
-      </div>
-      <div class="step">
-        <div class="step-title">4. Run the bridge</div>
-        <div class="code"><span class="cmd"><span class="verb">npx</span> <span class="pkg">spudmobile-bridge@latest</span></span><button class="copy-btn" onclick="copyText('npx spudmobile-bridge@latest', this)">Copy</button></div>
+        <div class="step-title" style="font-size:13px;color:#94A3B8;font-weight:400;">⚡ That's it — the script handles everything else.</div>
       </div>
     </div>
 
