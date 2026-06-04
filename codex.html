@@ -343,7 +343,27 @@
     const pairId = params.get("pair");
     const token = params.get("token");
     const expiresParam = parseInt(params.get("expires") || "0", 10);
-    const expiresAt = expiresParam > 0 ? expiresParam * 1000 : Date.now() + 15 * 60 * 1000;
+    const MAX_LIFETIME_MS = 15 * 60 * 1000;
+    // Compute remaining time relative to page-load moment.
+    // If the computer clock is skewed, we clamp to the full lifetime so the link
+    // doesn't expire immediately on machines with incorrect time.
+    const pageLoadMs = Date.now();
+    let remainingMs = expiresParam > 0
+      ? Math.max(0, expiresParam * 1000 - pageLoadMs)
+      : MAX_LIFETIME_MS;
+    // If remaining time exceeds the max lifetime (clock ahead), clamp it
+    if (remainingMs > MAX_LIFETIME_MS) remainingMs = MAX_LIFETIME_MS;
+    // If remaining is 0 but expires was set and is within a generous window
+    // (clock skew up to 5 minutes behind), grant a grace period
+    if (remainingMs === 0 && expiresParam > 0) {
+      const skew = pageLoadMs - expiresParam * 1000;
+      if (skew < 5 * 60 * 1000) {
+        // Clock is likely behind — grant remaining time as if clocks matched
+        remainingMs = MAX_LIFETIME_MS - skew;
+        if (remainingMs < 60 * 1000) remainingMs = 60 * 1000; // at least 1 min
+      }
+    }
+    const expiresAt = pageLoadMs + remainingMs;
 
     const connectLink = document.getElementById("connect-link");
     const connectedPill = document.getElementById("connected-pill");
