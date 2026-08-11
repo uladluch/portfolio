@@ -31,9 +31,10 @@ jobs:
       - name: Prepare static site
         run: |
           mkdir -p _site
-          cp index.html main.css main.js _site/
+          find . -maxdepth 1 -type f \
+            \( -name '*.html' -o -name '*.css' -o -name '*.js' -o -name '*.svg' -o -name 'CNAME' \) \
+            -exec cp {} _site/ \;
           cp -R assets _site/assets
-          cp CNAME _site/CNAME
           touch _site/.nojekyll
 
       - name: Upload artifact
