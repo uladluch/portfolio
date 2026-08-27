@@ -1,17 +1,21 @@
 /* ================================================================== theme */
 
 :root {
-  /* Palette — one neutral ramp plus the single accent used by the artwork.
-     Nothing outside this block should name a raw colour. */
+  /* Palette — the full neutral ramp plus the single accent used by the
+     artwork. 400, 600 and 950 are reserves with no consumers yet; nothing
+     outside this block should name a raw colour. */
   --white:    #ffffff;
   --gray-50:  #f9fafb;
   --gray-100: #f3f4f6;
   --gray-200: #e5e7eb;
   --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
   --gray-500: #6b7280;
+  --gray-600: #4b5563;
   --gray-700: #374151;
   --gray-800: #1f2937;
   --gray-900: #111827;
+  --gray-950: #030712;
   --blue-300: #65bcff;
 
   /* Surfaces */
@@ -43,24 +47,39 @@
   --radius-button: 999px;
   --radius-pill: 24px;
 
-  /* Type — each role is `weight size/line-height`, paired with --font-sans:
-       font: var(--text-body) var(--font-sans);
-     Weight climbs as size drops, so small text keeps its colour. */
+  /* Type — four sizes, each in two weights, Default and Emphasized. Pair a
+     role with the family:  font: var(--text-body) var(--font-sans);
+     Default weight climbs as size drops, so small text keeps its colour,
+     and Emphasized is always one step up from its Default. */
   --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 
-  --text-display:   500 28px/36px;  /* page title            */
-  --text-lede:      500 16px/24px;  /* standfirst            */
-  --text-body:      400 16px/24px;  /* running copy          */
-  --text-ui:        500 14px/20px;  /* nav, tags             */
-  --text-ui-strong: 600 14px/20px;  /* buttons               */
-  --text-eyebrow:   600 12px/20px;  /* section labels, caps  */
-  --text-fine:      500 12px/20px;  /* colophon, fine print  */
+  --text-display:            500 28px/36px;  /* page title — pairs with --tracking-tight */
+  --text-display-emphasized: 600 28px/36px;
+
+  --text-body:               400 16px/24px;  /* running copy            */
+  --text-body-emphasized:    500 16px/24px;  /* standfirst, page flag   */
+
+  --text-ui:                 500 14px/20px;  /* nav, tags               */
+  --text-ui-emphasized:      600 14px/20px;  /* buttons                 */
+
+  --text-small:              500 12px/20px;  /* colophon, fine print    */
+  --text-small-emphasized:   600 12px/20px;  /* section labels — caps + --tracking-wide */
 
   --tracking-tight: -0.02em;
   --tracking-wide:  1px;
 
+  /* Spacing — a 4px scale. --gutter is the page's base inset, an alias of
+     --space-4. Values off the scale in the rules below are component
+     geometry (dot, flag, marquee), not rhythm. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
   /* Metrics */
-  --gutter: 16px;
+  --gutter: var(--space-4);
   --container-max: 1160px;
   --sidebar-width: 386px;
   --stage-aspect: 862 / 655;
@@ -104,7 +123,7 @@ a { color: inherit; }
 .layout {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: var(--space-8);
   padding: var(--gutter);
 }
 
@@ -113,20 +132,20 @@ a { color: inherit; }
 .sidebar {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: var(--space-8);
 }
 
 .sidebar__top {
   display: flex;
   flex-direction: column;
-  gap: 34px;
+  gap: var(--space-8);
 }
 
 /* Hero, rule and directory travel together as one block. */
 .stack {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: var(--space-8);
 }
 
 .sidebar__bottom {
@@ -156,7 +175,7 @@ a { color: inherit; }
 .intro__text {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .intro__title {
@@ -165,7 +184,7 @@ a { color: inherit; }
 }
 
 .intro__lede {
-  font: var(--text-lede) var(--font-sans);
+  font: var(--text-body-emphasized) var(--font-sans);
 }
 
 /* --------------------------------------------------------------- buttons */
@@ -173,18 +192,18 @@ a { color: inherit; }
 .actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px var(--gutter);
+  padding: var(--space-2) var(--space-4);
   border: 0;
   border-radius: var(--radius-button);
   cursor: pointer;
-  font: var(--text-ui-strong) var(--font-sans);
+  font: var(--text-ui-emphasized) var(--font-sans);
   text-decoration: none;
   white-space: nowrap;
   transition: background-color 0.2s ease;
@@ -218,12 +237,12 @@ a { color: inherit; }
   flex: 1 1 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
   min-width: 0;
 }
 
 .directory__label {
-  font: var(--text-eyebrow) var(--font-sans);
+  font: var(--text-small-emphasized) var(--font-sans);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
   color: var(--ink-muted);
@@ -232,7 +251,7 @@ a { color: inherit; }
 .directory__list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--space-2);
   font: var(--text-ui) var(--font-sans);
 }
 
@@ -304,7 +323,7 @@ a { color: inherit; }
 .marquee__track {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: var(--space-6);
   height: 100%;
   width: max-content;
   animation: marquee-scroll 20s linear infinite;
@@ -318,13 +337,13 @@ a { color: inherit; }
 
 @keyframes marquee-scroll {
   from { transform: translateX(0); }
-  to   { transform: translateX(calc(-50% - 12px)); }
+  to   { transform: translateX(calc(-50% - var(--space-6) / 2)); }
 }
 
 /* -------------------------------------------------------------- colophon */
 
 .colophon {
-  font: var(--text-fine) var(--font-sans);
+  font: var(--text-small) var(--font-sans);
   color: var(--ink-muted);
 }
 
@@ -360,14 +379,14 @@ a { color: inherit; }
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--space-2);
   min-height: 120vh;
   padding: var(--gutter);
   text-align: center;
 }
 
 .empty__title {
-  font: var(--text-lede) var(--font-sans);
+  font: var(--text-body-emphasized) var(--font-sans);
   color: var(--ink);
 }
 
@@ -430,7 +449,7 @@ a { color: inherit; }
   border-radius: var(--radius-button);
   background: var(--scrim);
   box-shadow: inset 0 0 0 1px var(--line);
-  font: var(--text-lede) var(--font-sans);
+  font: var(--text-body-emphasized) var(--font-sans);
   color: var(--ink);
   white-space: nowrap;
 }
@@ -493,13 +512,13 @@ a { color: inherit; }
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .tag {
   display: inline-flex;
   align-items: center;
-  padding: 4px 12px;
+  padding: var(--space-1) var(--space-3);
   border-radius: var(--radius-pill);
   box-shadow: inset 0 0 0 1px var(--line-strong);
   background: var(--surface-raised);
@@ -509,7 +528,7 @@ a { color: inherit; }
 }
 
 .tag--link {
-  padding: 4px 0;
+  padding: var(--space-1) 0;
   background: none;
   box-shadow: none;
   text-decoration: underline;
@@ -551,7 +570,7 @@ a { color: inherit; }
 
   .sidebar {
     width: var(--sidebar-width);
-    gap: 148px;
+    gap: 148px; /* Figma layout coordinate, deliberately off the spacing scale */
     padding: var(--gutter) 0;
   }
 
@@ -562,9 +581,9 @@ a { color: inherit; }
     padding: 0 var(--gutter);
   }
 
-  .sidebar__top { gap: 24px; }
+  .sidebar__top { gap: var(--space-6); }
 
-  .intro { gap: 24px; }
+  .intro { gap: var(--space-6); }
 
   /* Three vertical rules frame the columns: both outer edges of the container
      and the seam between them. Drawn inset so they cost no layout width and
