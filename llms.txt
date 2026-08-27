@@ -1,0 +1,16 @@
+# Ulad Luch
+
+> Product & Growth Designer, focused on iOS apps: product design, growth, and SwiftUI development.
+
+Personal portfolio at https://luch.dev. Case studies cover Calorie Counter
+(4.8-star rating, ~28% D30 retention), Serene ($2M ARR wellness app), and
+Stream Vision 2 (90k DAU hardware companion app). Operates as Luch Dev,
+NIP PL1133202275, Poland.
+
+## Pages
+
+- [Home & Portfolio](https://luch.dev/index.html.md): intro, positioning, and all three case studies with metrics and store links
+
+## Contact
+
+- [Email](mailto:hello@luch.dev)

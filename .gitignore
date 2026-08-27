@@ -1,1 +1,44 @@
+# The published site is plain static files at the repo root plus assets/.
+# Everything below is local working context that should not ship with it.
+
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Claude Code — local working context.
+# launch.json stays tracked: it is the dev-server config, useful on a clone.
+.claude/skills/
+.claude/settings.local.json
+.claude/scratch/
+
+# Private research — business analysis, revenue figures, unreleased pricing.
+# Deliberately not published: this repo is public.
+analysis/
+
+# Python — analysis tooling and virtualenvs
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Node — if any tooling ever lands here
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Build output — the deploy workflow assembles this in CI
+_site/
+
+# Logs and scratch
+*.log
+scratch/
+tmp/

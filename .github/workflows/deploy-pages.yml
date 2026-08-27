@@ -32,7 +32,8 @@ jobs:
         run: |
           mkdir -p _site
           find . -maxdepth 1 -type f \
-            \( -name '*.html' -o -name '*.css' -o -name '*.js' -o -name '*.svg' -o -name 'CNAME' \) \
+            \( -name '*.html' -o -name '*.css' -o -name '*.js' -o -name '*.svg' -o -name 'CNAME' \
+               -o -name '*.html.md' -o -name 'llms.txt' -o -name 'robots.txt' \) \
             -exec cp {} _site/ \;
           cp -R assets _site/assets
           touch _site/.nojekyll

@@ -1,0 +1,5 @@
+# luch.dev — everyone is welcome, AI crawlers and agents included.
+# Markdown twins (*.html.md) and /llms.txt exist specifically for LLMs.
+
+User-agent: *
+Allow: /
