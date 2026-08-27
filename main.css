@@ -53,8 +53,17 @@
      and Emphasized is always one step up from its Default. */
   --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
 
+  --text-headline:           500 36px/44px;  /* case study H1 — pairs with --tracking-tight */
+  --text-headline-emphasized: 600 36px/44px;
+
+  --text-heading:            500 32px/40px;  /* case study H2 — pairs with --tracking-tight */
+  --text-heading-emphasized: 600 32px/40px;
+
   --text-display:            500 28px/36px;  /* page title — pairs with --tracking-tight */
   --text-display-emphasized: 600 28px/36px;
+
+  --text-title:              500 20px/28px;  /* aside block titles — pairs with --tracking-tight */
+  --text-title-emphasized:   600 20px/28px;
 
   --text-body:               400 16px/24px;  /* running copy            */
   --text-body-emphasized:    500 16px/24px;  /* standfirst, page flag   */
@@ -77,6 +86,7 @@
   --space-4: 16px;
   --space-6: 24px;
   --space-8: 32px;
+  --space-10: 40px;
 
   /* Icons — Lucide-sourced, 24x24 viewBox. Weight is emulated with
      stroke-width rather than a second file, echoing --text-*-emphasized. */
@@ -86,6 +96,7 @@
 
   /* Metrics */
   --gutter: var(--space-4);
+  --topbar-height: 48px;
   --container-max: 1160px;
   --sidebar-width: 386px;
   --stage-aspect: 862 / 655;
@@ -111,7 +122,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, p, ul, figure { margin: 0; }
+h1, h2, h3, p, ul, figure { margin: 0; }
 ul { padding: 0; list-style: none; }
 img, video { display: block; max-width: 100%; }
 
@@ -486,6 +497,13 @@ a { color: inherit; }
 
 /* ----------------------------------------------------------------- stage */
 
+/* A stage wrapped in a link keeps its hover reel; the pointer signals that
+   the whole artwork is the way into the case study. */
+.stage-link {
+  display: block;
+}
+
+
 /*
  * The artwork is authored on an 862 x 655 stage. The visible window is always
  * 500px tall at every breakpoint, so the stage is scaled to that height and
@@ -620,3 +638,296 @@ a { color: inherit; }
     box-shadow: inset 1px 0 0 var(--line), inset -1px 0 0 var(--line);
   }
 }
+
+/* ================================================== case study template */
+
+/*
+ * Detail pages (/portfolio/<slug>/) share the design system with the home
+ * page but carry their own shell: a fixed top bar, a sticky aside with the
+ * project passport, and a long-form article. Sections below only exist on
+ * those pages.
+ */
+
+/* ----------------------------------------------------------------- topbar */
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  height: var(--topbar-height);
+  padding: 0 var(--gutter);
+  background: var(--bg);
+  box-shadow: inset 0 -1px 0 var(--line);
+}
+
+/* The bar itself bleeds edge to edge; its content rides the same container
+   as the case layout, so the icons line up with the framing rules. */
+.topbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: var(--ink);
+  transition: background-color 0.2s ease;
+}
+
+.icon-button:hover { background: var(--surface-sunken); }
+
+.icon-button .icon {
+  width: var(--icon-size);
+  height: var(--icon-size);
+}
+
+/* ------------------------------------------------------------ case layout */
+
+.case-layout {
+  display: flex;
+  flex-direction: column;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-top: var(--topbar-height);
+}
+
+.case-aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gutter);
+  padding-top: var(--space-8);
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+.case-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.case-block__title {
+  font: var(--text-title) var(--font-sans);
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink);
+}
+
+/* Passport rows: icon + fact */
+.detail-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+  font: var(--text-body-emphasized) var(--font-sans);
+}
+
+.detail-list li:first-child { padding-top: 0; }
+.detail-list li:last-child { padding-bottom: 0; }
+
+.detail-list .icon {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.detail-list a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.detail-list a:hover { text-decoration: underline; }
+
+.link-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  font: var(--text-body) var(--font-sans);
+}
+
+.link-list a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.link-list a:hover { text-decoration: underline; }
+
+/* ----------------------------------------------------------- case article */
+
+.case-article {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+  padding: var(--space-6) var(--gutter);
+}
+
+/* Content blocks sit a gutter apart, but a heading stays tight to the text
+   it introduces — the gap under h1/h2 drops to one step. */
+.case-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.case-section > * + * {
+  margin-top: var(--gutter);
+}
+
+.case-section > h1 + *,
+.case-section > h2 + * {
+  margin-top: var(--space-3);
+}
+
+.case-section h1 {
+  font: var(--text-headline) var(--font-sans);
+  letter-spacing: var(--tracking-tight);
+}
+
+.case-section h2 {
+  font: var(--text-heading) var(--font-sans);
+  letter-spacing: var(--tracking-tight);
+}
+
+.case-section p,
+.case-section ul {
+  font: var(--text-body) var(--font-sans);
+  color: var(--ink-soft);
+}
+
+.case-section ul {
+  padding-left: 20px;
+  list-style: disc;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.case-section li::marker { color: var(--ink-muted); }
+
+.case-section strong {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* Image and its commentary side by side on wide screens. */
+.case-section__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gutter);
+}
+
+/* ------------------------------------------------------------ figures */
+
+/*
+ * Grey placeholder blocks. Until the real graphic lands, the block carries
+ * its brief — what to depict — and the asset id it will be saved under.
+ * A real image drops in with the same class, keeping the aspect ratio.
+ */
+.figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  aspect-ratio: var(--ar, 3 / 2);
+  background: var(--surface);
+  padding: var(--gutter);
+  text-align: center;
+}
+
+.figure figcaption {
+  font: var(--text-ui) var(--font-sans);
+  color: var(--ink-muted);
+  max-width: 44ch;
+}
+
+.figure__id {
+  font: var(--text-small) var(--font-sans);
+  color: var(--ink-muted);
+  opacity: 0.7;
+}
+
+.figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ------------------------------------------- case layout, desktop and up */
+
+/* Mirrors the home page shell: a gutter around the container until it can
+   hold --container-max, then centred with vertical rules framing the
+   columns — same breakpoints, same lines, so the two pages read as one. */
+@media (min-width: 800px) {
+  .case-layout {
+    flex-direction: row;
+    align-items: flex-start;
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+
+  .case-aside {
+    width: 340px;
+    flex: none;
+    position: sticky;
+    top: var(--topbar-height);
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-8);
+  }
+
+  .case-article {
+    flex: 1 1 0;
+    min-width: 0;
+    align-items: center;
+    padding: var(--space-8) var(--gutter);
+    box-shadow: inset 1px 0 0 var(--line);
+  }
+
+  .case-article > * {
+    width: 100%;
+    max-width: 598px;
+  }
+
+  .case-section__row {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .case-section__row > * {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  /* The left edge is drawn on the container, not the aside: the aside is
+     sticky and only as tall as its content, so its line would stop partway
+     down the page. */
+  .case-layout {
+    padding-left: 0;
+    padding-right: 0;
+    box-shadow: inset 1px 0 0 var(--line);
+  }
+
+  .case-aside {
+    width: var(--sidebar-width);
+  }
+
+  .case-article {
+    box-shadow: inset 1px 0 0 var(--line), inset -1px 0 0 var(--line);
+  }
+}
+
