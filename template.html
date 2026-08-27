@@ -112,100 +112,68 @@
 
     <article class="case-article">
 
+      <!--
+        This is a block library, not a fixed narrative. Each block below is a
+        reusable visual shape — heading + some combination of paragraph,
+        figure, and list. A case study is assembled by picking whichever
+        blocks fit ITS story, in whatever order and count it needs; nothing
+        here is a required slot named "Problem" or "Process". The captions
+        note which narrative moments a block typically carries, as a prompt,
+        not a rule.
+      -->
+
       <section class="case-section">
         <h1>Headline: One Sentence Naming the Product, Your Move, and the Number It Moved.</h1>
         <figure class="figure" style="--ar: 598 / 395">
-          <figcaption>Hero figure, ratio 598:395. The one image that sells the case: product in its real context, not a clean mockup</figcaption>
-          <span class="figure__id">placeholder:hero</span>
+          <div class="figure__media">
+            <p class="figure__brief">Hero block. Always first, always full width. The one image that sells the case: product in its real context, not a clean mockup</p>
+            <span class="figure__id">placeholder:hero</span>
+          </div>
         </figure>
       </section>
 
 
       <section class="case-section">
-        <h2>Section type: Context</h2>
-        <figure class="figure" style="--ar: 598 / 242">
-          <figcaption>Wide supporting figure, ratio 598:242. Product family, market landscape, or the state of things before you</figcaption>
-          <span class="figure__id">placeholder:context</span>
+        <h2>Block: Text</h2>
+        <p>Heading plus one paragraph. The plainest block — connective tissue between visual moments, or a claim that doesn't need proof: framing the stakes, stating a decision's thesis, closing a thought. From markdown this is a plain <em>## Heading</em> followed by a paragraph. One idea per block — a second paragraph usually wants its own heading instead.</p>
+        <p>A figure is optional on every block, this one included — add one below the paragraph wherever a single image carries the point on its own: the product family, a results dashboard, a before/after. Leave it out and the block is just text.</p>
+        <figure class="figure" style="--ar: 598 / 300">
+          <div class="figure__media">
+            <p class="figure__brief">Optional figure for this block. One image doing one job — swap the aspect ratio to fit what it actually shows</p>
+            <span class="figure__id">placeholder:text-figure</span>
+          </div>
         </figure>
-        <p>H2 plus one paragraph plus an optional wide figure. Sets the scene in three or four sentences: what the product is, who uses it, what was at stake when you arrived. From markdown this is a plain <em>## Heading</em> followed by a paragraph. One idea per section — if a second paragraph creeps in, it probably belongs in its own section.</p>
       </section>
 
 
       <section class="case-section">
-        <h2>Section type: Problem</h2>
-        <p>A one-paragraph lead naming the core difficulty, followed by a split row: evidence on the left, the breakdown on the right.</p>
-        <div class="case-section__row">
-          <figure class="figure" style="--ar: 291 / 280">
-            <figcaption>Split-row figure, ratio 291:280. A diagram or screenshot proving the problem was real</figcaption>
-            <span class="figure__id">placeholder:problem-evidence</span>
-          </figure>
-          <ul>
-            <li><strong>Named pain:</strong> each bullet opens with a bold label and states one concrete, verifiable difficulty — with a number where one exists.</li>
-            <li><strong>Constraint:</strong> the second bullet is usually the constraint that made the pain hard to fix: team size, tech debt, deadline, platform.</li>
-          </ul>
-        </div>
-      </section>
-
-
-      <section class="case-section">
-        <h2>Section type: Process</h2>
-        <p>A lead sentence naming your approach, then alternating bullet-and-figure pairs. Each pair is one method: what you did, what it showed.</p>
+        <h2>Block: List</h2>
+        <p>Heading, paragraph, bullet list — for anything that reads better as a claim than a picture: outcome metrics, a short set of constraints, a closing summary. Every number in it carries its period and its baseline; a number without a baseline is decoration.</p>
         <ul>
-          <li><strong>Method one:</strong> what you actually did, stated as an action with an object — audited N reviews, benchmarked X, mapped Y. The figure below it shows the artifact.</li>
+          <li><strong>First item:</strong> the headline fact, with the period it covers and what it was before.</li>
+          <li><strong>Second item:</strong> a supporting fact — with honest attribution where more than one party moved it.</li>
+          <li><strong>Third item:</strong> the ceiling. Past three, items start diluting each other.</li>
         </ul>
-        <figure class="figure" style="--ar: 598 / 460">
-          <figcaption>Tall evidence figure, ratio 598:460. The artifact the method produced: affinity map, audit sheet, flow</figcaption>
-          <span class="figure__id">placeholder:process-artifact</span>
-        </figure>
-        <ul>
-          <li><strong>Method two:</strong> repeat the pattern. Two or three methods is the ceiling — more reads as a checklist, and checklists are the rejection flag this template exists to avoid.</li>
-        </ul>
-        <figure class="figure" style="--ar: 598 / 205">
-          <figcaption>Short strip figure, ratio 598:205. Comparisons and before/after strips fit this shape</figcaption>
-          <span class="figure__id">placeholder:process-comparison</span>
+        <p>A figure is optional here too — a chart or dashboard behind the numbers, dropped in wherever it reads better than a bare list.</p>
+        <figure class="figure" style="--ar: 598 / 300">
+          <div class="figure__media">
+            <p class="figure__brief">Optional figure for this block. The numbers above as one simple visual — chart, dashboard, before/after</p>
+            <span class="figure__id">placeholder:list-figure</span>
+          </div>
         </figure>
       </section>
 
 
       <section class="case-section">
-        <h2>Section type: Decision</h2>
-        <p><strong>A bolded thesis sentence naming the decision.</strong> Then a split row per decision: the artifact on one side, action and result on the other.</p>
-        <div class="case-section__row">
-          <figure class="figure" style="--ar: 291 / 220">
-            <figcaption>Decision figure, ratio 291:220. The thing you changed: component states, a collapsed flow, a rebuilt screen</figcaption>
-            <span class="figure__id">placeholder:decision-artifact</span>
-          </figure>
-          <ul>
-            <li><strong>Action:</strong> what you changed and what you traded away to get it — the trade-off is the credible part.</li>
-            <li><strong>Result:</strong> the measured consequence of this decision alone, not of the whole project.</li>
-          </ul>
-        </div>
-        <p><strong>Repeat per decision, two or three times.</strong> Include the attempt that failed: what you tried first, why it did not survive contact with users.</p>
-        <div class="case-section__row">
-          <figure class="figure" style="--ar: 291 / 220">
-            <figcaption>Dead-end figure, ratio 291:220. The version that did not ship — failures earn trust</figcaption>
-            <span class="figure__id">placeholder:decision-deadend</span>
-          </figure>
-          <ul>
-            <li><strong>What failed:</strong> the honest account of the first attempt.</li>
-            <li><strong>What it taught:</strong> the insight that shaped the shipped version.</li>
-          </ul>
-        </div>
-      </section>
-
-
-      <section class="case-section">
-        <h2>Section type: Outcome</h2>
-        <figure class="figure" style="--ar: 598 / 362">
-          <figcaption>Results figure, ratio 598:362. The headline numbers as one simple visual — chart, dashboard, before/after</figcaption>
-          <span class="figure__id">placeholder:outcome</span>
+        <h2>Block: Image Only</h2>
+        <p>Just a figure — no heading, no text. This is the one block where the image isn't optional; it's for the moment a picture has to stand completely alone between two blocks of prose, with nothing explaining it.</p>
+        <figure class="figure" style="--ar: 291 / 220">
+          <div class="figure__media">
+            <p class="figure__brief">Standalone figure. Whatever needs no caption to land — a screenshot, a detail, a beat between two ideas</p>
+            <span class="figure__id">placeholder:image</span>
+          </div>
+          <figcaption>Caption (optional, on any block's figure) — once a real image replaces the placeholder, add this line for context the image doesn't give on its own; leave it out when the image speaks for itself.</figcaption>
         </figure>
-        <p>One paragraph connecting the work to the change, then the metrics as bullets. Every number carries its period and its baseline — a number without a baseline is decoration.</p>
-        <ul>
-          <li><strong>Headline metric:</strong> the one from the home card, with the period it covers and what it was before.</li>
-          <li><strong>Second metric:</strong> supporting number with honest attribution — your share of it versus the team\'s and the market\'s.</li>
-          <li><strong>Third metric:</strong> the ceiling. Past three, numbers start diluting each other.</li>
-        </ul>
       </section>
 
     </article>

@@ -822,21 +822,23 @@ a { color: inherit; }
   color: var(--ink);
 }
 
-/* Image and its commentary side by side on wide screens. */
-.case-section__row {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gutter);
-}
-
 /* ------------------------------------------------------------ figures */
 
 /*
- * Grey placeholder blocks. Until the real graphic lands, the block carries
- * its brief — what to depict — and the asset id it will be saved under.
- * A real image drops in with the same class, keeping the aspect ratio.
+ * .figure is the outer wrapper; .figure__media is the aspect-ratio'd box
+ * inside it. Grey placeholder blocks carry a brief — what to depict — and
+ * the asset id it will be saved under. A real image drops into the same
+ * media box, keeping the aspect ratio, and replaces the brief entirely.
+ * A <figcaption>, if present, is a separate, optional line below the media —
+ * the real caption a finished image may or may not need, not the brief.
  */
 .figure {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.figure__media {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -848,7 +850,7 @@ a { color: inherit; }
   text-align: center;
 }
 
-.figure figcaption {
+.figure__brief {
   font: var(--text-ui) var(--font-sans);
   color: var(--ink-muted);
   max-width: 44ch;
@@ -860,10 +862,16 @@ a { color: inherit; }
   opacity: 0.7;
 }
 
-.figure img {
+.figure__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.figure figcaption {
+  font: var(--text-ui) var(--font-sans);
+  color: var(--ink-muted);
+  text-align: left;
 }
 
 /* ------------------------------------------- case layout, desktop and up */
@@ -899,16 +907,6 @@ a { color: inherit; }
   .case-article > * {
     width: 100%;
     max-width: 598px;
-  }
-
-  .case-section__row {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-
-  .case-section__row > * {
-    flex: 1 1 0;
-    min-width: 0;
   }
 }
 
