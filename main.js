@@ -106,3 +106,40 @@ const canHover = window.matchMedia('(hover: hover)');
     }
   });
 })();
+
+/* ------------------------------------------------------------- page switch
+ * The sidebar "Pages" list swaps which panel the right column shows. The hash
+ * carries the choice, so a view can be linked to and the back button works.
+ */
+(() => {
+  const links = [...document.querySelectorAll('.page-link')];
+  const panels = [...document.querySelectorAll('.panel')];
+  const work = document.querySelector('.work');
+  if (!links.length || !panels.length) return;
+
+  const DEFAULT = panels[0].id;
+
+  const show = (id) => {
+    const target = panels.some((panel) => panel.id === id) ? id : DEFAULT;
+
+    panels.forEach((panel) => {
+      panel.hidden = panel.id !== target;
+    });
+
+    links.forEach((link) => {
+      const isCurrent = link.getAttribute('href') === `#${target}`;
+      if (isCurrent) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+
+    if (work) work.scrollTop = 0;
+  };
+
+  const fromHash = () => show(location.hash.slice(1));
+
+  window.addEventListener('hashchange', fromHash);
+  fromHash();
+})();
