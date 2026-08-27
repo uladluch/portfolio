@@ -107,9 +107,11 @@ const canHover = window.matchMedia('(hover: hover)');
   });
 })();
 
-/* ------------------------------------------------------------- page switch
- * The sidebar "Pages" list swaps which panel the right column shows. The hash
- * carries the choice, so a view can be linked to and the back button works.
+/* -------------------------------------------------------------- page marks
+ * The panels run end to end in a single scroll, so there is nothing to switch
+ * — the sidebar just reports where you are. Whichever section is crossing the
+ * upper third of the column takes the dot, and the hash follows along so the
+ * address stays meaningful without piling up history entries.
  */
 (() => {
   const links = [...document.querySelectorAll('.page-link')];
@@ -117,29 +119,72 @@ const canHover = window.matchMedia('(hover: hover)');
   const work = document.querySelector('.work');
   if (!links.length || !panels.length) return;
 
-  const DEFAULT = panels[0].id;
+  /* Above the tablet breakpoint the right column scrolls on its own; below it
+     the whole document does, and the observer has to watch the viewport. */
+  const wide = window.matchMedia('(min-width: 800px)');
 
-  const show = (id) => {
-    const target = panels.some((panel) => panel.id === id) ? id : DEFAULT;
+  const flag = document.querySelector('.page-flag');
+  const flagLabel = flag && flag.querySelector('.page-flag__label');
+  const FLAG_DWELL = 1600; // ms the name stays up once a page has arrived
 
-    panels.forEach((panel) => {
-      panel.hidden = panel.id !== target;
-    });
+  let flagTimer = null;
+
+  /* The name shows itself as a page arrives and then withdraws. It is skipped
+     on the very first mark, which only reports where the page opened. */
+  const announce = (name) => {
+    if (!flag || !flagLabel) return;
+
+    flagLabel.textContent = name;
+    flag.classList.add('is-visible');
+
+    window.clearTimeout(flagTimer);
+    flagTimer = window.setTimeout(() => {
+      flag.classList.remove('is-visible');
+    }, FLAG_DWELL);
+  };
+
+  /* --- current page ----------------------------------------------------- */
+
+  let current = null;
+
+  const mark = (id) => {
+    if (id === current) return;
+    const first = current === null;
+    current = id;
+
+    let name = id;
 
     links.forEach((link) => {
-      const isCurrent = link.getAttribute('href') === `#${target}`;
-      if (isCurrent) {
+      if (link.getAttribute('href') === `#${id}`) {
         link.setAttribute('aria-current', 'page');
+        name = link.textContent.trim();
       } else {
         link.removeAttribute('aria-current');
       }
     });
 
-    if (work) work.scrollTop = 0;
+    history.replaceState(null, '', `#${id}`);
+    if (!first) announce(name);
   };
 
-  const fromHash = () => show(location.hash.slice(1));
+  let observer = null;
 
-  window.addEventListener('hashchange', fromHash);
-  fromHash();
+  const watch = () => {
+    if (observer) observer.disconnect();
+
+    observer = new IntersectionObserver((entries) => {
+      /* A thin band near the top of the column decides the winner, so the dot
+         turns over as a section arrives rather than when it is fully in view. */
+      const arrived = entries.filter((entry) => entry.isIntersecting).pop();
+      if (arrived) mark(arrived.target.id);
+    }, {
+      root: wide.matches && work ? work : null,
+      rootMargin: '-25% 0px -70% 0px',
+    });
+
+    panels.forEach((panel) => observer.observe(panel));
+  };
+
+  watch();
+  wide.addEventListener('change', watch);
 })();

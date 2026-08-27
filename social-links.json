@@ -1,0 +1,8 @@
+{
+  "_note": "Parked while the sidebar shows pages instead of social links. Not copied by the Pages deploy workflow, which only publishes top-level html/css/js/svg and CNAME.",
+  "social": {
+    "github": "https://github.com/uladluch",
+    "figma": "https://www.figma.com/@uladluch",
+    "linkedin": "https://www.linkedin.com/in/uladluch/"
+  }
+}

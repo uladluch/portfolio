@@ -36,6 +36,9 @@
   /* Accent */
   --accent: var(--blue-300);
 
+  /* Translucent ground for the blurred page flag. */
+  --scrim: rgba(249, 250, 251, 0.72);
+
   /* Radii */
   --radius-button: 999px;
   --radius-pill: 24px;
@@ -70,7 +73,10 @@
 *::before,
 *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
@@ -175,7 +181,9 @@ a { color: inherit; }
   align-items: center;
   justify-content: center;
   padding: 8px var(--gutter);
+  border: 0;
   border-radius: var(--radius-button);
+  cursor: pointer;
   font: var(--text-ui-strong) var(--font-sans);
   text-decoration: none;
   white-space: nowrap;
@@ -239,11 +247,15 @@ a { color: inherit; }
 /* Pages behave as a view switcher: the current one keeps --ink and carries a
    dot. The dot is absolutely placed in a reserved gutter so the three labels
    stay aligned whichever one is active. */
+/* Pages sit flush with their column heading. The current one slides aside to
+   let a dot into the space it leaves, so the marker never has to travel
+   between the columns — the label does the moving. */
 .directory__list--pages a {
   position: relative;
-  padding-left: 14px;
+  display: inline-block;
   color: var(--ink-muted);
-  transition: color 0.15s ease;
+  transition: color 0.25s ease,
+              transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .directory__list--pages a:hover {
@@ -251,10 +263,12 @@ a { color: inherit; }
   text-decoration: none;
 }
 
+/* Parked a step to the left of its own label, so that once the label has
+   moved over the dot lands exactly on the column's left edge. */
 .directory__list--pages a::before {
   content: "";
   position: absolute;
-  left: 0;
+  left: -14px;
   top: 50%;
   width: 5px;
   height: 5px;
@@ -262,15 +276,19 @@ a { color: inherit; }
   border-radius: 50%;
   background: currentColor;
   opacity: 0;
-  transition: opacity 0.15s ease;
+  transform: scale(0.3);
+  transition: opacity 0.25s ease,
+              transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .directory__list--pages a[aria-current="page"] {
   color: var(--ink);
+  transform: translateX(14px);
 }
 
 .directory__list--pages a[aria-current="page"]::before {
   opacity: 1;
+  transform: scale(1);
 }
 
 /* --------------------------------------------------------------- marquee */
@@ -318,16 +336,23 @@ a { color: inherit; }
   display: flex;
   flex-direction: column;
   min-width: 0;
+  scroll-behavior: smooth;
+  /* The column is the scroll surface but shows no bar of its own; the belt
+     should read as one uninterrupted run of content. */
+  scrollbar-width: none;
 }
 
+.work::-webkit-scrollbar { display: none; }
+
+/* The panels sit end to end in one flow, so scrolling out of the portfolio
+   carries straight on into the next section. */
 .panel {
   display: flex;
   flex-direction: column;
   gap: var(--gutter);
-  flex: 1 1 auto;
+  flex: 0 0 auto;
+  scroll-margin-top: var(--gutter);
 }
-
-.panel[hidden] { display: none; }
 
 .empty {
   flex: 1 1 auto;
@@ -336,7 +361,7 @@ a { color: inherit; }
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 60vh;
+  min-height: 120vh;
   padding: var(--gutter);
   text-align: center;
 }
@@ -364,6 +389,56 @@ a { color: inherit; }
 .project__body {
   font: var(--text-body) var(--font-sans);
   color: var(--ink-soft);
+}
+
+/* ------------------------------------------------------------- page flag */
+
+/*
+ * Announces a page as it arrives. It sticks to the top of the column and is
+ * pulled back out of the flow by its own height, so it floats over the content
+ * instead of reserving a band of its own.
+ */
+.page-flag {
+  position: sticky;
+  top: var(--gutter);
+  z-index: 5;
+  align-self: center;
+  height: 40px;
+  margin-bottom: -40px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-8px);
+  /* Taken out of painting entirely while idle. A sticky layer carrying a
+     backdrop-filter is re-blurred on every scrolled frame even at zero
+     opacity, which is what made scrolling judder. */
+  visibility: hidden;
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0s linear 0.35s;
+}
+
+.page-flag.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  transition: opacity 0.35s ease, transform 0.35s ease, visibility 0s;
+}
+
+.page-flag__label {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 var(--gutter);
+  border-radius: var(--radius-button);
+  background: var(--scrim);
+  box-shadow: inset 0 0 0 1px var(--line);
+  font: var(--text-lede) var(--font-sans);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* The blur is switched on only for the moment the flag is up. */
+.page-flag.is-visible .page-flag__label {
+  -webkit-backdrop-filter: blur(12px) saturate(1.6);
+          backdrop-filter: blur(12px) saturate(1.6);
 }
 
 /* ----------------------------------------------------------------- stage */
