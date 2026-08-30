@@ -74,16 +74,6 @@
             </svg>
             Role: {role}
           </li>
-          <li>
-            <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <rect x="16" y="16" width="6" height="6" rx="1" />
-              <rect x="2" y="16" width="6" height="6" rx="1" />
-              <rect x="9" y="2" width="6" height="6" rx="1" />
-              <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3" />
-              <path d="M12 12V8" />
-            </svg>
-            Impact: {metrics}
-          </li>
         </ul>
       </section>
 
@@ -91,7 +81,7 @@
 
       <section class="case-block">
         <h3 class="case-block__title">TL;DR</h3>
-        <p>{summary} — max 160 characters, one or two sentences. The whole case for someone who reads nothing else: what the product is, what you did, what changed. Also what the AI chat and llms.txt quote, so it must stand alone.</p>
+        <p>{tldr} — a few sentences, under ~500 characters. The whole case for someone who reads nothing else: what the product was, what you did, the number it moved. There's no separate Impact row in Project Details, so the metric lives here. Falls back to {summary} — the ≤160-character one-liner the meta description, home card and llms.txt quote — when a case doesn't set its own.</p>
       </section>
 
       <hr class="rule" />
@@ -174,6 +164,93 @@
           </div>
           <figcaption>Caption (optional, on any block's figure) — once a real image replaces the placeholder, add this line for context the image doesn't give on its own; leave it out when the image speaks for itself.</figcaption>
         </figure>
+      </section>
+
+
+      <section class="case-section">
+        <h2>Block: Quote</h2>
+        <p>A testimonial, not a decoration — attribute it to a real person with a role and a company, and give it a measurable result to carry, not just praise. Use it where someone else's word proves a point better than another paragraph of your own could. The whole block links out to where it was actually said — a LinkedIn post, a review, an email screenshot — so it's checkable, not just quoted.</p>
+        <a class="quote" href="#" target="_blank" rel="noopener noreferrer">
+          <blockquote>
+            <p>"The quote itself — one or two sentences, naming what changed for them, not just how it felt."</p>
+            <footer>
+              <cite><strong>Name Surname</strong>, Role, Company</cite>
+              <svg class="icon quote__link-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
+                <path d="m21 3-9 9" />
+                <path d="M15 3h6v6" />
+              </svg>
+            </footer>
+          </blockquote>
+        </a>
+      </section>
+
+
+      <section class="case-section">
+        <h2>Block: Code</h2>
+        <p>Real, working code — not a mockup of it. This is the one block most designers can't use and you can: it says you shipped the thing, not just drew it.</p>
+        <figure class="code-figure">
+          <figcaption>Caption naming what the snippet shows — language, component, the one line that matters</figcaption>
+          <pre class="code-block"><code><span class="tok-kw">struct</span> <span class="tok-type">ToggleRow</span>: <span class="tok-type">View</span> {
+    <span class="tok-attr">@Binding</span> <span class="tok-kw">var</span> isOn: <span class="tok-type">Bool</span>
+
+    <span class="tok-kw">var</span> body: <span class="tok-kw">some</span> <span class="tok-type">View</span> {
+        <span class="tok-type">Toggle</span>(<span class="tok-str">"Auto-sync"</span>, isOn: $isOn)
+            .tint(.accentColor)
+    }
+}</code></pre>
+        </figure>
+      </section>
+
+
+      <section class="case-section">
+        <h2>Block: Compare</h2>
+        <p>Two figures, explicitly labelled — not a mystery row. Use it only when the two images need to be read against each other; if one alone would make the point, that's an Image Only or a figure on a Text block instead.</p>
+        <div class="compare">
+          <figure class="figure compare__item">
+            <p class="compare__label">Before</p>
+            <div class="figure__media" style="--ar: 291 / 220">
+              <p class="figure__brief">State of things before the change</p>
+              <span class="figure__id">placeholder:before</span>
+            </div>
+          </figure>
+          <figure class="figure compare__item">
+            <p class="compare__label">After</p>
+            <div class="figure__media" style="--ar: 291 / 220">
+              <p class="figure__brief">State of things after it</p>
+              <span class="figure__id">placeholder:after</span>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+
+      <section class="case-section">
+        <h2>Block: Table</h2>
+        <p>For a comparison that has more than two columns of data — spec sheets, before/after with more than one dimension, anything a sentence would only make harder to scan.</p>
+        <div class="table-scroll">
+          <table class="case-table">
+            <thead>
+              <tr>
+                <th scope="col">Dimension</th>
+                <th scope="col">Before</th>
+                <th scope="col">After</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Row label</td>
+                <td>Value</td>
+                <td>Value</td>
+              </tr>
+              <tr>
+                <td>Row label</td>
+                <td>Value</td>
+                <td>Value</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
     </article>
