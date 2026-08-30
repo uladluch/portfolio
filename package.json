@@ -1,0 +1,14 @@
+{
+  "name": "luch-dev",
+  "private": true,
+  "description": "Build tooling for luch.dev — generates case study pages from content/portfolio/*.md",
+  "scripts": {
+    "build": "node tools/build.js",
+    "preview": "node tools/preview.js",
+    "lint:case": "node tools/lint-case.js"
+  },
+  "devDependencies": {
+    "js-yaml": "^4.1.0",
+    "marked": "^15.0.0"
+  }
+}

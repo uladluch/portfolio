@@ -33,9 +33,11 @@ jobs:
           mkdir -p _site
           find . -maxdepth 1 -type f \
             \( -name '*.html' -o -name '*.css' -o -name '*.js' -o -name '*.svg' -o -name 'CNAME' \
-               -o -name '*.html.md' -o -name 'llms.txt' -o -name 'robots.txt' \) \
+               -o -name '*.html.md' -o -name 'llms.txt' -o -name 'robots.txt' -o -name 'sitemap.xml' \) \
             -exec cp {} _site/ \;
           cp -R assets _site/assets
+          # Generated case study pages (committed output of tools/build.js)
+          [ -d portfolio ] && cp -R portfolio _site/portfolio || true
           touch _site/.nojekyll
 
       - name: Upload artifact

@@ -23,6 +23,18 @@
 # Deliberately not published: this repo is public.
 analysis/
 
+# Working reference/research notes per project (App Store & Google Play
+# listings, review excerpts, competitor context, etc.) — raw material for
+# writing case studies, not meant to ship verbatim. Pull specific facts
+# into content/portfolio/<slug>.md by hand; this folder stays local.
+references/
+
+# Raw Figma bulk exports (every screen, case/section/name.png) — local
+# staging only. Pick specific screens from here, convert to webp, and
+# drop the curated set into assets/projects/<slug>/ by hand; this whole
+# raw dump never gets committed.
+figma-exports/
+
 # Python — analysis tooling and virtualenvs
 __pycache__/
 *.py[cod]
