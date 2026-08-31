@@ -312,11 +312,18 @@ a { color: inherit; }
   font: var(--text-ui) var(--font-sans);
 }
 
+/* Muted at rest and inked on hover, the same treatment the page links get —
+   an off-site link should read as one more item in the directory, not as
+   something louder than the page you are on. The --pages rules below
+   override this for the in-page links, which also carry a dot. */
 .directory__list a {
+  color: var(--ink-muted);
   text-decoration: none;
+  transition: color 0.25s ease;
 }
 
 .directory__list a:hover {
+  color: var(--ink);
   text-decoration: underline;
 }
 

@@ -8,7 +8,7 @@ Companies worked with: Inktech, Yukon Advanced Optics, Kiss Apps, Fractal, Tiny 
 
 ## Portfolio
 
-### Calorie Counter (2023)
+### Calorie Counter (2020–2024)
 
 Metrics: 4.8-star rating · ~28% D30 Retention
 
@@ -18,7 +18,7 @@ Contributed to the design evolution of Calorie Counter, recognized as the #1 app
 - [Google Play](https://play.google.com/store/apps/details?id=food.tracker.calorie.counter&hl=en_US&gl=US)
 - [Web2App](https://food-mentor.com/)
 
-### Stream Vision 2 (2018)
+### Stream Vision 2 (2018–2020)
 
 Metrics: 90k DAU · 2.5x TTM
 
