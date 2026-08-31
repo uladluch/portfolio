@@ -486,8 +486,15 @@ a { color: inherit; }
   top: var(--gutter);
   z-index: 5;
   align-self: center;
-  height: 40px;
-  margin-bottom: -40px;
+  /* Matched to the topbar rather than picked: the flag floats just below it
+     and reads as its peer, and one token keeps the pull-back in step with
+     the height so they cannot drift apart. */
+  height: var(--topbar-height);
+  margin-bottom: calc(var(--topbar-height) * -1);
+  /* It is a flex item in the belt's column, so without this the default
+     flex-shrink collapses it onto its own line box — 24px — and the height
+     above never takes effect. That is why it read as flat. */
+  flex: none;
   pointer-events: none;
   opacity: 0;
   transform: translateY(-8px);
@@ -509,7 +516,7 @@ a { color: inherit; }
   display: inline-flex;
   align-items: center;
   height: 100%;
-  padding: 0 var(--gutter);
+  padding: 0 var(--space-6);
   border-radius: var(--radius-button);
   background: var(--scrim);
   box-shadow: inset 0 0 0 1px var(--line);
