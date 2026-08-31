@@ -1,5 +1,5 @@
 {
-  "_note": "Parked while the sidebar shows pages instead of social links. Not copied by the Pages deploy workflow, which only publishes top-level html/css/js/svg and CNAME.",
+  "_note": "The sidebar's Elsewhere group links to these. Kept as data so the URLs live in one place; index.html carries the same three, and the Pages deploy publishes only top-level html/css/js/svg and CNAME, so this file is not served.",
   "social": {
     "github": "https://github.com/uladluch",
     "figma": "https://www.figma.com/@uladluch",

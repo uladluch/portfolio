@@ -30,7 +30,7 @@ Stream Vision 2 is a command hub for a complex hardware ecosystem including ther
 
 ## Other sections
 
-My Projects, Feeeeeeed, About, Experience, and Testimonials are planned sections with no content published yet.
+My Projects and About are planned sections with no content published yet.
 
 ## Company
 
