@@ -124,46 +124,21 @@
 
 
       <section class="case-section">
-        <h2>Block: Text</h2>
-        <p>Heading plus one paragraph. The plainest block — connective tissue between visual moments, or a claim that doesn't need proof: framing the stakes, stating a decision's thesis, closing a thought. From markdown this is a plain <em>## Heading</em> followed by a paragraph. One idea per block — a second paragraph usually wants its own heading instead.</p>
-        <p>A figure is optional on every block, this one included — add one below the paragraph wherever a single image carries the point on its own: the product family, a results dashboard, a before/after. Leave it out and the block is just text.</p>
-        <figure class="figure" style="--ar: 598 / 300">
-          <div class="figure__media">
-            <p class="figure__brief">Optional figure for this block. One image doing one job — swap the aspect ratio to fit what it actually shows</p>
-            <span class="figure__id">placeholder:text-figure</span>
-          </div>
-        </figure>
-      </section>
-
-
-      <section class="case-section">
-        <h2>Block: List</h2>
-        <p>Heading, paragraph, bullet list — for anything that reads better as a claim than a picture: outcome metrics, a short set of constraints, a closing summary. Every number in it carries its period and its baseline; a number without a baseline is decoration.</p>
+        <h2>Prose and figures</h2>
+        <p>The default, and most of any case study. A heading, one or more paragraphs, bullets where a claim reads better as a list than a sentence, and a figure wherever a picture carries the point. All of it is plain markdown — <em>## Heading</em>, paragraphs, <em>-</em> bullets, an image line — and the generator lays out whatever it finds. There is no choice to make between a "text block" and a "list block": a section holds whichever of these it needs.</p>
+        <p>One idea per section. A second paragraph that starts a new thought usually wants its own heading instead.</p>
         <ul>
-          <li><strong>First item:</strong> the headline fact, with the period it covers and what it was before.</li>
-          <li><strong>Second item:</strong> a supporting fact — with honest attribution where more than one party moved it.</li>
-          <li><strong>Third item:</strong> the ceiling. Past three, items start diluting each other.</li>
+          <li><strong>Bullets earn their place</strong> when the items are genuinely parallel — outcome metrics, a short set of constraints.</li>
+          <li><strong>Every number carries its period and its baseline.</strong> A number without a baseline is decoration.</li>
+          <li><strong>Three is the ceiling.</strong> Past that, items start diluting each other.</li>
         </ul>
-        <p>A figure is optional here too — a chart or dashboard behind the numbers, dropped in wherever it reads better than a bare list.</p>
-        <figure class="figure" style="--ar: 598 / 300">
+        <figure class="figure" style="--ar: 4 / 3">
           <div class="figure__media">
-            <p class="figure__brief">Optional figure for this block. The numbers above as one simple visual — chart, dashboard, before/after</p>
-            <span class="figure__id">placeholder:list-figure</span>
+            <p class="figure__brief">A figure is optional on any section — but a section with nothing to look at is one a reader skims, so the working rule is that every section has one</p>
+            <span class="figure__id">placeholder:prose-figure</span>
           </div>
         </figure>
-      </section>
-
-
-      <section class="case-section">
-        <h2>Block: Image Only</h2>
-        <p>Just a figure — no heading, no text. This is the one block where the image isn't optional; it's for the moment a picture has to stand completely alone between two blocks of prose, with nothing explaining it.</p>
-        <figure class="figure" style="--ar: 291 / 220">
-          <div class="figure__media">
-            <p class="figure__brief">Standalone figure. Whatever needs no caption to land — a screenshot, a detail, a beat between two ideas</p>
-            <span class="figure__id">placeholder:image</span>
-          </div>
-          <figcaption>Caption (optional, on any block's figure) — once a real image replaces the placeholder, add this line for context the image doesn't give on its own; leave it out when the image speaks for itself.</figcaption>
-        </figure>
+        <p>A section can also be nothing but a figure: no heading, no words, just the image. That is the shape to reach for when the picture is the whole point and a caption would only restate it.</p>
       </section>
 
 
@@ -205,24 +180,42 @@
 
       <section class="case-section">
         <h2>Block: Compare</h2>
-        <p>Two figures, explicitly labelled — not a mystery row. Use it only when the two images need to be read against each other; if one alone would make the point, that's an Image Only or a figure on a Text block instead.</p>
+        <p>Two states of one thing in a single frame, with a handle that wipes between them. Use it when the change is what matters and the two images can occupy the same space; if they cannot be registered against each other, two separate figures serve better. Each side is one centred mockup — at this width a multi-screen composition cannot be read, and wiping across a row of small phones compares nothing.</p>
         <div class="compare">
-          <figure class="figure compare__item">
-            <p class="compare__label">Before</p>
-            <div class="figure__media" style="--ar: 291 / 220">
-              <p class="figure__brief">State of things before the change</p>
-              <span class="figure__id">placeholder:before</span>
-            </div>
-          </figure>
-          <figure class="figure compare__item">
-            <p class="compare__label">After</p>
-            <div class="figure__media" style="--ar: 291 / 220">
-              <p class="figure__brief">State of things after it</p>
-              <span class="figure__id">placeholder:after</span>
-            </div>
-          </figure>
+          <div class="figure__media" style="--ar: 4 / 3">
+            <img class="compare__img compare__img--after" src="assets/projects/serene/serene-rebrand-hero.webp" alt="After: the redesigned home screen" />
+            <img class="compare__img compare__img--before" src="assets/projects/serene/android-welcome.webp" alt="Before: the screen as it was" />
+            <span class="compare__label compare__label--before">Before</span>
+            <span class="compare__label compare__label--after">After</span>
+            <input class="compare__input" type="range" min="0" max="100" value="50"
+                   aria-label="Wipe between before and after" />
+            <span class="compare__line" aria-hidden="true"><span class="compare__grip"></span></span>
+          </div>
         </div>
       </section>
+
+
+      <section class="case-section">
+        <h2>Block: Carousel</h2>
+        <p>Several screens where one figure would be a compromise — a product's surfaces, a run of states, variants of one idea. Each gets the whole frame in turn instead of being shrunk into a grid. Slides cross-fade rather than scroll, so the frame never moves and the eye keeps its place. Thumbnails are a tablist: click, or arrow between them.</p>
+        <figure class="figure carousel">
+          <div class="figure__media carousel__stage" style="--ar: 4 / 3">
+            <img class="carousel__slide is-active" src="assets/projects/serene/outcome-feed.webp" alt="The daily feed" />
+            <img class="carousel__slide" src="assets/projects/serene/outcome-compatibility.webp" alt="A compatibility result" />
+            <img class="carousel__slide" src="assets/projects/serene/outcome-transits.webp" alt="Transits" />
+            <img class="carousel__slide" src="assets/projects/serene/outcome-astrologers.webp" alt="Astrologer threads" />
+          </div>
+          <div class="carousel__thumbs" role="tablist" aria-label="Choose a screen">
+            <button class="carousel__thumb" role="tab" aria-selected="true" type="button"><img src="assets/projects/serene/outcome-feed.webp" alt="Daily feed" /></button>
+            <button class="carousel__thumb" role="tab" aria-selected="false" type="button"><img src="assets/projects/serene/outcome-compatibility.webp" alt="Compatibility" /></button>
+            <button class="carousel__thumb" role="tab" aria-selected="false" type="button"><img src="assets/projects/serene/outcome-transits.webp" alt="Transits" /></button>
+            <button class="carousel__thumb" role="tab" aria-selected="false" type="button"><img src="assets/projects/serene/outcome-astrologers.webp" alt="Astrologers" /></button>
+          </div>
+        </figure>
+      </section>
+
+
+      
 
 
       <section class="case-section">

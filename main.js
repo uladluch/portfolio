@@ -325,3 +325,58 @@ const canHover = window.matchMedia('(hover: hover)');
     });
   });
 })();
+
+/* ------------------------------------------------------- compare slider
+ * One frame, two states, a handle wiping between them. The range input is
+ * the control — it already handles pointer, touch and arrow keys — so all
+ * this does is mirror its value onto the property the clip and the handle
+ * both read from.
+ */
+(() => {
+  for (const slider of document.querySelectorAll('.compare')) {
+    const input = slider.querySelector('.compare__input');
+    if (!input) continue;
+
+    const apply = () => slider.style.setProperty('--pos', `${input.value}%`);
+    input.addEventListener('input', apply);
+    apply();
+  }
+})();
+
+/* ------------------------------------------------------------- carousel
+ * One slide in the frame at a time, chosen from the thumbnails. The stage
+ * never moves, so the eye keeps its place between slides — which is the
+ * point of cross-fading rather than scrolling.
+ *
+ * The thumbnails are a tablist: arrow keys move between them, as they
+ * would in any other tabbed thing, and only the selected one is in the tab
+ * order so the whole strip is not a series of stops.
+ */
+(() => {
+  for (const carousel of document.querySelectorAll('.carousel')) {
+    const slides = [...carousel.querySelectorAll('.carousel__slide')];
+    const thumbs = [...carousel.querySelectorAll('.carousel__thumb')];
+    if (slides.length < 2 || slides.length !== thumbs.length) continue;
+
+    const select = (index, focus) => {
+      slides.forEach((s, i) => s.classList.toggle('is-active', i === index));
+      thumbs.forEach((t, i) => {
+        t.setAttribute('aria-selected', String(i === index));
+        t.tabIndex = i === index ? 0 : -1;
+      });
+      if (focus) thumbs[index].focus();
+    };
+
+    thumbs.forEach((thumb, i) => {
+      thumb.addEventListener('click', () => select(i));
+      thumb.addEventListener('keydown', (event) => {
+        const step = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
+        if (!step) return;
+        event.preventDefault();
+        select((i + step + thumbs.length) % thumbs.length, true);
+      });
+    });
+
+    select(Math.max(0, slides.findIndex((s) => s.classList.contains('is-active'))));
+  }
+})();

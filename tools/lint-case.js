@@ -17,7 +17,8 @@
  *     words for a 650-word case. This counts what a reader actually reads,
  *     by walking the same markdown tokens the generator renders.
  *   - summary ≤ 160 (hard: meta description, home card, llms.txt all quote it)
- *     and tldr ≤ 500 (soft: past that the aside retells the case).
+ *     and tldr ≤ 260 (soft: the aside is a narrow column; past that it stops
+ *     summarising and starts retelling the case).
  *   - Placeholders: duplicate ids, and which are still unresolved. The
  *     checklist at the end of a session is this list, not a hand-assembled one.
  *   - Leftovers: TODO markers still sitting in frontmatter, empty links,
@@ -38,7 +39,7 @@ const ASSETS_DIR = path.join(ROOT, 'assets', 'projects');
 const WORDS_MIN = 500;
 const WORDS_MAX = 800;
 const SUMMARY_MAX = 160;
-const TLDR_MAX = 500;
+const TLDR_MAX = 260;
 
 // ---------------------------------------------------------------- report --
 
@@ -165,6 +166,16 @@ function lint(file) {
   catch (e) { report.error(`bad YAML — ${e.message}`); return report; }
   const body = split[2];
 
+  /* An archived case is not being worked on: holding it to the completeness
+     rules would report work nobody intends to do. */
+  if (fm.status === 'archived') {
+    report.note('archived — not published, not checked');
+    report.status = 'archived';
+    report.slug = slug;
+    report.pending = [];
+    return report;
+  }
+
   // --- frontmatter ---------------------------------------------------------
 
   for (const k of ['title', 'slug', 'headline', 'company', 'role', 'period', 'summary']) {
@@ -176,7 +187,7 @@ function lint(file) {
     report.error(`summary is ${fm.summary.length} chars (max ${SUMMARY_MAX} — the build refuses to publish it)`);
   }
   if (fm.tldr && fm.tldr.length > TLDR_MAX) {
-    report.warn(`tldr is ${fm.tldr.length} chars (aim under ${TLDR_MAX}; the aside is a narrow column)`);
+    report.warn(`tldr is ${fm.tldr.length} chars (aim under ${TLDR_MAX}: the aside is a narrow column, and past this it stops summarising and starts retelling)`);
   }
   if (!fm.tldr) report.note('no tldr — the page\'s TL;DR block falls back to summary');
 
@@ -196,6 +207,18 @@ function lint(file) {
     report.warn(`role-type "${fm['role-type']}" is not one of end-to-end | led | contributed`);
   }
 
+  /* `role` is the job title held, not a sentence about what was achieved.
+     A title does not start with a verb, and it does not enumerate duties —
+     both read as invented, which costs more credibility than the claim buys.
+     Ownership belongs in role-type; the work belongs in the body. */
+  if (fm.role) {
+    if (/^(led|designed|owned|built|drove|ran|managed|scaled|delivered|headed)\b/i.test(fm.role)) {
+      report.error(`role "${fm.role}" describes the work; it should be the job title held`);
+    } else if (/\s[—–-]\s/.test(fm.role) || fm.role.split(/,/).length > 2) {
+      report.warn(`role "${fm.role}" enumerates duties; a title is enough`);
+    }
+  }
+
   // --- body ----------------------------------------------------------------
 
   const words = proseWords(marked.lexer(body));
@@ -203,6 +226,23 @@ function lint(file) {
   else if (words < WORDS_MIN) report.warn(`body is ${words} words (aim ${WORDS_MIN}–${WORDS_MAX})`);
   else if (words > WORDS_MAX) report.warn(`body is ${words} words (aim ${WORDS_MIN}–${WORDS_MAX})`);
   else report.note(`body is ${words} words`);
+
+  /* A design case study with prose-only sections reads as thin. A section
+     that is itself a quote or a code block is already something to look at;
+     everything else needs a figure. */
+  {
+    const parts = body.split(/^##\s+/m).slice(1);
+    for (const part of parts) {
+      const title = part.split('\n')[0].trim();
+      const rest = part.slice(title.length);
+      const hasFigure = /!\[[^\]]*\]\(/.test(rest) || /<figure/.test(rest);
+      const isQuote = /^\s*>/m.test(rest);
+      const isCode = /^```/m.test(rest);
+      if (!hasFigure && !isQuote && !isCode) {
+        report.warn(`section "${title}" has no figure — every section carries one except a quote or a code block`);
+      }
+    }
+  }
 
   const headings = [...body.matchAll(/^##\s+(.+)$/gm)].map((m) => m[1].trim());
   const emptySections = headings.filter((h, i) => {
@@ -213,6 +253,29 @@ function lint(file) {
   for (const h of emptySections) report.error(`section "${h}" has no content`);
 
   // --- graphics ------------------------------------------------------------
+
+  /* Compare panels are half the column wide; a multi-screen composition
+     shrinks to illegible screens inside one. Every panel takes one screen. */
+  const specPath = path.join(CONTENT_DIR, `${slug}.compositions.yaml`);
+  let spec = {};
+  if (fs.existsSync(specPath)) {
+    try { spec = yaml.load(fs.readFileSync(specPath, 'utf8')) || {}; }
+    catch (e) { report.error(`compositions.yaml — ${e.message}`); }
+  }
+  /* The compare div nests figure divs inside it, so match up to its own
+     closing tag — the one that starts a line — rather than the first </div>. */
+  for (const block of body.match(/<div class="compare">[\s\S]*?\n<\/div>/g) || []) {
+    const ids = [
+      ...[...block.matchAll(/placeholder:([^<"\s]+)/g)].map((m) => m[1]),
+      ...[...block.matchAll(/\/([^/"]+)\.webp/g)].map((m) => m[1]),
+    ];
+    for (const id of ids) {
+      const n = (spec[id]?.screens || []).length;
+      if (n > 1) {
+        report.error(`compare panel "${id}" uses a ${n}-screen composition; a panel is half the column, so it takes one screen`);
+      }
+    }
+  }
 
   const marks = placeholders(body);
   const seen = new Set();
@@ -231,7 +294,17 @@ function lint(file) {
   for (const p of ready) report.warn(`${p.id}.png has landed — convert to webp and swap the placeholder`);
 
   for (const ref of usedAssets(body)) {
-    if (!/^(https?:)?\//.test(ref) && !have.includes(ref)) {
+    if (/^(https?:)?\//.test(ref)) continue;
+    /* A raw-HTML figure (the Compare block) writes its own path, since the
+       build only rewrites markdown image srcs — so it arrives here as
+       ../../assets/projects/<slug>/<file> rather than a bare filename. */
+    const m = /^\.\.\/\.\.\/assets\/projects\/([^/]+)\/(.+)$/.exec(ref);
+    if (m) {
+      if (m[1] !== slug) report.error(`body pulls an image from another case: ${ref}`);
+      else if (!have.includes(m[2])) report.error(`body references ${m[2]}, which is not in assets/projects/${slug}/`);
+      continue;
+    }
+    if (!have.includes(ref)) {
       report.error(`body references ${ref}, which is not in assets/projects/${slug}/`);
     }
   }
@@ -276,10 +349,12 @@ function main() {
 
   const errors = reports.reduce((n, r) => n + r.errors.length, 0);
   const warns = reports.reduce((n, r) => n + r.warns.length, 0);
-  const drafts = reports.filter((r) => r.status !== 'ready').length;
+  const drafts = reports.filter((r) => r.status !== 'ready' && r.status !== 'archived').length;
+  const archived = reports.filter((r) => r.status === 'archived').length;
 
   console.log(`\n\n${errors} error(s), ${warns} warning(s) across ${reports.length} case(s)` +
-    `${drafts ? `, ${drafts} still draft` : ''}\n`);
+    `${drafts ? `, ${drafts} still draft` : ''}` +
+    `${archived ? `, ${archived} archived` : ''}\n`);
 
   process.exit(errors ? 1 : 0);
 }

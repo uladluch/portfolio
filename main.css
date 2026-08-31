@@ -77,6 +77,12 @@
   --text-body:               400 16px/24px;  /* running copy            */
   --text-body-emphasized:    500 16px/24px;  /* standfirst, page flag   */
 
+  /* One step below body, still reading text: 400 weight and leading to
+     match. --text-ui is the same size but a 500-weight interface role with
+     tighter leading, which is wrong for prose. */
+  --text-reading:            400 14px/22px;  /* case study copy         */
+  --text-reading-emphasized: 500 14px/22px;
+
   --text-ui:                 500 14px/20px;  /* nav, tags               */
   --text-ui-emphasized:      600 14px/20px;  /* buttons                 */
 
@@ -732,8 +738,15 @@ a { color: inherit; }
   gap: var(--space-4);
 }
 
+/* The aside had no size of its own and inherited body's 16px. Left alone it
+   now reads heavier than the article it sits beside. */
+.case-block p {
+  font: var(--text-reading) var(--font-sans);
+  color: var(--ink-soft);
+}
+
 .case-block__title {
-  font: var(--text-title) var(--font-sans);
+  font: var(--text-body-emphasized) var(--font-sans);
   letter-spacing: var(--tracking-tight);
   color: var(--ink);
 }
@@ -751,7 +764,7 @@ a { color: inherit; }
   align-items: flex-start;
   gap: var(--space-2);
   padding: var(--space-1) 0;
-  font: var(--text-body-emphasized) var(--font-sans);
+  font: var(--text-reading-emphasized) var(--font-sans);
 }
 
 .detail-list li:first-child { padding-top: 0; }
@@ -763,7 +776,7 @@ a { color: inherit; }
   flex: none;
   /* Centred on the first line rather than hung from its top: half the
      difference between the 24px line box and the 16px icon. */
-  margin-top: calc((24px - var(--icon-size-sm)) / 2);
+  margin-top: calc((22px - var(--icon-size-sm)) / 2);
 }
 
 .detail-list a {
@@ -793,7 +806,10 @@ a { color: inherit; }
   display: flex;
   flex-direction: column;
   gap: var(--space-10);
-  padding: var(--space-6) var(--gutter);
+  /* 32px at the sides rather than the page gutter: on desktop the column is
+     divided from the aside by a hairline, and copy starting a gutter away
+     from that rule sits too close to it. */
+  padding: var(--space-6) var(--space-8);
 }
 
 /* Content blocks sit a gutter apart, but a heading stays tight to the text
@@ -820,18 +836,18 @@ a { color: inherit; }
 }
 
 .case-section h1 {
-  font: var(--text-headline) var(--font-sans);
+  font: var(--text-heading) var(--font-sans);
   letter-spacing: var(--tracking-tight);
 }
 
 .case-section h2 {
-  font: var(--text-heading) var(--font-sans);
+  font: var(--text-display) var(--font-sans);
   letter-spacing: var(--tracking-tight);
 }
 
 .case-section p,
 .case-section ul {
-  font: var(--text-body) var(--font-sans);
+  font: var(--text-reading) var(--font-sans);
   color: var(--ink-soft);
 }
 
@@ -876,6 +892,11 @@ a { color: inherit; }
   background: var(--surface);
   padding: var(--gutter);
   text-align: center;
+}
+
+.figure__media:has(img) {
+  background: none;
+  padding: 0;
 }
 
 .figure__brief {
@@ -989,27 +1010,192 @@ a { color: inherit; }
 .tok-attr { color: var(--code-attribute); }
 .tok-comment { color: var(--ink-muted); font-style: italic; }
 
-/* ------------------------------------------------------ block: compare */
+/* ----------------------------------------------- block: compare (slider) */
 
-/* Two figures with explicit labels, not a mystery row — stacked until
-   there is room to lay them side by side without cramping either one. */
+/* One frame, two states, and a handle that wipes between them. Two figures
+   side by side halve the width each state gets and ask the reader to hold
+   one in memory while looking at the other; here they occupy the same
+   space, so the difference is the only thing that moves.
+
+   Each side carries a single centred mockup — at this size a multi-screen
+   composition would be unreadable, and a wipe across a row of small phones
+   compares nothing.
+
+   The control is a real range input, stretched invisibly over the frame:
+   dragging, tapping and arrow keys all work without writing any of them. */
+
 .compare {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gutter);
+  --pos: 50%;
+  position: relative;
 }
 
-.compare__item {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
+.compare .figure__media {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  background: none;
 }
+
+.compare__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The "before" sits on top and is cut back to the handle. Clipping the top
+   layer rather than resizing either one keeps both perfectly registered. */
+.compare__img--before {
+  clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+}
+
+.compare__line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 2px;
+  margin-left: -1px;
+  background: var(--surface-raised);
+  box-shadow: 0 0 0 1px rgba(16, 24, 40, 0.08);
+  pointer-events: none;
+}
+
+.compare__grip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: var(--radius-button);
+  background: var(--surface-raised);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+/* Two chevrons, drawn rather than iconised: this grip is never anything
+   else, so it does not need to come from the icon set. */
+.compare__grip::before,
+.compare__grip::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border: solid var(--ink-muted);
+  border-width: 1.5px 1.5px 0 0;
+}
+.compare__grip::before { transform: rotate(-135deg); margin-right: 1px; }
+.compare__grip::after  { transform: rotate(45deg);   margin-left: 1px; }
 
 .compare__label {
+  position: absolute;
+  top: var(--space-3);
   font: var(--text-small-emphasized) var(--font-sans);
   letter-spacing: var(--tracking-wide);
   text-transform: uppercase;
-  color: var(--ink-muted);
+  color: var(--ink);
+  background: var(--scrim);
+  -webkit-backdrop-filter: blur(8px);
+          backdrop-filter: blur(8px);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-button);
+  pointer-events: none;
+}
+.compare__label--before { left: var(--space-3); }
+.compare__label--after  { right: var(--space-3); }
+
+/* Stretched over the frame and invisible; it is still the thing being
+   operated, so focus has to be visible on it. */
+.compare__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+}
+.compare__input:focus-visible + .compare__line .compare__grip {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ----------------------------------------------------- block: carousel */
+
+/* Several screens where one figure would be a compromise: each gets the
+   full frame in turn instead of being shrunk into a grid. Use it when the
+   set is worth showing but no single member of it carries the section —
+   a product's surfaces, a run of states, variants of one idea.
+
+   Slides are stacked and cross-faded rather than scrolled: the frame never
+   moves, so the thing being compared stays exactly where the eye left it. */
+
+.carousel__stage {
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  background: none;
+}
+
+.carousel__slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.carousel__slide.is-active { opacity: 1; }
+
+.carousel__thumbs {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+.carousel__thumb {
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  flex: 1 1 0;
+  min-width: 0;
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  /* The ring is drawn inside so a selected thumb does not shift its
+     neighbours by the width of a border. */
+  box-shadow: inset 0 0 0 1px var(--line);
+  opacity: 0.55;
+  transition: opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+.carousel__thumb:hover { opacity: 0.85; }
+
+.carousel__thumb[aria-selected="true"] {
+  opacity: 1;
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+.carousel__thumb:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.carousel__thumb img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
 }
 
 /* ------------------------------------------------------- block: table */
@@ -1085,23 +1271,21 @@ a { color: inherit; }
     flex: 1 1 0;
     min-width: 0;
     align-items: center;
-    padding: var(--space-8) var(--gutter);
+    padding: var(--space-8);
     box-shadow: inset 1px 0 0 var(--line);
   }
 
+  /* Sections fill the column: the 32px padding is then the real inset, not
+     a floor under a narrower centred block. Capping them at --article-width
+     and centring left the copy 88px from the rule, which read as a much
+     larger margin than was set. */
   .case-article > * {
     width: 100%;
-    max-width: var(--article-width);
+    max-width: none;
   }
 
-  .compare {
-    flex-direction: row;
-  }
 
-  .compare__item {
-    flex: 1 1 0;
-    min-width: 0;
-  }
+
 }
 
 @media (min-width: 1280px) {

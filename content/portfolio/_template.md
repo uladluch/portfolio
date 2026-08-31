@@ -7,13 +7,14 @@ slug: ""
 headline: ""             # the H1 sentence: product + your move + the number it moved
 company: ""
 companyUrl: ""           # company name links out to this in Project Details
-role: ""                 # ONE short line — no em-dash enumeration of sub-duties, those go in the body
+role: ""                 # the real job title held, e.g. "Product & Growth Designer".
+                         # Not a description of the work — ownership goes in role-type.
 period: ""
 summary: ""               # max 160 chars (hard limit); home card, meta description, llms.txt.
                            # No separate Impact row in Project Details — fold the number in here.
 tldr: ""                  # optional; the page's TL;DR block. A few sentences, under ~500 chars.
                            # Falls back to summary when omitted.
-status: draft            # draft | ready — build publishes only ready
+status: draft            # draft | ready | archived — build publishes only ready
 metrics:                 # not shown in Project Details; feeds JSON-LD rating + llms.txt only
   - label: ""
     value:
@@ -23,6 +24,7 @@ category: ""             # schema.org applicationCategory
 links:                   # free-form — as many as apply, in display order
   - label: ""            # e.g. "App Store", "Figma", "Case study video"
     url: ""
+brandColor: ""           # parked — nothing reads it; compositions use the site's greys
 cover: cover.webp
 related: []
 aiUse: ""
