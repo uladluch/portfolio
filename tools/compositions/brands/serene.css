@@ -1,0 +1,24 @@
+/* serene — generated from brandColor #F7F2FF by brand-palette.py.
+   Lightness copied from the site's grey ramp step for step; hue 303;
+   chroma is the grey ramp's own shape x6.20, set so brand-100 is
+   exactly the colour given. Do not edit — re-run the script. */
+.brand-serene {
+  --brand-hue: 303;
+  --brand-50: #fbf9ff;
+  --brand-100: #f7f2ff;
+  --brand-200: #ece2fb;
+  --brand-300: #dcccf5;
+  --brand-400: #b290e0;
+  --brand-500: #8459b6;
+  --brand-600: #68349c;
+  --brand-700: #570790;
+  --brand-800: #390061;
+  --brand-900: #240040;
+  --brand-950: #0d001d;
+
+  /* the three a composition background can use, mirroring
+     --bg / --surface / --surface-sunken */
+  --brand-bg: var(--brand-50);
+  --brand-surface: var(--brand-100);
+  --brand-sunken: var(--brand-200);
+}

@@ -1,0 +1,796 @@
+/*
+ * Composition library for case study graphics.
+ *
+ * Re-implemented from the Untitled UI portfolio-mockup set
+ * (figma 8LDrLQXQwSrzVsvL31WQ6T, node 14371-6004): its layout geometry —
+ * screen size, spacing, shadow, crop behaviour — with this site's own
+ * tokens and backgrounds substituted for Untitled UI's.
+ *
+ * Structure, and why it is smaller than the 52 frames in Figma: the Figma
+ * sheet repeats each arrangement twice, once bare and once with device
+ * chrome. Here chrome is an option on the screen, not a separate template,
+ * so nine arrangements cover all of them.
+ *
+ *   .comp                 the 4:3 canvas every composition renders into
+ *   .comp--<id>           the arrangement (see catalogue.html)
+ *   .screen               one screenshot: rounded, clipped, shadowed
+ *   .screen--browser      adds the macOS-style toolbar
+ *   .screen--device       adds the phone bezel
+ *   .comp--bg-<name>      background choice
+ *
+ * Canvas is 1920x1440 and scales as a whole via --comp-scale, so every
+ * length below is authored at 1x and never needs recomputing.
+ */
+
+.comp {
+  --comp-w: 1920;
+  --comp-h: 1440;
+  --screen-w: 440px;
+  --screen-h: 984px;
+  /* 8px, not a phone's real ~12% corner: at that size the rounding eats
+     content out of the screenshot's corners, which matters more here than
+     the silhouette being literally device-shaped. */
+  --screen-radius: 8px;
+  --chrome-h: 32px;
+  /* Untitled UI's shadow, kept: a long, soft, down-right cast that lifts the
+     screen off the ground without reading as a drop-shadow effect. */
+  --screen-shadow: 100px 100px 75px rgba(52, 64, 84, 0.12);
+  --bezel: #1f2937;          /* --gray-800 */
+
+  position: relative;
+  width: calc(var(--comp-w) * 1px);
+  height: calc(var(--comp-h) * 1px);
+  overflow: hidden;
+  transform: scale(var(--comp-scale, 1));
+  transform-origin: top left;
+}
+
+/* -- backgrounds ---------------------------------------------------------
+
+   The site's own greys, and only those. A composition is a neutral ground
+   with the product's screens on it; the colour comes from the screens.
+
+   There was a per-case tinted ramp here, derived from a `brandColor` the
+   case declared — the greys are themselves a hue-264 ramp at very low
+   chroma, so a branded background was the same ramp with the hue swapped.
+   It was removed on 2026-08-30: the results were unreliable in practice.
+   The deriving tool is kept parked at tools/compositions/brand-palette.py
+   if it is ever worth another attempt. */
+
+.comp--bg-bg      { background: #f9fafb; }   /* --bg — same as the page, so a
+                                                composition on it has no visible
+                                                ground at all */
+.comp--bg-surface { background: #f3f4f6; }   /* --surface — the default: one step
+                                                off the page, so the mockup reads
+                                                as a block without weighing much */
+.comp--bg-sunken  { background: #e5e7eb; }   /* --surface-sunken */
+.comp--bg-ink     { background: #111827; }   /* --ink, for light screens */
+
+/* -- the screen ---------------------------------------------------------- */
+
+.screen {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: var(--screen-w);
+  height: var(--screen-h);
+  border-radius: var(--screen-radius);
+  overflow: hidden;
+  box-shadow: var(--screen-shadow);
+  background: #fff;
+}
+
+/* The screenshot is taller than its frame on purpose: it is anchored to the
+   top and cropped at the bottom, so a long screen reads as a real scrolling
+   page rather than being squashed to fit. */
+.screen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.screen--browser::before {
+  content: "";
+  display: block;
+  flex: none;
+  height: var(--chrome-h);
+  background:
+    radial-gradient(circle at 22px calc(var(--chrome-h) / 2), #ef4444 5px, transparent 5px),
+    radial-gradient(circle at 40px calc(var(--chrome-h) / 2), #eab308 5px, transparent 5px),
+    radial-gradient(circle at 58px calc(var(--chrome-h) / 2), #22c55e 5px, transparent 5px),
+    rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* A bezel is drawn, not composited from an asset: an inner ring plus the
+   home indicator, so it scales cleanly and carries no licence. Swap for a
+   real device PNG later by giving .screen--device a background-image. */
+.screen--device {
+  --screen-radius: 40px;
+  padding: 10px;
+  background: var(--bezel);
+}
+.screen--device img { border-radius: 34px; }
+/* No home indicator is drawn here: the exported screens already carry their
+   own, and a second one drawn on the bezel doubles it. */
+
+/* -- arrangements --------------------------------------------------------
+   Positions are the Figma sheet's own: 440px screens on a 584px pitch,
+   which leaves a 144px gutter. */
+
+/* solo — one screen, centred, the widest crop of the three-up screens */
+.comp--solo .screen:nth-child(1) { left: 740px; top: 192px; }
+
+/* pair-flat — two screens, level, same size */
+.comp--pair-flat .screen:nth-child(1) { left: 448px; top: 192px; }
+.comp--pair-flat .screen:nth-child(2) { left: 1032px; top: 192px; }
+
+/* pair-offset — the second lifted, so the pair reads as a sequence */
+.comp--pair-offset .screen:nth-child(1) { left: 448px; top: 288px; }
+.comp--pair-offset .screen:nth-child(2) { left: 1032px; top: 120px; }
+
+/* pair-overlap — front screen breaks the back one's edge */
+.comp--pair-overlap .screen:nth-child(1) { left: 560px; top: 160px; }
+.comp--pair-overlap .screen:nth-child(2) { left: 920px; top: 296px; z-index: 2; }
+
+/* trio-flat — the sheet's canonical three-up */
+.comp--trio-flat .screen:nth-child(1) { left: 156px; top: 192px; }
+.comp--trio-flat .screen:nth-child(2) { left: 740px; top: 192px; }
+.comp--trio-flat .screen:nth-child(3) { left: 1324px; top: 192px; }
+
+/* trio-stagger — same pitch, alternating rise */
+.comp--trio-stagger .screen:nth-child(1) { left: 156px; top: 288px; }
+.comp--trio-stagger .screen:nth-child(2) { left: 740px; top: 144px; }
+.comp--trio-stagger .screen:nth-child(3) { left: 1324px; top: 288px; }
+
+/* trio-cascade — descending diagonal, overlapping, front-most last */
+.comp--trio-cascade .screen:nth-child(1) { left: 300px; top: 96px; }
+.comp--trio-cascade .screen:nth-child(2) { left: 740px; top: 240px; z-index: 2; }
+.comp--trio-cascade .screen:nth-child(3) { left: 1180px; top: 384px; z-index: 3; }
+
+/* hex-grid — six screens, 3x2.
+   The screens keep the phone's own proportion and the grid runs off the top
+   and bottom edges instead, 100px each way; squashing them to fit two rows
+   inside 1440 makes the devices read as stubby cards, not phones. */
+.comp--hex-grid { --screen-w: 340px; --screen-h: 760px; }
+.comp--hex-grid .screen:nth-child(1) { left: 330px;  top: -100px; }
+.comp--hex-grid .screen:nth-child(2) { left: 790px;  top: -100px; }
+.comp--hex-grid .screen:nth-child(3) { left: 1250px; top: -100px; }
+.comp--hex-grid .screen:nth-child(4) { left: 330px;  top: 780px; }
+.comp--hex-grid .screen:nth-child(5) { left: 790px;  top: 780px; }
+.comp--hex-grid .screen:nth-child(6) { left: 1250px; top: 780px; }
+
+/* hex-tilt — the same grid rotated as one plane, the sheet's last two rows.
+   Rotating the canvas rather than each screen keeps the shadows coherent. */
+.comp--hex-tilt { --screen-w: 340px; --screen-h: 760px; }
+/* Same grid and the same proportion as hex-grid; the plane is scaled up so
+   the rotation still reaches the canvas corners. */
+.comp--hex-tilt .comp__plane {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-12deg) scale(1.28);
+  transform-origin: center;
+}
+.comp--hex-tilt .screen:nth-child(1) { left: 330px;  top: -100px; }
+.comp--hex-tilt .screen:nth-child(2) { left: 790px;  top: -100px; }
+.comp--hex-tilt .screen:nth-child(3) { left: 1250px; top: -100px; }
+.comp--hex-tilt .screen:nth-child(4) { left: 330px;  top: 780px; }
+.comp--hex-tilt .screen:nth-child(5) { left: 790px;  top: 780px; }
+.comp--hex-tilt .screen:nth-child(6) { left: 1250px; top: 780px; }
+
+
+/* ========================================================================
+   Mobile compositions
+   ------------------------------------------------------------------------
+   Re-implemented from the "Free Mockups for Dribbble Shot" set
+   (figma OfmVg1Wqgc4D1CxBxhmuH4, node 2939-157): five families — one, two,
+   three, four and many screens — 35 arrangements in all.
+
+   Coordinates are that sheet's own, unscaled, on its own 1600x1200 canvas
+   (the same 4:3 as the set above, so both rasterise to the same shape).
+   Its screen is 450x974 — aspect .4620 against our Serene exports' .4621,
+   the same iPhone ratio, so screens drop in without distortion. Crowded
+   families step down to 318x688, which is the identical ratio.
+
+   Taken from the source: geometry and rotation only.
+   Taken from this site: background (.comp--bg-*, including the branded
+   tints), shadow (--screen-shadow), and the token language throughout —
+   so these read as one system with the compositions above rather than as
+   an imported set.
+
+   Corner radius is the one thing kept proportional to the source rather
+   than pulled from our radius tokens: 56/450 here and 40/318 on the small
+   class, both ~12.5%, which is a real phone's corner. Our --radius-pill
+   would read as a browser window, not a screen.
+   ======================================================================== */
+
+.comp--m {
+  --comp-w: 1600;
+  --comp-h: 1200;
+  --screen-w: 450px;
+  --screen-h: 974px;
+}
+
+/* The crowded families use the smaller screen, same ratio, same radius
+   fraction. */
+.comp--m4-level, .comp--m4-alt, .comp--m4-descend, .comp--m4-scatter,
+.comp--m4-drift, .comp--m4-columns, .comp--m4-tilt, .comp--m4-tilt-scale,
+.comp--m8-brick, .comp--m9-brick, .comp--m10-brick, .comp--m11-brick {
+  --screen-w: 318px;
+  --screen-h: 688px;
+}
+
+/* -- one screen ---------------------------------------------------------- */
+
+.comp--m1-center .screen:nth-child(1) { left: 575px; top: 113px; }
+.comp--m1-top    .screen:nth-child(1) { left: 575px; top: -94px; }
+.comp--m1-bottom .screen:nth-child(1) { left: 575px; top: 320px; }
+
+/* -- two screens --------------------------------------------------------- */
+
+.comp--m2-level      .screen:nth-child(1) { left: 317px; top: 113px; }
+.comp--m2-level      .screen:nth-child(2) { left: 852px; top: 113px; }
+
+.comp--m2-offset     .screen:nth-child(1) { left: 307px; top: 65px; }
+.comp--m2-offset     .screen:nth-child(2) { left: 842px; top: 161px; }
+
+.comp--m2-offset-alt .screen:nth-child(1) { left: 307px; top: 161px; }
+.comp--m2-offset-alt .screen:nth-child(2) { left: 842px; top: 65px; }
+
+.comp--m2-drift      .screen:nth-child(1) { left: 307px; top: 96px; }
+.comp--m2-drift      .screen:nth-child(2) { left: 842px; top: 129px; }
+
+/* one screen dropped far down — the pair reads as two moments, not two states */
+.comp--m2-split      .screen:nth-child(1) { left: 307px; top: 113px; }
+.comp--m2-split      .screen:nth-child(2) { left: 842px; top: 381px; }
+
+/* first screen runs off the top edge */
+.comp--m2-bleed      .screen:nth-child(1) { left: 307px; top: -135px; }
+.comp--m2-bleed      .screen:nth-child(2) { left: 842px; top: 113px; }
+
+/* rotated: the source turns each screen a few degrees, opposite ways */
+.comp--m2-tilt       .screen:nth-child(1) { left: 300px; top: 130px; transform: rotate(-8deg); }
+.comp--m2-tilt       .screen:nth-child(2) { left: 860px; top: 90px;  transform: rotate(10deg); }
+
+/* both leaning the same way, as one pair */
+.comp--m2-tilt-pair  .screen:nth-child(1) { left: 250px; top: 150px; transform: rotate(-20deg); }
+.comp--m2-tilt-pair  .screen:nth-child(2) { left: 800px; top: 90px;  transform: rotate(-20deg); }
+
+/* -- three screens ------------------------------------------------------- */
+/* x is 60 / 575 / 1090 throughout: a 515 pitch, 65 gutter */
+
+.comp--m3-level   .screen:nth-child(1) { left: 60px;   top: 113px; }
+.comp--m3-level   .screen:nth-child(2) { left: 575px;  top: 113px; }
+.comp--m3-level   .screen:nth-child(3) { left: 1090px; top: 113px; }
+
+.comp--m3-stagger .screen:nth-child(1) { left: 60px;   top: 62px; }
+.comp--m3-stagger .screen:nth-child(2) { left: 575px;  top: 163px; }
+.comp--m3-stagger .screen:nth-child(3) { left: 1090px; top: 95px; }
+
+/* centre raised — an arch */
+.comp--m3-arch    .screen:nth-child(1) { left: 60px;   top: 146px; }
+.comp--m3-arch    .screen:nth-child(2) { left: 575px;  top: 80px; }
+.comp--m3-arch    .screen:nth-child(3) { left: 1090px; top: 146px; }
+
+/* stepping down: reads as a sequence with direction */
+.comp--m3-descend .screen:nth-child(1) { left: 60px;   top: 51px; }
+.comp--m3-descend .screen:nth-child(2) { left: 575px;  top: 112px; }
+.comp--m3-descend .screen:nth-child(3) { left: 1090px; top: 175px; }
+
+.comp--m3-mixed   .screen:nth-child(1) { left: 60px;   top: 120px; }
+.comp--m3-mixed   .screen:nth-child(2) { left: 575px;  top: 47px; }
+.comp--m3-mixed   .screen:nth-child(3) { left: 1090px; top: 179px; }
+
+/* outer pair leans out, centre stays nearly upright */
+.comp--m3-tilt    .screen:nth-child(1) { left: 70px;   top: 160px; transform: rotate(-15deg); }
+.comp--m3-tilt    .screen:nth-child(2) { left: 575px;  top: 90px;  transform: rotate(-5deg); }
+.comp--m3-tilt    .screen:nth-child(3) { left: 1080px; top: 160px; transform: rotate(15deg); }
+
+/* all three leaning together */
+.comp--m3-tilt-run .screen:nth-child(1) { left: 90px;   top: 140px; transform: rotate(-8deg); }
+.comp--m3-tilt-run .screen:nth-child(2) { left: 590px;  top: 100px; transform: rotate(-8deg); }
+.comp--m3-tilt-run .screen:nth-child(3) { left: 1090px; top: 60px;  transform: rotate(-8deg); }
+
+/* -- four screens -------------------------------------------------------- */
+/* x is 81 / 454 / 827 / 1200: a 373 pitch, 55 gutter */
+
+.comp--m4-level   .screen:nth-child(1) { left: 81px;   top: 256px; }
+.comp--m4-level   .screen:nth-child(2) { left: 454px;  top: 256px; }
+.comp--m4-level   .screen:nth-child(3) { left: 827px;  top: 256px; }
+.comp--m4-level   .screen:nth-child(4) { left: 1200px; top: 256px; }
+
+.comp--m4-alt     .screen:nth-child(1) { left: 81px;   top: 216px; }
+.comp--m4-alt     .screen:nth-child(2) { left: 454px;  top: 296px; }
+.comp--m4-alt     .screen:nth-child(3) { left: 827px;  top: 216px; }
+.comp--m4-alt     .screen:nth-child(4) { left: 1200px; top: 296px; }
+
+.comp--m4-descend .screen:nth-child(1) { left: 81px;   top: 127px; }
+.comp--m4-descend .screen:nth-child(2) { left: 454px;  top: 334px; }
+.comp--m4-descend .screen:nth-child(3) { left: 827px;  top: 187px; }
+.comp--m4-descend .screen:nth-child(4) { left: 1200px; top: 384px; }
+
+.comp--m4-scatter .screen:nth-child(1) { left: 81px;   top: 259px; }
+.comp--m4-scatter .screen:nth-child(2) { left: 454px;  top: 101px; }
+.comp--m4-scatter .screen:nth-child(3) { left: 827px;  top: 285px; }
+.comp--m4-scatter .screen:nth-child(4) { left: 1200px; top: 411px; }
+
+/* tighter pitch, drifting downward */
+.comp--m4-drift   .screen:nth-child(1) { left: 230px;  top: 189px; }
+.comp--m4-drift   .screen:nth-child(2) { left: 519px;  top: 268px; }
+.comp--m4-drift   .screen:nth-child(3) { left: 786px;  top: 244px; }
+.comp--m4-drift   .screen:nth-child(4) { left: 1052px; top: 322px; }
+
+/* a stacked pair on the left, two singles right */
+.comp--m4-columns .screen:nth-child(1) { left: 255px;  top: -187px; }
+.comp--m4-columns .screen:nth-child(2) { left: 255px;  top: 556px; }
+.comp--m4-columns .screen:nth-child(3) { left: 641px;  top: 212px; }
+.comp--m4-columns .screen:nth-child(4) { left: 1027px; top: 91px; }
+
+/* the source rotates the whole group, not each screen, so the shadows
+   stay consistent with one another */
+.comp--m4-tilt .comp__plane {
+  position: absolute; inset: 0;
+  transform: rotate(-25deg) scale(1.1);
+  transform-origin: center;
+}
+.comp--m4-tilt .screen:nth-child(1) { left: 340px;  top: 190px; }
+.comp--m4-tilt .screen:nth-child(2) { left: 713px;  top: 190px; }
+.comp--m4-tilt .screen:nth-child(3) { left: 526px;  top: 500px; }
+.comp--m4-tilt .screen:nth-child(4) { left: 899px;  top: 500px; }
+
+.comp--m4-tilt-scale .screen:nth-child(1) { left: 172px;  top: 242px; transform: rotate(-7deg); }
+.comp--m4-tilt-scale .screen:nth-child(2) { left: 542px;  top: 252px; transform: rotate(-4deg); }
+.comp--m4-tilt-scale .screen:nth-child(3) { left: 775px;  top: 237px; }
+.comp--m4-tilt-scale .screen:nth-child(4) { left: 1115px; top: 264px; transform: rotate(6deg); }
+
+/* -- many screens --------------------------------------------------------
+   A brick grid: four columns on a 373 pitch, each column offset vertically
+   by a different amount so no two rows line up, running well past the top
+   and bottom edges. The canvas crops it, which is what makes it read as a
+   fragment of something larger. */
+
+.comp--m8-brick  .screen:nth-child(1) { left: 81px;   top: 56px; }
+.comp--m8-brick  .screen:nth-child(2) { left: 81px;   top: 799px; }
+.comp--m8-brick  .screen:nth-child(3) { left: 454px;  top: -307px; }
+.comp--m8-brick  .screen:nth-child(4) { left: 454px;  top: 436px; }
+.comp--m8-brick  .screen:nth-child(5) { left: 827px;  top: 76px; }
+.comp--m8-brick  .screen:nth-child(6) { left: 827px;  top: 819px; }
+.comp--m8-brick  .screen:nth-child(7) { left: 1200px; top: -268px; }
+.comp--m8-brick  .screen:nth-child(8) { left: 1200px; top: 475px; }
+
+.comp--m9-brick  .screen:nth-child(1) { left: 81px;   top: -286px; }
+.comp--m9-brick  .screen:nth-child(2) { left: 81px;   top: 457px; }
+.comp--m9-brick  .screen:nth-child(3) { left: 454px;  top: -460px; }
+.comp--m9-brick  .screen:nth-child(4) { left: 454px;  top: 283px; }
+.comp--m9-brick  .screen:nth-child(5) { left: 454px;  top: 1026px; }
+.comp--m9-brick  .screen:nth-child(6) { left: 827px;  top: -116px; }
+.comp--m9-brick  .screen:nth-child(7) { left: 827px;  top: 627px; }
+.comp--m9-brick  .screen:nth-child(8) { left: 1200px; top: 55px; }
+.comp--m9-brick  .screen:nth-child(9) { left: 1200px; top: 798px; }
+
+.comp--m10-brick .screen:nth-child(1)  { left: 78px;   top: -591px; }
+.comp--m10-brick .screen:nth-child(2)  { left: 78px;   top: 152px; }
+.comp--m10-brick .screen:nth-child(3)  { left: 78px;   top: 895px; }
+.comp--m10-brick .screen:nth-child(4)  { left: 453px;  top: -286px; }
+.comp--m10-brick .screen:nth-child(5)  { left: 451px;  top: 457px; }
+.comp--m10-brick .screen:nth-child(6)  { left: 824px;  top: -487px; }
+.comp--m10-brick .screen:nth-child(7)  { left: 824px;  top: 256px; }
+.comp--m10-brick .screen:nth-child(8)  { left: 824px;  top: 999px; }
+.comp--m10-brick .screen:nth-child(9)  { left: 1197px; top: -116px; }
+.comp--m10-brick .screen:nth-child(10) { left: 1197px; top: 627px; }
+
+.comp--m11-brick .screen:nth-child(1)  { left: 81px;   top: 172px; }
+.comp--m11-brick .screen:nth-child(2)  { left: 81px;   top: -571px; }
+.comp--m11-brick .screen:nth-child(3)  { left: 81px;   top: 915px; }
+.comp--m11-brick .screen:nth-child(4)  { left: 454px;  top: -403px; }
+.comp--m11-brick .screen:nth-child(5)  { left: 454px;  top: 340px; }
+.comp--m11-brick .screen:nth-child(6)  { left: 454px;  top: 1083px; }
+.comp--m11-brick .screen:nth-child(7)  { left: 827px;  top: -516px; }
+.comp--m11-brick .screen:nth-child(8)  { left: 827px;  top: 227px; }
+.comp--m11-brick .screen:nth-child(9)  { left: 827px;  top: 970px; }
+.comp--m11-brick .screen:nth-child(10) { left: 1200px; top: -138px; }
+.comp--m11-brick .screen:nth-child(11) { left: 1200px; top: 605px; }
+
+/* The tilted families are the same brick grid on a rotated plane — the
+   source rotates the containing Group, so every screen leans by exactly the
+   same angle and the light stays consistent across them.
+
+   The plane is rotated but never scaled. Scaling it up was the first
+   attempt and it enlarges the screens along with the layout, turning a
+   dense grid into three huge screens. Coverage comes from the grid being
+   bigger instead: rotating a 1600x1200 canvas by 45 degrees means the
+   plane has to fill x -190..1790 and y -390..1590, so the grid runs six
+   columns wide and four deep, alternate columns dropped half a pitch. Most
+   of it is cropped away, which is the point. */
+
+.comp--mgrid-tilt .comp__plane,
+.comp--mgrid-tilt-45 .comp__plane,
+.comp--mgrid-tilt-45r .comp__plane {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
+}
+.comp--mgrid-tilt     .comp__plane { transform: rotate(-25deg); }
+.comp--mgrid-tilt-45  .comp__plane { transform: rotate(-45deg); }
+.comp--mgrid-tilt-45r .comp__plane { transform: rotate(45deg); }
+
+.comp--mgrid-tilt, .comp--mgrid-tilt-45, .comp--mgrid-tilt-45r {
+  --screen-w: 318px;
+  --screen-h: 688px;
+}
+
+/* 24 positions: six columns on the 373 pitch, four rows on 743, every
+   other column dropped half a row so no two line up. */
+.comp--mgrid-tilt .screen:nth-child(1),
+.comp--mgrid-tilt-45 .screen:nth-child(1),
+.comp--mgrid-tilt-45r .screen:nth-child(1) { left: -292px; top: -571px; }
+.comp--mgrid-tilt .screen:nth-child(2),
+.comp--mgrid-tilt-45 .screen:nth-child(2),
+.comp--mgrid-tilt-45r .screen:nth-child(2) { left: -292px; top: 172px; }
+.comp--mgrid-tilt .screen:nth-child(3),
+.comp--mgrid-tilt-45 .screen:nth-child(3),
+.comp--mgrid-tilt-45r .screen:nth-child(3) { left: -292px; top: 915px; }
+.comp--mgrid-tilt .screen:nth-child(4),
+.comp--mgrid-tilt-45 .screen:nth-child(4),
+.comp--mgrid-tilt-45r .screen:nth-child(4) { left: -292px; top: 1658px; }
+.comp--mgrid-tilt .screen:nth-child(5),
+.comp--mgrid-tilt-45 .screen:nth-child(5),
+.comp--mgrid-tilt-45r .screen:nth-child(5) { left: 81px; top: -943px; }
+.comp--mgrid-tilt .screen:nth-child(6),
+.comp--mgrid-tilt-45 .screen:nth-child(6),
+.comp--mgrid-tilt-45r .screen:nth-child(6) { left: 81px; top: -200px; }
+.comp--mgrid-tilt .screen:nth-child(7),
+.comp--mgrid-tilt-45 .screen:nth-child(7),
+.comp--mgrid-tilt-45r .screen:nth-child(7) { left: 81px; top: 543px; }
+.comp--mgrid-tilt .screen:nth-child(8),
+.comp--mgrid-tilt-45 .screen:nth-child(8),
+.comp--mgrid-tilt-45r .screen:nth-child(8) { left: 81px; top: 1286px; }
+.comp--mgrid-tilt .screen:nth-child(9),
+.comp--mgrid-tilt-45 .screen:nth-child(9),
+.comp--mgrid-tilt-45r .screen:nth-child(9) { left: 454px; top: -571px; }
+.comp--mgrid-tilt .screen:nth-child(10),
+.comp--mgrid-tilt-45 .screen:nth-child(10),
+.comp--mgrid-tilt-45r .screen:nth-child(10) { left: 454px; top: 172px; }
+.comp--mgrid-tilt .screen:nth-child(11),
+.comp--mgrid-tilt-45 .screen:nth-child(11),
+.comp--mgrid-tilt-45r .screen:nth-child(11) { left: 454px; top: 915px; }
+.comp--mgrid-tilt .screen:nth-child(12),
+.comp--mgrid-tilt-45 .screen:nth-child(12),
+.comp--mgrid-tilt-45r .screen:nth-child(12) { left: 454px; top: 1658px; }
+.comp--mgrid-tilt .screen:nth-child(13),
+.comp--mgrid-tilt-45 .screen:nth-child(13),
+.comp--mgrid-tilt-45r .screen:nth-child(13) { left: 827px; top: -943px; }
+.comp--mgrid-tilt .screen:nth-child(14),
+.comp--mgrid-tilt-45 .screen:nth-child(14),
+.comp--mgrid-tilt-45r .screen:nth-child(14) { left: 827px; top: -200px; }
+.comp--mgrid-tilt .screen:nth-child(15),
+.comp--mgrid-tilt-45 .screen:nth-child(15),
+.comp--mgrid-tilt-45r .screen:nth-child(15) { left: 827px; top: 543px; }
+.comp--mgrid-tilt .screen:nth-child(16),
+.comp--mgrid-tilt-45 .screen:nth-child(16),
+.comp--mgrid-tilt-45r .screen:nth-child(16) { left: 827px; top: 1286px; }
+.comp--mgrid-tilt .screen:nth-child(17),
+.comp--mgrid-tilt-45 .screen:nth-child(17),
+.comp--mgrid-tilt-45r .screen:nth-child(17) { left: 1200px; top: -571px; }
+.comp--mgrid-tilt .screen:nth-child(18),
+.comp--mgrid-tilt-45 .screen:nth-child(18),
+.comp--mgrid-tilt-45r .screen:nth-child(18) { left: 1200px; top: 172px; }
+.comp--mgrid-tilt .screen:nth-child(19),
+.comp--mgrid-tilt-45 .screen:nth-child(19),
+.comp--mgrid-tilt-45r .screen:nth-child(19) { left: 1200px; top: 915px; }
+.comp--mgrid-tilt .screen:nth-child(20),
+.comp--mgrid-tilt-45 .screen:nth-child(20),
+.comp--mgrid-tilt-45r .screen:nth-child(20) { left: 1200px; top: 1658px; }
+.comp--mgrid-tilt .screen:nth-child(21),
+.comp--mgrid-tilt-45 .screen:nth-child(21),
+.comp--mgrid-tilt-45r .screen:nth-child(21) { left: 1573px; top: -943px; }
+.comp--mgrid-tilt .screen:nth-child(22),
+.comp--mgrid-tilt-45 .screen:nth-child(22),
+.comp--mgrid-tilt-45r .screen:nth-child(22) { left: 1573px; top: -200px; }
+.comp--mgrid-tilt .screen:nth-child(23),
+.comp--mgrid-tilt-45 .screen:nth-child(23),
+.comp--mgrid-tilt-45r .screen:nth-child(23) { left: 1573px; top: 543px; }
+.comp--mgrid-tilt .screen:nth-child(24),
+.comp--mgrid-tilt-45 .screen:nth-child(24),
+.comp--mgrid-tilt-45r .screen:nth-child(24) { left: 1573px; top: 1286px; }
+
+
+/* ========================================================================
+   Web compositions
+   ------------------------------------------------------------------------
+   Browser windows, from the Untitled UI portfolio-mockup sheet's desktop
+   rows (figma 8LDrLQXQwSrzVsvL31WQ6T). Canvas 1920x1440, the same 4:3 as
+   both families above.
+
+   The window is 1600x1056 with a 52px toolbar, so the page area is
+   1600x1004 — roughly 16:10. The page image inside is far taller than the
+   window (1600x1778 in the source) and anchored to the top, so the window
+   shows a real page's opening screenful rather than a squashed whole page.
+
+   Screens here are web captures, not app exports: give compose a
+   screenshot of the page at 1600px wide and let it crop.
+   ======================================================================== */
+
+.comp--w {
+  --comp-w: 1920;
+  --comp-h: 1440;
+  --screen-w: 1600px;
+  --screen-h: 1056px;
+  --chrome-h: 52px;
+}
+
+/* one window ------------------------------------------------------------ */
+
+.comp--w1-window .screen:nth-child(1) { left: 160px; top: 176px; }
+
+.comp--w1-wide   { --screen-w: 1712px; --screen-h: 1184px; }
+.comp--w1-wide   .screen:nth-child(1) { left: 104px; top: 128px; }
+
+.comp--w1-tall   { --screen-h: 1376px; }
+.comp--w1-tall   .screen:nth-child(1) { left: 160px; top: 104px; }
+
+.comp--w1-narrow { --screen-w: 1440px; --screen-h: 1352px; }
+.comp--w1-narrow .screen:nth-child(1) { left: 240px; top: 128px; }
+
+/* Oversized and cropped: the window is bigger than the canvas, so only its
+   top-left corner shows. Reads as a detail rather than a whole page. */
+.comp--w1-bleed    { --screen-w: 2400px; --screen-h: 1584px; --chrome-h: 78px; }
+.comp--w1-bleed    .screen:nth-child(1) { left: 144px; top: 144px; }
+
+.comp--w1-bleed-xl { --screen-w: 3200px; --screen-h: 2112px; --chrome-h: 104px; }
+.comp--w1-bleed-xl .screen:nth-child(1) { left: 144px; top: 144px; }
+
+/* window + mobile ------------------------------------------------------- */
+/* The desktop window runs off the right edge; a narrow mobile-web frame
+   stands in front of it on the left. The mobile frame is deliberately not
+   a phone ratio — it is a long page scroll, cropped. */
+
+.comp--w1-m1 .screen:nth-child(1) {
+  width: 2400px; height: 1584px; --chrome-h: 78px;
+  left: 512px; top: 96px;
+}
+.comp--w1-m1 .screen:nth-child(2) {
+  width: 480px; height: 1505px;
+  left: 144px; top: 260px; z-index: 2;
+}
+
+.comp--w1-m1-wide .screen:nth-child(1) {
+  width: 2400px; height: 1584px; --chrome-h: 78px;
+  left: 828px; top: 96px;
+}
+.comp--w1-m1-wide .screen:nth-child(2) {
+  width: 1080px; height: 1775px;
+  left: 96px; top: 260px; z-index: 2;
+}
+
+
+/* ========================================================================
+   UI Mockup sheet — mobile and web
+   ------------------------------------------------------------------------
+   From "UI Mockup For Dribbble and Behance" (figma 9l6BU3e58uY6PmFE82sziU):
+   sections Mobile App (1509:7) and Web (1509:739), 117 compositions on
+   1600x1200 — the same canvas as .comp--m.
+
+   GENERATED by tools/compositions/import-figma.py. Edit the importer, not
+   this block.
+
+   40 of the 117 are here, and every one was checked against Figma's own
+   render before it was let in. The importer cannot see rotation — this
+   metadata does not carry it — so it emits only the node ids listed in
+   verified-ui-mockup.txt, which verify-import.py produces by rasterising
+   each parse over the section's render and scoring the overlap.
+
+   An earlier pass shipped this import on a metadata heuristic alone and got
+   it wrong: a composition Figma renders at about 40 degrees came through as
+   an axis-aligned rectangle the size of its bounding box. Hence the render
+   check, and hence the importer refusing to run without its list.
+
+   Screens carry their own width and height here: these sheets vary the size
+   per screen rather than working from one base.
+   ======================================================================== */
+
+.comp--u {
+  --comp-w: 1600;
+  --comp-h: 1200;
+}
+
+/* 1509:667 */
+.comp--um-3-level .screen:nth-child(1) { left: 81px; top: 114px; width: 448px; height: 971px; }
+.comp--um-3-level .screen:nth-child(2) { left: 576px; top: 114px; width: 448px; height: 971px; }
+.comp--um-3-level .screen:nth-child(3) { left: 1071px; top: 114px; width: 448px; height: 971px; }
+
+/* 1509:592 */
+.comp--um-1-one .screen:nth-child(1) { left: 576px; top: 87px; width: 448px; height: 971px; }
+
+/* 1509:620 */
+.comp--um-6-alt .screen:nth-child(1) { left: 220px; top: -341px; width: 335px; height: 725px; }
+.comp--um-6-alt .screen:nth-child(2) { left: 220px; top: 445px; width: 335px; height: 725px; }
+.comp--um-6-alt .screen:nth-child(3) { left: 632px; top: 50px; width: 336px; height: 726px; }
+.comp--um-6-alt .screen:nth-child(4) { left: 632px; top: 836px; width: 336px; height: 726px; }
+.comp--um-6-alt .screen:nth-child(5) { left: 1044px; top: -372px; width: 336px; height: 726px; }
+.comp--um-6-alt .screen:nth-child(6) { left: 1044px; top: 414px; width: 336px; height: 726px; }
+
+/* 1509:596 */
+.comp--um-3-alt .screen:nth-child(1) { left: 126px; top: 161px; width: 420px; height: 911px; }
+.comp--um-3-alt .screen:nth-child(2) { left: 590px; top: 107px; width: 419px; height: 910px; }
+.comp--um-3-alt .screen:nth-child(3) { left: 1054px; top: 182px; width: 420px; height: 910px; }
+
+/* 1509:513 */
+.comp--um-3-level2 .screen:nth-child(1) { left: 280px; top: 100px; width: 460px; height: 1000px; }
+.comp--um-3-level2 .screen:nth-child(2) { left: 850px; top: 100px; width: 460px; height: 1000px; }
+.comp--um-3-level2 .screen:nth-child(3) { left: 1420px; top: 100px; width: 460px; height: 1000px; }
+
+/* 1509:540 */
+.comp--um-2-descend .screen:nth-child(1) { left: 126px; top: 76px; width: 646px; height: 1402px; }
+.comp--um-2-descend .screen:nth-child(2) { left: 827px; top: 201px; width: 646px; height: 1402px; }
+
+/* 1509:526 */
+.comp--um-3-level3 .screen:nth-child(1) { left: -176px; top: 100px; width: 460px; height: 1000px; }
+.comp--um-3-level3 .screen:nth-child(2) { left: 384px; top: 100px; width: 460px; height: 1000px; }
+.comp--um-3-level3 .screen:nth-child(3) { left: 944px; top: 100px; width: 460px; height: 1000px; }
+
+/* 1509:483 */
+.comp--um-3-alt2 .screen:nth-child(1) { left: 100px; top: 80px; width: 410px; height: 910px; }
+.comp--um-3-alt2 .screen:nth-child(2) { left: 595px; top: 210px; width: 410px; height: 910px; }
+.comp--um-3-alt2 .screen:nth-child(3) { left: 1090px; top: 80px; width: 410px; height: 910px; }
+
+/* 1509:390 */
+.comp--um-3-descend .screen:nth-child(1) { left: 100px; top: 80px; width: 410px; height: 910px; }
+.comp--um-3-descend .screen:nth-child(2) { left: 595px; top: 145px; width: 410px; height: 910px; }
+.comp--um-3-descend .screen:nth-child(3) { left: 1090px; top: 210px; width: 410px; height: 910px; }
+
+/* 1509:374 */
+.comp--um-3-rise .screen:nth-child(1) { left: 100px; top: 210px; width: 410px; height: 910px; }
+.comp--um-3-rise .screen:nth-child(2) { left: 595px; top: 145px; width: 410px; height: 910px; }
+.comp--um-3-rise .screen:nth-child(3) { left: 1090px; top: 80px; width: 410px; height: 910px; }
+
+/* 1509:360 */
+.comp--um-3-alt3 .screen:nth-child(1) { left: 120px; top: 178px; width: 390px; height: 844px; }
+.comp--um-3-alt3 .screen:nth-child(2) { left: 595px; top: 145px; width: 410px; height: 910px; }
+.comp--um-3-alt3 .screen:nth-child(3) { left: 1090px; top: 178px; width: 390px; height: 844px; }
+
+/* 1509:329 */
+.comp--um-3-alt4 .screen:nth-child(1) { left: 100px; top: 100px; width: 460px; height: 1000px; }
+.comp--um-3-alt4 .screen:nth-child(2) { left: 640px; top: 177px; width: 390px; height: 846px; }
+.comp--um-3-alt4 .screen:nth-child(3) { left: 1110px; top: 177px; width: 390px; height: 846px; }
+
+/* 1509:308 */
+.comp--um-4-alt .screen:nth-child(1) { left: 120px; top: 164px; width: 402px; height: 873px; }
+.comp--um-4-alt .screen:nth-child(2) { left: 599px; top: -303px; width: 402px; height: 873px; }
+.comp--um-4-alt .screen:nth-child(3) { left: 599px; top: 630px; width: 402px; height: 873px; }
+.comp--um-4-alt .screen:nth-child(4) { left: 1078px; top: 164px; width: 402px; height: 873px; }
+
+/* 1509:276 */
+.comp--um-3-level4 .screen:nth-child(1) { left: 100px; top: 145px; width: 410px; height: 910px; }
+.comp--um-3-level4 .screen:nth-child(2) { left: 595px; top: 145px; width: 410px; height: 910px; }
+.comp--um-3-level4 .screen:nth-child(3) { left: 1090px; top: 145px; width: 410px; height: 910px; }
+
+/* 1509:232 */
+.comp--um-2-level .screen:nth-child(1) { left: 295px; top: 100px; width: 460px; height: 1000px; }
+.comp--um-2-level .screen:nth-child(2) { left: 845px; top: 100px; width: 460px; height: 1000px; }
+
+/* 1509:185 */
+.comp--um-3-alt5 .screen:nth-child(1) { left: 280px; top: 100px; width: 460px; height: 1000px; }
+.comp--um-3-alt5 .screen:nth-child(2) { left: 860px; top: -445px; width: 460px; height: 1000px; }
+.comp--um-3-alt5 .screen:nth-child(3) { left: 860px; top: 645px; width: 460px; height: 1000px; }
+
+/* 1509:145 */
+.comp--um-2-descend2 .screen:nth-child(1) { left: 300px; top: 200px; width: 460px; height: 1000px; }
+.comp--um-2-descend2 .screen:nth-child(2) { left: 840px; top: 300px; width: 461px; height: 1000px; }
+
+/* 1509:128 */
+.comp--um-1-one2 .screen:nth-child(1) { left: 505px; top: 80px; width: 589px; height: 1276px; }
+
+/* 1509:120 */
+.comp--um-2-descend3 .screen:nth-child(1) { left: 310px; top: 100px; width: 460px; height: 1000px; }
+.comp--um-2-descend3 .screen:nth-child(2) { left: 920px; top: 177px; width: 389px; height: 846px; }
+
+/* 1509:95 */
+.comp--um-2-descend4 .screen:nth-child(1) { left: 115px; top: 86px; width: 624px; height: 1353px; }
+.comp--um-2-descend4 .screen:nth-child(2) { left: 851px; top: 284px; width: 624px; height: 1353px; }
+
+/* 1509:54 */
+.comp--um-2-descend5 .screen:nth-child(1) { left: 295px; top: 80px; width: 460px; height: 1000px; }
+.comp--um-2-descend5 .screen:nth-child(2) { left: 845px; top: 261px; width: 461px; height: 1000px; }
+
+/* 1509:37 */
+.comp--um-2-level2 .screen:nth-child(1) { left: 295px; top: 100px; width: 460px; height: 1000px; }
+.comp--um-2-level2 .screen:nth-child(2) { left: 845px; top: 100px; width: 461px; height: 1000px; }
+
+/* 1509:27 */
+.comp--um-3-level5 .screen:nth-child(1) { left: 216px; top: 100px; width: 460px; height: 1000px; }
+.comp--um-3-level5 .screen:nth-child(2) { left: 786px; top: 100px; width: 461px; height: 1000px; }
+.comp--um-3-level5 .screen:nth-child(3) { left: 1357px; top: 100px; width: 461px; height: 1000px; }
+
+/* 1509:8 */
+.comp--um-1-one3 .screen:nth-child(1) { left: 544px; top: 47px; width: 511px; height: 1107px; }
+
+/* 1509:1126 */
+.comp--uw-1-one .screen:nth-child(1) { left: 126px; top: 171px; width: 1348px; height: 858px; }
+
+/* 1509:1155 */
+.comp--uw-1-one2 .screen:nth-child(1) { left: 114px; top: 121px; width: 1373px; height: 958px; }
+
+/* 1509:811 */
+.comp--uw-3-descend .screen:nth-child(1) { left: -80px; top: -6px; width: 880px; height: 586px; }
+.comp--uw-3-descend .screen:nth-child(2) { left: 279px; top: 253px; width: 1042px; height: 694px; }
+.comp--uw-3-descend .screen:nth-child(3) { left: 800px; top: 620px; width: 880px; height: 586px; }
+
+/* 1509:864 */
+.comp--uw-1-one3 .screen:nth-child(1) { left: 142px; top: 150px; width: 1316px; height: 901px; }
+
+/* 1509:883 */
+.comp--uw-3-alt .screen:nth-child(1) { left: -97px; top: 696px; width: 872px; height: 543px; }
+.comp--uw-3-alt .screen:nth-child(2) { left: 355px; top: 103px; width: 880px; height: 543px; }
+.comp--uw-3-alt .screen:nth-child(3) { left: 825px; top: 696px; width: 872px; height: 543px; }
+
+/* 1509:856 */
+.comp--uw-1-one4 .screen:nth-child(1) { left: 142px; top: 150px; width: 1316px; height: 901px; }
+
+/* 1509:1151 */
+.comp--uw-1-one5 .screen:nth-child(1) { left: 114px; top: 121px; width: 1373px; height: 958px; }
+
+/* 1509:872 */
+.comp--uw-2-descend .screen:nth-child(1) { left: -33px; top: 143px; width: 964px; height: 772px; }
+.comp--uw-2-descend .screen:nth-child(2) { left: 669px; top: 285px; width: 964px; height: 772px; }
+
+/* 1509:952 */
+.comp--uw-2-descend2 .screen:nth-child(1) { left: 180px; top: 180px; width: 757px; height: 1020px; }
+.comp--uw-2-descend2 .screen:nth-child(2) { left: 821px; top: 336px; width: 649px; height: 864px; }
+
+/* 1509:968 */
+.comp--uw-2-descend3 .screen:nth-child(1) { left: 200px; top: 0px; width: 588px; height: 888px; }
+.comp--uw-2-descend3 .screen:nth-child(2) { left: 683px; top: 259px; width: 717px; height: 941px; }
+
+/* 1509:980 */
+.comp--uw-2-rise .screen:nth-child(1) { left: 250px; top: 297px; width: 687px; height: 903px; }
+.comp--uw-2-rise .screen:nth-child(2) { left: 645px; top: 0px; width: 705px; height: 879px; }
+
+/* 1509:1054 */
+.comp--uw-2-descend4 .screen:nth-child(1) { left: 210px; top: 0px; width: 588px; height: 950px; }
+.comp--uw-2-descend4 .screen:nth-child(2) { left: 703px; top: 259px; width: 717px; height: 941px; }
+
+/* 1509:1090 */
+.comp--uw-2-rise2 .screen:nth-child(1) { left: 180px; top: 234px; width: 757px; height: 966px; }
+.comp--uw-2-rise2 .screen:nth-child(2) { left: 904px; top: 0px; width: 546px; height: 966px; }
+
+/* 1509:1102 */
+.comp--uw-2-rise3 .screen:nth-child(1) { left: 150px; top: 234px; width: 757px; height: 966px; }
+.comp--uw-2-rise3 .screen:nth-child(2) { left: 857px; top: 0px; width: 639px; height: 1131px; }
+
+/* 1509:1066 */
+.comp--uw-2-rise4 .screen:nth-child(1) { left: 300px; top: 259px; width: 717px; height: 941px; }
+.comp--uw-2-rise4 .screen:nth-child(2) { left: 762px; top: 0px; width: 588px; height: 815px; }
+
+/* 1509:1078 */
+.comp--uw-2-rise5 .screen:nth-child(1) { left: 200px; top: 196px; width: 650px; height: 1004px; }
+.comp--uw-2-rise5 .screen:nth-child(2) { left: 904px; top: 0px; width: 546px; height: 1008px; }
+
+
+
+/* ========================================================================
+   Close-ups
+   ------------------------------------------------------------------------
+   The one-screen layouts above put a 450px screen in a 1600px frame — 28%
+   of the width, which is a screen sitting in a lot of empty ground, not a
+   close-up. These fill the frame instead, and are the better default when
+   one screen carries the point: detail is legible, and a page of them does
+   not read as the same grid of small phones over and over.
+
+   Two ways to fill it, both useful:
+     m1-tall   the whole screen, as large as the frame's height allows
+     m1-close  scaled past the frame so the canvas crops it — the top of a
+               screen at a size where its type can actually be read
+   ======================================================================== */
+
+.comp--m1-tall  .screen:nth-child(1) { left: 523px; top: 0;      width: 554px;  height: 1200px; }
+
+.comp--m1-close .screen:nth-child(1) { left: 350px; top: -60px;  width: 900px;  height: 1948px; }
+
+/* Two, both large, cropped by the frame — a pair worth comparing rather
+   than a row to scan. */
+.comp--m2-close .screen:nth-child(1) { left: 100px; top: -136px; width: 680px;  height: 1472px; }
+.comp--m2-close .screen:nth-child(2) { left: 820px; top: -136px; width: 680px;  height: 1472px; }

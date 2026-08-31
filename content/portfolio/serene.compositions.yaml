@@ -1,0 +1,92 @@
+# Serene — composition figures.
+#
+# Each key is a placeholder id already declared in serene.md; rendering one
+# writes assets/projects/serene/<id>.webp and the grey block becomes the
+# real figure on the next build.  Run: python3 tools/compose.py serene
+#
+# `composition` names a layout from tools/compositions/library.css — that
+# stylesheet holds the geometry, this file only says which layout and which
+# screens.
+#
+# `align` (top | center | bottom, one value or one per screen) chooses where
+# a taller screen is cropped. A modal presented over a dimmed backdrop needs
+# `bottom`, or the figure shows mostly the dark area above the sheet.
+
+serene-rebrand-hero:
+  # A Compare panel is half the column wide, so this is a single screen at
+  # close range — see the rule in the case-study skill. The home surface
+  # makes the point alone: serif type, editorial layout, compatibility rings.
+  composition: m1-tall
+  background: surface
+  screens:
+    - "figma-exports/serene-ios/2. Horoscopes/Main Screens/Horoscopes — start position, full feed (short).png"
+
+astrologer-chat-paywall:
+  composition: m3-descend       # stepping down: a sequence with direction
+  background: surface
+  screens:                      # typed -> sent -> gated mid-conversation
+    - "figma-exports/serene-ios/Astrologers v2/Astrologers with new reply/Personal Question — new question, typed.png"
+    - "figma-exports/serene-ios/Astrologers v2/Astrologers with new reply/Personal Question — question sent, Get Answer.png"
+    - "figma-exports/serene-ios/Astrologers v2/Astrologers with new reply/Personal Question — answer shown, pre-payment.png"
+
+web2app-quiz-step:
+  composition: m4-alt           # four beats of a long funnel
+  background: surface
+  align: [top, top, bottom, bottom]   # the last two are sheets over a backdrop
+  screens:
+    - "figma-exports/serene-ios/7. Advisors (Quiz)/Survey/8.2 Survey - Question 1.png"
+    - "figma-exports/serene-ios/7. Advisors (Quiz)/Survey/8.4 Survey - Question 3.png"
+    - "figma-exports/serene-ios/7. Advisors (Quiz)/Survey/8.11. Survey - Congrets Alert.png"
+    - "figma-exports/serene-ios/7. Advisors (Quiz)/Survey/6.0 Payment Wall - General with discount.png"
+
+affirmations-v3:
+  composition: m3-level         # start -> progress -> finished
+  background: surface
+  screens:
+    - "figma-exports/serene-ios/2. Horoscopes/Affirmation/First day/Affirmation — begin challenge.png"
+    - "figma-exports/serene-ios/2. Horoscopes/Affirmation/First day/Affirmation — Day 1 progress, view 5.png"
+    - "figma-exports/serene-ios/2. Horoscopes/Affirmation/Last day + share/Affirmation — home, challenge finished.png"
+
+outcome-feed:
+  composition: m1-tall
+  background: surface
+  screens:
+    - "figma-exports/serene-ios/2. Horoscopes/Main Screens/Horoscopes — start position, full feed (short).png"
+
+outcome-compatibility:
+  composition: m1-tall
+  background: surface
+  screens:
+    - "figma-exports/serene-ios/4. Compatibility/5.5. - Friend Profile — compatibility result.png"
+
+outcome-transits:
+  composition: m1-tall
+  background: surface
+  screens:
+    - "figma-exports/serene-ios/5. Transits/7.1 Transits.png"
+
+outcome-astrologers:
+  composition: m1-tall
+  background: surface
+  screens:
+    - "figma-exports/serene-ios/Astrologers v2/Astrologers with new reply/Chats — thread list.png"
+
+android-afterthought:
+  # For "What I'd change now". Android's onboarding stayed dark purple while
+  # iOS went white and serif. One screen at close range says it faster than
+  # three small ones.
+  composition: m1-close
+  background: surface
+  screens:
+    - "figma-exports/serene-android/1. Onboarding/1.1.1. Welcome Screen - stp2.png"
+
+android-welcome:
+  # The other half of the Compare slider until the Astro screens land.
+  composition: m1-tall
+  background: surface
+  screens:
+    - "figma-exports/serene-android/1. Onboarding/1.1.1. Welcome Screen - stp2.png"
+
+# astro-before-screen has no entry: the old Astro screenshots do not exist in
+# the repo yet (references/serene/astro-before/ holds only its README). It
+# stays a grey placeholder until they land.

@@ -1,0 +1,151 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Composition library</title>
+<link rel="stylesheet" href="library.css" />
+<script src="manifest.js"></script>
+<style>
+  body { margin: 0; padding: 28px 32px 80px; background: #fff;
+         font: 500 13px/20px Inter, -apple-system, system-ui, sans-serif; color: #111827; }
+  h1 { font: 600 24px/32px Inter, sans-serif; letter-spacing: -0.02em; margin: 0 0 6px; }
+  .lede { color: #6b7280; margin: 0 0 18px; max-width: 78ch; }
+  code { font: 400 12px/18px ui-monospace, SFMono-Regular, Menlo, monospace;
+         background: #f3f4f6; padding: 1px 6px; border-radius: 5px; }
+
+  /* segmented control — the site's own pill/token language */
+  .segs { display: inline-flex; gap: 2px; padding: 3px; background: #f3f4f6;
+          border-radius: 999px; position: sticky; top: 12px; z-index: 5; }
+  .segs button { appearance: none; border: 0; cursor: pointer; background: transparent;
+                 font: 600 13px/20px Inter, sans-serif; color: #4b5563;
+                 padding: 5px 16px; border-radius: 999px; }
+  .segs button[aria-pressed="true"] { background: #fff; color: #111827;
+                                      box-shadow: 0 1px 2px rgba(16,24,40,.1); }
+  .segs .count { font-weight: 500; color: #9ca3af; margin-left: 6px; }
+
+  h2 { font: 600 15px/22px Inter, sans-serif; margin: 32px 0 12px;
+       padding-top: 8px; border-top: 1px solid #e5e7eb; }
+  h2 .n { font-weight: 500; color: #9ca3af; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, 300px); gap: 22px; }
+  .meta { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+  .note { color: #9ca3af; font-size: 12px; }
+  .src  { color: #d1d5db; font-size: 11px; margin-left: auto; }
+  .stage { width: 300px; height: 225px; overflow: hidden; border-radius: 10px;
+           border: 1px solid #e5e7eb; }
+  .stage .comp { --comp-scale: 0.1875; }          /* 1600-wide canvas */
+  .stage .comp.w1920 { --comp-scale: 0.15625; }   /* 1920-wide canvas */
+  .webdemo { width: 100%; height: 100%; background: #fff;
+             background-image:
+               linear-gradient(#eef0f4 0 0), linear-gradient(#f6f7f9 0 0),
+               linear-gradient(#eef0f4 0 0), linear-gradient(#eef0f4 0 0);
+             background-repeat: no-repeat;
+             background-size: 100% 9%, 46% 34%, 30% 2.5%, 22% 5%;
+             background-position: 0 0, 6% 22%, 6% 15%, 6% 66%; }
+  [hidden] { display: none !important; }
+</style>
+
+<h1>Composition library</h1>
+<p class="lede">Geometry re-implemented from three Figma mockup sheets; background, shadow and
+tokens are this site's own. Grouped by platform, not by which sheet each came from — the source
+is noted on each card. Every card sits on the same neutral ground
+(<code>bg-surface</code>) so what varies is the layout: a composition is the site's grey with
+the product's screens on it, and the colour comes from the screens. Markup:
+<code>comp comp--&lt;family&gt; comp--&lt;id&gt; comp--bg-&lt;bg&gt;</code>.</p>
+
+<div class="segs" id="segs"></div>
+<div id="out"></div>
+
+<script>
+const S = n => `screens/s${((n - 1) % 6) + 1}.webp`;
+const BG = 'surface';            // the site's grey, one step off the page
+const planed = new Set(['m4-tilt','mgrid-tilt','mgrid-tilt-45','mgrid-tilt-45r','hex-tilt']);
+const wide  = new Set(['solo','pair-flat','pair-offset','pair-overlap','trio-flat',
+                       'trio-stagger','trio-cascade','hex-grid','hex-tilt',
+                       'w1-window','w1-wide','w1-tall','w1-narrow','w1-bleed',
+                       'w1-bleed-xl','w1-m1','w1-m1-wide']);
+
+// id, screens, family class, note
+const DRIBBBLE = [
+  ['m1-center',1,'centred'],['m1-top',1,'off the top'],['m1-bottom',1,'off the bottom'],
+  ['m2-level',2,'level'],['m2-offset',2,'one up, one down'],['m2-offset-alt',2,'mirrored'],
+  ['m2-drift',2,'barely offset'],['m2-split',2,'far apart'],['m2-bleed',2,'first off the top'],
+  ['m2-tilt',2,'leaning apart'],['m2-tilt-pair',2,'leaning together'],
+  ['m3-level',3,'a flow in three'],['m3-stagger',3,'staggered'],['m3-arch',3,'centre raised'],
+  ['m3-descend',3,'stepping down'],['m3-mixed',3,'mixed heights'],
+  ['m3-tilt',3,'outer pair leans out'],['m3-tilt-run',3,'all leaning'],
+  ['m4-level',4,'level row'],['m4-alt',4,'alternating'],['m4-descend',4,'descending'],
+  ['m4-scatter',4,'scattered'],['m4-drift',4,'tight, drifting'],['m4-columns',4,'stacked pair + two'],
+  ['m4-tilt',4,'group turned'],['m4-tilt-scale',4,'each turned a little'],
+  ['m8-brick',8,'brick grid'],['m9-brick',9,'denser'],['m10-brick',10,'denser still'],
+  ['m11-brick',11,'fullest'],['mgrid-tilt',24,'grid at 25°'],
+  ['mgrid-tilt-45',24,'at 45°'],['mgrid-tilt-45r',24,'the other way'],
+];
+const UNTITLED_WEB = [
+  ['w1-window',1,'the standard window'],['w1-wide',1,'wider'],['w1-tall',1,'nearly full height'],
+  ['w1-narrow',1,'narrow and tall'],['w1-bleed',1,'oversized, cropped'],
+  ['w1-bleed-xl',1,'a detail'],['w1-m1',2,'window + mobile web'],['w1-m1-wide',2,'window + wide mobile'],
+];
+const UNTITLED_MIX = [
+  ['solo',1,'one, centred'],['pair-flat',2,'level pair'],['pair-offset',2,'a sequence'],
+  ['pair-overlap',2,'detail over context'],['trio-flat',3,'three beats'],
+  ['trio-stagger',3,'more movement'],['trio-cascade',3,'depth'],
+  ['hex-grid',6,'breadth'],['hex-tilt',6,'most graphic'],
+];
+const imported = window.IMPORTED || { mobile: {}, web: {} };
+const plural = n => `${n} screen${n > 1 ? 's' : ''}`;
+
+const items = [
+  ...DRIBBBLE.map(([id,n,note]) => ({id,n,note,fam:'m',plat:'mobile',src:'Dribbble sheet'})),
+  ...Object.entries(imported.mobile).map(([id,n]) => ({id,n,note:plural(n),fam:'u',plat:'mobile',src:'UI Mockup sheet'})),
+  ...Object.entries(imported.web).map(([id,n]) => ({id,n,note:plural(n),fam:'u',plat:'web',src:'UI Mockup sheet'})),
+  ...UNTITLED_WEB.map(([id,n,note]) => ({id,n,note,fam:'w',plat:'web',src:'Untitled UI'})),
+  ...UNTITLED_MIX.map(([id,n,note]) => ({id,n,note,fam:'',plat:'mix',src:'Untitled UI'})),
+];
+// within a platform, simplest first
+items.forEach((it,i) => it._i = i);
+items.sort((a,b) => a.n - b.n || a.id.localeCompare(b.id));
+
+const isWeb = it => it.plat === 'web';
+
+function card(it) {
+  const kids = Array.from({ length: it.n }, (_, k) => isWeb(it)
+    ? `<div class="screen"><div class="webdemo"></div></div>`
+    : `<div class="screen"><img src="${S(k + 1)}" alt="" /></div>`).join('');
+  const inner = planed.has(it.id) ? `<div class="comp__plane">${kids}</div>` : kids;
+  const cls = ['comp', it.fam && `comp--${it.fam}`, `comp--${it.id}`,
+               `comp--bg-${BG}`, wide.has(it.id) && 'w1920'].filter(Boolean).join(' ');
+  return `<div>
+    <div class="meta"><code>${it.id}</code><span class="note">${it.note}</span>
+      <span class="src">${it.src}</span></div>
+    <div class="stage"><div class="${cls}">${inner}</div></div>
+  </div>`;
+}
+
+const GROUPS = [
+  ['mobile', 'Mobile', 'App screens — 450×974 and 318×688, both the iPhone ratio our exports already are.'],
+  ['web',    'Web',    'Browser windows and page captures. Give these a screenshot of the page, not an app export.'],
+  ['mix',    'Mix',    'Generic frames that take an optional device bezel or browser chrome.'],
+];
+
+document.getElementById('out').innerHTML = GROUPS.map(([key, title, blurb]) => {
+  const list = items.filter(i => i.plat === key);
+  return `<section data-plat="${key}">
+    <h2>${title} <span class="n">${list.length}</span></h2>
+    <p class="lede">${blurb}</p>
+    <div class="grid">${list.map(card).join('')}</div>
+  </section>`;
+}).join('');
+
+const segs = [['all','All',items.length],
+  ...GROUPS.map(([k,t]) => [k, t, items.filter(i => i.plat === k).length])];
+document.getElementById('segs').innerHTML = segs.map(([k,t,n],i) =>
+  `<button data-seg="${k}" aria-pressed="${i===0}">${t}<span class="count">${n}</span></button>`).join('');
+
+document.getElementById('segs').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const seg = b.dataset.seg;
+  for (const x of document.querySelectorAll('#segs button'))
+    x.setAttribute('aria-pressed', String(x === b));
+  for (const s of document.querySelectorAll('section[data-plat]'))
+    s.hidden = !(seg === 'all' || s.dataset.plat === seg);
+  window.scrollTo(0, 0);
+});
+</script>
