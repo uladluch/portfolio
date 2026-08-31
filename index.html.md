@@ -18,16 +18,6 @@ Contributed to the design evolution of Calorie Counter, recognized as the #1 app
 - [Google Play](https://play.google.com/store/apps/details?id=food.tracker.calorie.counter&hl=en_US&gl=US)
 - [Web2App](https://food-mentor.com/)
 
-### Serene (2022)
-
-Metrics: Scaled Revenue to $2M ARR · Captured 42% of leads via web2app
-
-Serene: Scaling a Wellness Utility to $2M ARR. Led the end-to-end transformation of a generic horoscope app into a high-LTV lifestyle brand. By combining a strategic brand pivot ("Digital Vogue" aesthetic) with a data-driven Web-to-App acquisition engine, I unlocked viral organic growth and a predictable revenue stream.
-
-- [App Store](https://apps.apple.com/us/app/serene-talk-to-astrologer/id1178444023)
-- [Google Play](https://play.google.com/store/apps/details?id=astrology.daily.horoscope&hl=en)
-- [Web2App](https://quiz.appserene.co/place-of-birth)
-
 ### Stream Vision 2 (2018)
 
 Metrics: 90k DAU · 2.5x TTM

@@ -76,7 +76,11 @@ const stamp = (files) => files
 
 /* A draft is a case that is finished enough to look at and not finished enough
    to publish — exactly what a preview is for. The rewrite touches only the
-   status line inside the frontmatter block, never the body. */
+   status line inside the frontmatter block, never the body.
+
+   An archived case is skipped: it was deliberately pulled from the site, and
+   a preview that quietly puts it back is a preview that lies about what the
+   site is. */
 function stage(files) {
   fs.rmSync(STAGE, { recursive: true, force: true });
   fs.mkdirSync(STAGE, { recursive: true });
@@ -84,6 +88,7 @@ function stage(files) {
   for (const src of files) {
     if (src === BUILD) continue;
     const raw = fs.readFileSync(src, 'utf8');
+    if (/^status:[ \t]*archived\s*$/m.test(raw)) continue;
     const text = raw.replace(
       /^(---\n[\s\S]*?)^status:[ \t]*\S+/m,
       (all, head) => `${head}status: ready`
