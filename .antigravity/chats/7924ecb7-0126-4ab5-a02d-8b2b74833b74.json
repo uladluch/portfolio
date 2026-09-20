@@ -136,6 +136,30 @@
       "created_at": "2026-09-20T14:03:06.172Z",
       "sender": "ios",
       "is_cancelled": false
+    },
+    {
+      "id": "7e4a7513-5e99-4d7d-b1cf-c8d6a5916ab1",
+      "role": "agent",
+      "content": "Hello! 👋 Welcome! I'm Antigravity, your AI coding assistant.\n\nI can see you have a **portfolio project** connected to the GitHub repository `uladluch/portfolio`. I'm ready to help you with:\n\n- 🛠️ Building or improving features\n- 🐛 Debugging issues\n- 🎨 UI/UX improvements\n- 📝 Code reviews\n- And much more!\n\nWhat would you like to work on today?",
+      "status": "completed",
+      "model": "claude-sonnet-4-6",
+      "client_type": "gemini-bridge",
+      "parent_message_id": "fccf3876-b9fa-4e6a-9cde-5d72b65bc218",
+      "created_at": "2026-09-20T14:03:12.843Z",
+      "sender": "macOS",
+      "is_cancelled": false
+    },
+    {
+      "id": "3ce87c2a-9c3b-4bc6-ad23-8917e8bcb075",
+      "role": "user",
+      "content": "Show me beautiful python code",
+      "status": "pending",
+      "model": "claude-sonnet-4-6",
+      "client_type": "gemini-bridge",
+      "parent_message_id": null,
+      "created_at": "2026-09-20T14:04:41.287Z",
+      "sender": "ios",
+      "is_cancelled": false
     }
   ]
 }
