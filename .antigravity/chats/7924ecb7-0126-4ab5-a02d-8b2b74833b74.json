@@ -280,6 +280,30 @@
       "created_at": "2026-09-20T14:29:20.304Z",
       "sender": "ios",
       "is_cancelled": false
+    },
+    {
+      "id": "49d643f7-d781-41f8-8e19-9e26e8d706a3",
+      "role": "user",
+      "content": "Give me some js example from the project",
+      "status": "cancelled",
+      "model": "claude-sonnet-4-6",
+      "client_type": "gemini-bridge",
+      "parent_message_id": null,
+      "created_at": "2026-09-20T14:34:29.731Z",
+      "sender": "ios",
+      "is_cancelled": true
+    },
+    {
+      "id": "5f36c4be-aca4-405a-a36c-3880a39155f7",
+      "role": "user",
+      "content": "Give me some js example from the project",
+      "status": "pending",
+      "model": "claude-sonnet-4-6",
+      "client_type": "gemini-bridge",
+      "parent_message_id": null,
+      "created_at": "2026-09-20T14:35:13.821Z",
+      "sender": "ios",
+      "is_cancelled": false
     }
   ]
 }
