@@ -88,6 +88,18 @@
       "created_at": "2026-09-20T13:09:57.267Z",
       "sender": "ios",
       "is_cancelled": false
+    },
+    {
+      "id": "204896ec-c9b0-42a6-824e-4c9a4c28285b",
+      "role": "user",
+      "content": "Show me some beautiful js code in snippets",
+      "status": "pending",
+      "model": "claude-sonnet-4-6",
+      "client_type": "gemini-bridge",
+      "parent_message_id": null,
+      "created_at": "2026-09-20T13:47:55.234Z",
+      "sender": "ios",
+      "is_cancelled": false
     }
   ]
 }
