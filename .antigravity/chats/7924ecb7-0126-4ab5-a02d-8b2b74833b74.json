@@ -100,6 +100,30 @@
       "created_at": "2026-09-20T13:47:55.234Z",
       "sender": "ios",
       "is_cancelled": false
+    },
+    {
+      "id": "dc25be00-16e0-4085-8810-457af6da90eb",
+      "role": "agent",
+      "content": "Here are some beautiful JavaScript code snippets that showcase elegance, modern patterns, and clever techniques:\n\n---\n\n## ✨ 1. Elegant Pipeline with Functional Composition\n\n```js\nconst pipe = (...fns) => x => fns.reduce((v, f) => f(v), x);\n\nconst transform = pipe(\n  str  => str.trim(),\n  str  => str.toLowerCase(),\n  str  => str.replace(/\\s+/g, '-'),\n  str  => `slug: ${str}`\n);\n\ntransform(\"  Hello Beautiful World  \");\n// → \"slug: hello-beautiful-world\"\n```\n\n---\n\n## 🌊 2. Async Iterator — Infinite Fibonacci Stream\n\n```js\nasync function* fibonacci() {\n  let [a, b] = [0, 1];\n  while (true) {\n    await new Promise(r => setTimeout(r, 300)); // breathe ✨\n    yield a;\n    [a, b] = [b, a + b];\n  }\n}\n\nfor await (const n of fibonacci()) {\n  if (n > 1000) break;\n  console.log(n); // 0, 1, 1, 2, 3, 5, 8 ... 987\n}\n```\n\n---\n\n## 🎭 3. Proxy Magic — Observable Objects\n\n```js\nconst observe = (obj, onChange) =>\n  new Proxy(obj, {\n    set(target, key, value) {\n      const prev = target[key];\n      target[key] = value;\n      onChange({ key, prev, next: value });\n      return true;\n    }\n  });\n\nconst state = observe({ count: 0 }, diff =>\n  console.log(`${diff.key}: ${diff.prev} → ${diff.next}`)\n);\n\nstate.count++; // count: 0 → 1\nstate.count++; // count: 1 → 2\n```\n\n---\n\n## 🔮 4. Tagged Template Literals — Mini HTML Sanitizer\n\n```js\nconst escape = str => str\n  .replace(/&/g, '&amp;')\n  .replace(/</g, '&lt;')\n  .replace(/>/g, '&gt;')\n  .replace(/\"/g, '&quot;');\n\nconst html = (strings, ...values) =>\n  strings.reduce((out, str, i) =>\n    `${out}${str}${values[i] !== undefined ? escape(String(values[i])) : ''}`, '');\n\nconst userInput = '<script>alert(\"xss\")</script>';\nconst safe = html`<div class=\"user\">${userInput}</div>`;\n// → <div class=\"user\">&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;</div>\n```\n\n---\n\n## ⏳ 5. Debounce — The Elegant Way\n\n```js\nconst debounce = (fn, ms) => {\n  let timer;\n  return (...args) => {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn(...args), ms);\n  };\n};\n\nconst onSearch = debounce(query => {\n  console.log(`Searching: \"${query}\"`);\n}, 400);\n\n// Rapid keystrokes — only the last one fires\n['h','he','hel','hell','hello'].forEach(onSearch);\n// → Searching: \"hello\" (after 400ms)\n```\n\n---\n\n## 🧩 6. Recursive `deepFreeze` — Immutable by Nature\n\n```js\nconst deepFreeze = obj =>\n  Object.keys(obj).reduce((frozen, key) => {\n    if (typeof obj[key] === 'object' && obj[key] !== null)\n      deepFreeze(obj[key]);\n    return frozen;\n  }, Object.freeze(obj));\n\nconst config = deepFreeze({\n  api: { url: 'https://api.example.com', timeout: 3000 },\n  features: { darkMode: true }\n});\n\nconfig.api.url = 'hacked'; // ❌ silently fails (or throws in strict mode)\nconsole.log(config.api.url); // → 'https://api.example.com' ✅\n```\n\n---\n\n## 🎲 7. One-liner Wonders\n\n```js\n// Shuffle an array (Fisher-Yates in one chain)\nconst shuffle = arr => arr\n  .map(v => [Math.random(), v])\n  .sort(([a], [b]) => a - b)\n  .map(([, v]) => v);\n\n// Deep clone with structuredClone (modern & beautiful)\nconst clone = obj => structuredClone(obj);\n\n// Group an array by a key\nconst groupBy = (arr, fn) =>\n  arr.reduce((map, item) => ({\n    ...map,\n    [fn(item)]: [...(map[fn(item)] ?? []), item]\n  }), {});\n\nconst grouped = groupBy(\n  [{ type: 'fruit', name: '🍎' }, { type: 'veggie', name: '🥕' }, { type: 'fruit', name: '🍌' }],\n  item => item.type\n);\n// → { fruit: [{...}, {...}], veggie: [{...}] }\n```\n\n---\n\nThese patterns highlight what makes JS special: **first-class functions**, **async generators**, **metaprogramming with Proxy**, and the expressiveness of **template literals**. Want me to dive deeper into any of these?",
+      "status": "completed",
+      "model": "claude-sonnet-4-6",
+      "client_type": "gemini-bridge",
+      "parent_message_id": "204896ec-c9b0-42a6-824e-4c9a4c28285b",
+      "created_at": "2026-09-20T13:48:17.442Z",
+      "sender": "macOS",
+      "is_cancelled": false
+    },
+    {
+      "id": "314c3323-d4a0-473b-8aee-849cbf6593a5",
+      "role": "user",
+      "content": "And now show me swift code",
+      "status": "pending",
+      "model": "claude-sonnet-4-6",
+      "client_type": "gemini-bridge",
+      "parent_message_id": null,
+      "created_at": "2026-09-20T13:48:28.537Z",
+      "sender": "ios",
+      "is_cancelled": false
     }
   ]
 }
