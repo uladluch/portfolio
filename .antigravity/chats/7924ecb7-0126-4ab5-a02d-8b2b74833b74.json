@@ -3,6 +3,19 @@
   "name": "Hello",
   "createdAt": "2026-09-20T12:52:19.448Z",
   "filename": "7924ecb7-0126-4ab5-a02d-8b2b74833b74.json",
-  "geminiStarted": false,
-  "messages": []
+  "geminiStarted": true,
+  "messages": [
+    {
+      "id": "4b3c811a-f6ad-4c37-a625-a9b019f1aa40",
+      "role": "user",
+      "content": "Hello",
+      "status": "pending",
+      "model": "claude-sonnet-4-6",
+      "client_type": "gemini-bridge",
+      "parent_message_id": null,
+      "created_at": "2026-09-20T12:52:21.111Z",
+      "sender": "ios",
+      "is_cancelled": false
+    }
+  ]
 }
