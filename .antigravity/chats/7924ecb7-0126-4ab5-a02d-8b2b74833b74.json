@@ -40,6 +40,30 @@
       "created_at": "2026-09-20T12:56:06.411Z",
       "sender": "ios",
       "is_cancelled": false
+    },
+    {
+      "id": "2b4c1bca-7aa4-4fbd-b957-ca6848964ac5",
+      "role": "agent",
+      "content": "Hello again! 👋 How can I help you with your portfolio today?",
+      "status": "completed",
+      "model": "claude-sonnet-4-6",
+      "client_type": "gemini-bridge",
+      "parent_message_id": "d4e377b9-661d-4882-81a2-1713e87ec124",
+      "created_at": "2026-09-20T12:56:12.063Z",
+      "sender": "macOS",
+      "is_cancelled": false
+    },
+    {
+      "id": "5a9087d1-5181-40d8-a0f7-2173a34c3c2d",
+      "role": "user",
+      "content": "Hello",
+      "status": "pending",
+      "model": "auto",
+      "client_type": "gemini-bridge",
+      "parent_message_id": null,
+      "created_at": "2026-09-20T13:06:53.505Z",
+      "sender": "ios",
+      "is_cancelled": false
     }
   ]
 }
