@@ -1,7 +1,5 @@
 'use strict';
 
-const canHover = window.matchMedia('(hover: hover)');
-
 /* --------------------------------------------------------------- the mark
  * Spins only while the pointer is over it, and keeps whatever angle it
  * reached when the pointer leaves.
@@ -42,71 +40,6 @@ const canHover = window.matchMedia('(hover: hover)');
   mark.addEventListener('mouseleave', stop);
 })();
 
-/* ------------------------------------------------------------ project reel
- * Each project holds a stack of frames. Hovering the stage walks through
- * them on the per-frame delay recorded in `data-hold`, then loops. Leaving
- * the stage snaps back to the cover.
- */
-(() => {
-  const projects = document.querySelectorAll('.project');
-  if (!projects.length) return;
-
-  projects.forEach((project) => {
-    const stage = project.querySelector('.stage');
-    const frames = [...project.querySelectorAll('.frame')];
-    if (!stage || frames.length < 2) return;
-
-    let index = 0;
-    let timerId = null;
-
-    const show = (next) => {
-      const previous = frames[index];
-      previous.classList.remove('is-active');
-
-      const previousVideo = previous.querySelector('video');
-      if (previousVideo) previousVideo.pause();
-
-      index = next;
-      const current = frames[index];
-      current.classList.add('is-active');
-
-      const video = current.querySelector('video');
-      if (video) {
-        video.currentTime = 0;
-        const played = video.play();
-        if (played) played.catch(() => {});
-      }
-    };
-
-    const queue = () => {
-      const hold = Number(frames[index].dataset.hold) || 800;
-      timerId = window.setTimeout(() => {
-        show((index + 1) % frames.length);
-        queue();
-      }, hold);
-    };
-
-    const start = () => {
-      if (timerId !== null) return;
-      show(1);
-      queue();
-    };
-
-    const stop = () => {
-      if (timerId !== null) {
-        clearTimeout(timerId);
-        timerId = null;
-      }
-      if (index !== 0) show(0);
-    };
-
-    if (canHover.matches) {
-      stage.addEventListener('mouseenter', start);
-      stage.addEventListener('mouseleave', stop);
-    }
-  });
-})();
-
 /* -------------------------------------------------------------- page marks
  * The panels run end to end in a single scroll, so there is nothing to switch
  * — the sidebar just reports where you are. Whichever section is crossing the
@@ -131,9 +64,13 @@ const canHover = window.matchMedia('(hover: hover)');
   let flagTimer = null;
 
   /* The name shows itself as a page arrives and then withdraws. It is skipped
-     on the very first mark, which only reports where the page opened. */
-  const announce = (name) => {
-    if (!flag || !flagLabel) return;
+     on the very first mark, which only reports where the page opened, and for
+     the portfolio, which is where the page opens — a section does not need to
+     announce itself as the one you were already looking at. */
+  const SILENT = 'portfolio';
+
+  const announce = (name, id) => {
+    if (!flag || !flagLabel || id === SILENT) return;
 
     flagLabel.textContent = name;
     flag.classList.add('is-visible');
@@ -165,7 +102,7 @@ const canHover = window.matchMedia('(hover: hover)');
     });
 
     history.replaceState(null, '', `#${id}`);
-    if (!first) announce(name);
+    if (!first) announce(name, id);
   };
 
   /* --- reading position --------------------------------------------------

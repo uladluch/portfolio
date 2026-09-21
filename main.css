@@ -584,6 +584,12 @@ a { color: inherit; }
   background: var(--accent);
 }
 
+/* lens.js redraws the stage on a WebGL canvas and marks it here only once its
+   twin has actually been painted. opacity, not visibility: .frame.is-active
+   sets visibility: visible, and a child may override a hidden parent. The box
+   stays in the flow, so layout and the hover reel are unaffected. */
+.stage[data-lens] { opacity: 0; }
+
 /* ------------------------------------------------------------------ tags */
 
 .tags {
