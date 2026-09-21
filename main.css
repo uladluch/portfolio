@@ -533,8 +533,8 @@ a { color: inherit; }
 
 /* ----------------------------------------------------------------- stage */
 
-/* A stage wrapped in a link keeps its hover reel; the pointer signals that
-   the whole artwork is the way into the case study. */
+/* A stage wrapped in a link: the pointer signals that the whole artwork is
+   the way into the case study. */
 .stage-link {
   display: block;
 }
