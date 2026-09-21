@@ -40,6 +40,18 @@ jobs:
           [ -d portfolio ] && cp -R portfolio _site/portfolio || true
           touch _site/.nojekyll
 
+      - name: Include Antigravity Android App Links
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _site/.well-known
+          curl --fail --silent --show-error --retry 3 --connect-timeout 15 --max-time 60 \
+            https://antigravity-legal.antigravity-legal.workers.dev/.well-known/assetlinks.json \
+            --output _site/.well-known/assetlinks.json
+          # Exact reviewed copy of TPAppsorg/antigravity_mobile/AntigravityAndroid/play/assetlinks.json.
+          # Fail before deployment if the source is unavailable or differs from the approved content.
+          echo "c544206400634e97ef3c2176f0b846faa06670a09d3a6791a3084b064910b78f  _site/.well-known/assetlinks.json" | sha256sum --check --strict
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
