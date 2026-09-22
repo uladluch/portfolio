@@ -166,13 +166,6 @@
       color: #B91C1C;
     }
 
-    .filename {
-      margin-top: 8px;
-      color: #9CA3AF;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Courier New", monospace;
-      font-size: 11px;
-    }
-
     .download-frame {
       width: 0;
       height: 0;
@@ -229,13 +222,12 @@
       </div>
       <div class="step">
         <div class="step-title">3. Scan the QR code</div>
-        <div>In Antigravity Mobile, tap Connect, open the scanner, and scan the code shown on your computer.</div>
+        <div>In Antigravity on your iPhone, switch to Local, tap Connect a Computer, then Scan Code, and scan the code shown on your computer.</div>
       </div>
     </section>
 
     <a class="download-btn" id="download-link" href="#" target="_blank" rel="noopener">Download again</a>
     <div class="note" id="note" aria-live="polite">If the download doesn’t start, use Download again.</div>
-    <div class="filename" id="filename">AntigravityConnector-Setup-1.2.0-x64.exe</div>
   </main>
 
   <iframe class="download-frame" id="download-frame" title="Installer download"></iframe>
@@ -244,17 +236,21 @@
     const installers = {
       windows: {
         label: "Windows",
-        filename: "AntigravityConnector-Setup-1.2.0-x64.exe",
-        url: "https://gqowupdasbvencpsmlhb.supabase.co/storage/v1/object/public/desktop-releases/AntigravityConnector-Setup-1.2.0-x64.exe",
+        url: "https://gqowupdasbvencpsmlhb.supabase.co/storage/v1/object/public/desktop-releases/AntigravityConnector-Setup-x64.exe",
         instruction: "Open the EXE, complete the setup, then launch Antigravity Connector."
       },
       macos: {
         label: "macOS",
-        filename: "AntigravityConnector-1.2.0.dmg",
-        url: "https://gqowupdasbvencpsmlhb.supabase.co/storage/v1/object/public/desktop-releases/AntigravityConnector-1.2.0.dmg",
+        url: "https://gqowupdasbvencpsmlhb.supabase.co/storage/v1/object/public/desktop-releases/AntigravityConnector.dmg",
         instruction: "Open the DMG, drag Antigravity Connector to Applications, then open it."
       }
     };
+
+    // The files keep the same names from release to release; the query
+    // keeps a cache from handing out the release before this one.
+    function freshURL(url) {
+      return `${url}?t=${Date.now()}`;
+    }
 
     const params = new URLSearchParams(window.location.search);
     const requestedPlatform = normalizePlatform(params.get("platform"));
@@ -301,8 +297,7 @@
       });
 
       document.getElementById("open-instruction").textContent = installer.instruction;
-      document.getElementById("filename").textContent = installer.filename;
-      downloadLink.href = installer.url;
+      downloadLink.href = freshURL(installer.url);
     }
 
     function showStartingState() {
@@ -328,7 +323,7 @@
     function startDownload() {
       const installer = installers[selectedPlatform];
       showStartingState();
-      downloadFrame.src = installer.url;
+      downloadFrame.src = freshURL(installer.url);
     }
 
     document.querySelectorAll(".seg-btn").forEach((button) => {
