@@ -280,6 +280,13 @@
       opacity: 0.85;
     }
 
+    .connect-btn.secondary {
+      margin-top: 10px;
+      background: #FFFFFF;
+      color: #111827;
+      border: 1px solid #E5E7EB;
+    }
+
     /* Connected pill — same style as countdown but green */
     .connected-pill {
       display: none;
@@ -365,7 +372,25 @@
       <span>Connected</span>
     </div>
 
-    <div class="segment">
+    <!-- A connector's QR code opened with the phone's Camera app (desktop=1):
+         the code is meant for the app's scanner, not for this page. -->
+    <div class="card" id="phone-steps" style="display:none; text-align:left;">
+      <div class="step">
+        <div class="step-title">1. Open Antigravity on this phone</div>
+        Get the free app if you don't have it yet.
+        <a class="connect-btn" href="https://apps.apple.com/us/app/mobile-ide-for-antigravity-ai/id6759795486">Get it on the App Store</a>
+        <a class="connect-btn secondary" href="https://play.google.com/store/apps/details?id=dev.luch.antigravity">Get it on Google Play</a>
+      </div>
+      <div class="step">
+        <div class="step-title">2. Choose Local and tap Connect a Computer</div>
+      </div>
+      <div class="step">
+        <div class="step-title">3. Tap Already Installed, Continue, then Scan Code</div>
+        Point the camera at the code in Antigravity Connector again. The app pairs on its own.
+      </div>
+    </div>
+
+    <div class="segment" id="cli-segment">
       <button class="seg-btn active" id="tab-gemini-btn" onclick="switchTab('gemini')">Gemini CLI</button>
       <button class="seg-btn" id="tab-antigravity-btn" onclick="switchTab('antigravity')">Antigravity CLI</button>
     </div>
@@ -553,8 +578,24 @@
       return "http://127.0.0.1:38475/callback?pair=" + encodeURIComponent(pairId) + "&token=" + encodeURIComponent(token) + "&cli=" + getActiveCliType();
     }
 
+    // A connector's QR code opened with the phone's Camera app: the pairing
+    // happens in the app's own scanner, so say how to get there and nothing else.
+    function showPhoneSteps() {
+      const keep = new Set(["phone-steps"]);
+      for (const child of document.querySelector(".container").children) {
+        if (child.matches(".logo, h1, .subtitle") || keep.has(child.id)) continue;
+        child.style.display = "none";
+      }
+      document.querySelector("h1").textContent = "Scan this code in the app";
+      document.querySelector(".subtitle").textContent =
+        "This code connects your computer to Antigravity on your phone. The phone's Camera app can't pair it.";
+      document.getElementById("phone-steps").style.display = "block";
+    }
+
     // ── Main pairing logic ───────────────────────────────────────────────────
-    if (!pairId || !token) {
+    if (params.get("desktop") === "1") {
+      showPhoneSteps();
+    } else if (!pairId || !token) {
       manualConnectWrap.style.display = "block";
       connectLink.style.opacity = "0.5";
       connectLink.style.pointerEvents = "none";
